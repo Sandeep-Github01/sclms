@@ -2,9 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LeaveRequest extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'type_id',
@@ -33,5 +36,9 @@ class LeaveRequest extends Model
 
     public function approval() {
         return $this->hasOne(Approval::class);
+    }
+
+    public function auditLogs() {
+        return $this->hasMany(AuditLog::class);
     }
 }
