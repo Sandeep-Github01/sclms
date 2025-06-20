@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('approvals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('leave_request_id')->constrained()->onDelete('cascade');
+            $table->foreignId('approved_by')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['approved', 'rejected']);
+            $table->text('comment')->nullable();
             $table->timestamps();
+
         });
     }
 

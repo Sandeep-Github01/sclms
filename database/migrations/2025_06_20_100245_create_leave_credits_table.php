@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('leave_credits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('type_id')->constrained('leave_types')->onDelete('cascade');
+            $table->integer('remaining_days');
             $table->timestamps();
+
         });
     }
 

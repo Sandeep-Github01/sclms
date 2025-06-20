@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('blackout_periods', function (Blueprint $table) {
             $table->id();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->string('reason');
             $table->timestamps();
+
         });
     }
 
