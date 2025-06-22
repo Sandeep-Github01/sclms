@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Mail\VerifyMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Carbon;
 
 class UserController extends Controller
 {
@@ -41,7 +42,12 @@ class UserController extends Controller
     $user->department_id = $request->department_id;
     $user->save();
 
-    Mail::to($user->email)->send(new VerifyMail($user));
+    $verificationUrl = URL::temporarySignedRoute(
+        'verify.email',
+        now()->addMinutes(60),
+        ['id' => $user->id]
+    );
+    Mail::to($user->email)->send(new VerifyMail($user, $verificationUrl));
 
     return redirect()->route('frontend.emails.verificationSent');
 }
@@ -75,17 +81,24 @@ class UserController extends Controller
         return redirect()->route('frontend.user.login')->with('success', 'Logged out successfully.');
     }
 
-    public function verify_email(Request $request, $id)
+public function verify_email(Request $request, $id)
 {
-    $user = User::findOrFail($id);
+    // Signed URL validity जाँच
+    if (! $request->hasValidSignature()) {
+        abort(401, 'Invalid or expired verification link.');
+    }
 
-    if (!$user->email_verified_at) {
+    $user = User::findOrFail($id);
+    if (! $user->email_verified_at) {
         $user->email_verified_at = now();
         $user->save();
     }
 
-    return redirect()->route('frontend.user.login')->with('message', 'Email verified successfully');
+    // Verificationपछि login पेजमा success सन्देशसहित redirect
+    return redirect()->route('frontend.user.login')
+                     ->with('success', 'Email verified successfully. You can now log in.');
 }
+
 
 
     public function verificationSent()

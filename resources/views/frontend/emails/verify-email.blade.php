@@ -11,7 +11,7 @@
         <p>Dear {{ $user->name }},</p>
         <p>Thank you for registering. Please verify your email address to complete your registration:</p>
 
-        <a href="{{ url('email_verify', $user->id) }}" style="display:inline-block; padding:10px 20px; background:#007bff; color:#fff; text-decoration:none; border-radius:5px;">
+        <a href="{{ $verificationUrl }}" style="display:inline-block; padding:10px 20px; background:#007bff; color:#fff; text-decoration:none; border-radius:5px;">
             Verify Email
         </a>
 

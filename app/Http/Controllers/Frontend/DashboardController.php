@@ -8,14 +8,30 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    // User login bhayepaxi aune dashboard
+    // User login bhayepaxi dashboard dekhaucha
     public function index()
     {
-        $user = Auth::user(); // login gareko user taneko
+        $user = Auth::user();
 
-        // yedi user dashboard maa personal stats dekhauxa bhane data yaha pathauna sakincha
-        // e.g. $totalLeaves = $user->leaveRequests()->count();
+        // Total leaves applied
+        $totalLeaves = $user->leaveRequests()->count();
 
-        return view('frontend.dashboard', compact('user'));
+        // Pending leaves
+        $pendingLeaves = $user->leaveRequests()
+                              ->where('status', 'pending')
+                              ->count();
+
+        // Last leave status: sabai leaves bata latest start_date ko record
+        $lastLeave = $user->leaveRequests()
+                          ->orderBy('start_date', 'desc')
+                          ->first();
+
+        // Pass data view maa
+        return view('frontend.dashboard', compact(
+            'user',
+            'totalLeaves',
+            'pendingLeaves',
+            'lastLeave'
+        ));
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+// app/Mail/VerifyMail.php
 namespace App\Mail;
 
 use App\Models\User;
@@ -11,16 +11,22 @@ class VerifyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user; // accessible in blade
+    public $user;
+    public $verificationUrl;
 
-    public function __construct(User $user)
+    public function __construct(User $user, string $verificationUrl)
     {
         $this->user = $user;
+        $this->verificationUrl = $verificationUrl;
     }
 
     public function build()
     {
         return $this->subject('Verify Your Email')
-                    ->view('frontend.emails.verify-email');
+                    ->view('frontend.emails.verify-email')
+                    ->with([
+                        'user' => $this->user,
+                        'verificationUrl' => $this->verificationUrl,
+                    ]);
     }
 }
