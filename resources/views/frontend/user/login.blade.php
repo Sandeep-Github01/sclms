@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="login-page">
     
@@ -29,8 +31,10 @@
         <input type="email" name="email" required>
 
         <label>Password:</label>
-        <input type="password" name="password" required>
-        <i class="far fa-eye toggle-password" id="togglePassword"></i>
+        <div class="password-wrapper">
+            <input type="password" name="password" id="password" required>
+            <i id="togglePassword" class="far fa-eye toggle-password"></i>
+        </div>
 
         <button type="submit">Login</button>
     </form>
@@ -38,5 +42,19 @@
     <p style="text-align:center;">Not registered? <a href="{{ route('frontend.user.register') }}">Register Now</a></p>
 </div>
 
+<!-- JS rakhe body vitra -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const toggle = document.getElementById('togglePassword');
+    const pwd = document.getElementById('password');
+    if(toggle && pwd){
+        toggle.addEventListener('click', function(){
+            const type = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwd.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+});
+</script>
 </body>
 </html>

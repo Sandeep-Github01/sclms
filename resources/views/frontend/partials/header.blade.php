@@ -16,7 +16,13 @@
         <div class="header-center">
             SMART COLLEGE LEAVE MANAGEMENT SYSTEM
         </div>
-        <div class="header-right">
-            <a href="{{ route('user.logout') }}" class="logout-btn">🚪 Logout</a>
-        </div>
+       <div class="header-right">
+    <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display:none;">
+    @csrf
+</form>
+<a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    Logout
+</a>
+</div>
+
     </header>

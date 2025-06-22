@@ -1,8 +1,16 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+// Import related models
+use App\Models\User;
+use App\Models\LeaveType;
+use App\Models\Department;
+use App\Models\Approval;
+use App\Models\AuditLog;
 
 class LeaveRequest extends Model
 {
@@ -22,23 +30,28 @@ class LeaveRequest extends Model
         'status_note',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function leaveType() {
+    public function leaveType()
+    {
         return $this->belongsTo(LeaveType::class, 'type_id');
     }
 
-    public function department() {
+    public function department()
+    {
         return $this->belongsTo(Department::class);
     }
 
-    public function approval() {
+    public function approval()
+    {
         return $this->hasOne(Approval::class);
     }
 
-    public function auditLogs() {
+    public function auditLogs()
+    {
         return $this->hasMany(AuditLog::class);
     }
 }

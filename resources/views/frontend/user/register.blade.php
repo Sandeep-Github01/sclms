@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body class="login-page">
 
@@ -52,3 +54,18 @@
 
 </body>
 </html>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const toggle = document.getElementById('togglePassword');
+    const pwd = document.querySelector('input[name="password"]');
+    if(toggle && pwd){
+        toggle.addEventListener('click', function(){
+            const type = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwd.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+});
+</script>

@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+// Import related models
+use App\Models\LeaveRequest;
+use App\Models\User;
+
 class Approval extends Model
 {
     use HasFactory;
@@ -16,11 +20,13 @@ class Approval extends Model
         'comment',
     ];
 
-    public function leaveRequest() {
+    public function leaveRequest()
+    {
         return $this->belongsTo(LeaveRequest::class);
     }
 
-    public function approver() {
+    public function approver()
+    {
         return $this->belongsTo(User::class, 'approved_by');
     }
 }
