@@ -1,7 +1,7 @@
 @include('frontend.partials.header')
 @include('frontend.partials.sidebar')
 
-<div style="margin-left: 230px; padding: 20px;">
+<div class="main-content">
     <h2>Leave Request Result</h2>
 
     <p><strong>Type:</strong> {{ $leave->leaveType->name }}</p>

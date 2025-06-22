@@ -17,7 +17,7 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
 });
 
 // Frontend Routes
-// Route::get('/', [FrontendUser::class, 'login_show'])->name('login');
+Route::get('/', [FrontendUser::class, 'login_show'])->name('login');
 
 // Route::get('/user/register', [FrontendUser::class, 'register_show'])->name('frontend.user.register');
 // Route::post('/user/registerSave', [FrontendUser::class, 'register'])->name('frontend.user.registerSave');

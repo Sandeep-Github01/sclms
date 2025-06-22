@@ -139,6 +139,18 @@ select:focus {
     color: #000
 }
 
+.logout-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+    transform: translateY(-30%); 
+}
+
+.logout-link i {
+    margin-right: 6px;
+}
+
 
 /* ===================== HEADER ===================== */
 .main-header {
@@ -228,6 +240,7 @@ select:focus {
     margin-left: 230px;
     margin-top: 70px;
     padding: 40px 30px;
+    padding-top: 70px;
     background: #f4f7fc;
     min-height: calc(100vh - 70px);
 }
@@ -262,10 +275,15 @@ select:focus {
 
 /* ===================== FOOTER ===================== */
 .main-footer {
-    clear: both;
-    padding: 12px 30px;
+    position: fixed;       /* page ko bottom ma fix garne */
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background: #e0e0e0;
+    padding: 12px 30px;
     text-align: center;
+    z-index: 999;          /* upar aune */
+    box-shadow: 0 -1px 5px rgba(0,0,0,0.1); /* optional: top shadow */
 }
 
 /* ===================== ANIMATION ===================== */
