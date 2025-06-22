@@ -31,11 +31,9 @@ class User extends Authenticatable
     }
 
     // LeaveRequest sanga relation
-    public function leaveRequests()
-    {
-        return $this->hasMany(LeaveRequest::class);
-    }
-
+  public function leaveRequests() {
+    return $this->hasMany(LeaveRequest::class);
+}
     // LeaveCredit sanga relation
     public function leaveCredits()
     {

@@ -6,8 +6,8 @@
         </div>
     </div>
     <ul class="sidebar-nav">
-        <li><a href="{{ route('dashboard') }}">🏠 Dashboard</a></li>
-        <li><a href="#">📝 Leave Apply</a></li>
-        <li><a href="#">📂 My Leaves</a></li>
+        <li><a href="{{ route('frontend.user.dashboard') }}">🏠 Dashboard</a></li>
+        <li><a href="{{route('leave.create')}}">📝 Leave Apply</a></li>
+        <li><a href="{{route('leave.list')}}">📂 My Leaves</a></li>
     </ul>
 </aside>

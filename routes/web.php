@@ -17,7 +17,7 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
 });
 
 // Frontend Routes
-// Route::get('/', [FrontendUser::class, 'login_show'])->name('login');
+Route::get('/', [FrontendUser::class, 'login_show'])->name('login');
 
 // Route::get('/user/register', [FrontendUser::class, 'register_show'])->name('frontend.user.register');
 // Route::post('/user/registerSave', [FrontendUser::class, 'register'])->name('frontend.user.registerSave');
@@ -59,7 +59,7 @@ Route::get('send-email', [MailController::class, 'sendEmail']);
 
 Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/profile', [FrontendUser::class, 'profile'])->name('frontend.user.profile');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('frontend.user.dashboard');
 });
 
 

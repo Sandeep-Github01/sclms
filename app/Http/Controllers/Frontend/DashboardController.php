@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
