@@ -6,9 +6,9 @@
     </div>
     <ul style="list-style: none; padding-left: 0;">
         <li><a href="{{ route('dashboard') }}">🏠 Dashboard</a></li>
-        <li><a href="{{ route('user.profile') }}">👤 My Profile</a></li>
+        <li><a href="{{ route('frontend.user.profile') }}">👤 My Profile</a></li>
         <li><a href="#">📝 Leave Apply</a></li>
         <li><a href="#">📂 My Leaves</a></li>
-        <li><a href="{{ route('logout') }}">🚪 Logout</a></li>
+        <li><a href="{{ route('user.logout') }}">🚪 Logout</a></li>
     </ul>
 </aside>

@@ -1,11 +1,15 @@
-@include('frontend.partials.header')
-@include('frontend.partials.sidebar')
-
-<div style="margin-left: 230px; padding: 20px;">
+<div style="width: 400px; margin: 50px auto;">
     <h2>Register New Account</h2>
 
-    {{-- Simple form for student/teacher register garna --}}
-    <form action="{{ route('register.submit') }}" method="POST">
+    @if($errors->any())
+        <div style="color: red;">
+            @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
+    <form action="{{ route('frontend.user.registerSave') }}" method="POST">
         @csrf
 
         <label>Name:</label><br>
@@ -16,6 +20,9 @@
 
         <label>Password:</label><br>
         <input type="password" name="password" required><br><br>
+
+        <label>Confirm Password:</label><br>
+        <input type="password" name="password_confirmation" required><br><br>
 
         <label>Role:</label><br>
         <select name="role" required>
@@ -28,6 +35,6 @@
 
         <button type="submit">Register</button>
     </form>
-</div>
 
-@include('frontend.partials.footer')
+    <p>Already registered? <a href="{{ route('frontend.user.login') }}">Login here</a></p>
+</div>
