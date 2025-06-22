@@ -5,7 +5,7 @@
     <title>Register</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 </head>
-<body>
+<body class="login-page">
 
 <div class="auth-container">
     <h2>Register New Account</h2>

@@ -1,10 +1,21 @@
-<aside style="width: 220px; float: left; background: #f0f0f0; height: 100vh; padding: 15px;">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="{{ asset('images/user.png') }}" class="rounded-circle" style="width: 60px; height: 60px;">
-        <div>{{ Auth::user()->name }}</div>
-        <small>Profile</small>
+<aside class="sidebar">
+    {{-- <div class="company-logo">
+        <img src="{{ asset('images/logo.png') }}" alt="App Logo">
     </div>
-    <ul style="list-style: none; padding-left: 0;">
+    <ul>
+        <li>
+        </li>
+        <li>
+        </li>
+        <li>
+        </li>
+    </ul> --}}
+    <div class="profile-section">
+        <img src="{{ asset('images/user.png') }}" class="profile-pic">
+        <div>{{ Auth::user()->name }}</div>
+        {{-- <small>Profile</small> --}}
+    </div>
+    <ul class="sidebar-nav">
         <li><a href="{{ route('dashboard') }}">🏠 Dashboard</a></li>
         <li><a href="{{ route('frontend.user.profile') }}">👤 My Profile</a></li>
         <li><a href="#">📝 Leave Apply</a></li>
