@@ -1,12 +1,21 @@
-<div style="width: 400px; margin: 50px auto;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+</head>
+<body>
+
+<div class="auth-container">
     <h2>Login</h2>
 
     @if(session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
+        <p class="success">{{ session('success') }}</p>
     @endif
 
     @if($errors->any())
-        <div style="color: red;">
+        <div class="alert">
             @foreach($errors->all() as $error)
                 <p>{{ $error }}</p>
             @endforeach
@@ -16,14 +25,18 @@
     <form method="POST" action="{{ route('frontend.user.loginMatch') }}">
         @csrf
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <label>Email:</label>
+        <input type="email" name="email" required>
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+        <label>Password:</label>
+        <input type="password" name="password" required>
+        <i class="far fa-eye toggle-password" id="togglePassword"></i>
 
         <button type="submit">Login</button>
     </form>
 
-    <p>Not registered? <a href="{{ route('frontend.user.register') }}">Register Now</a></p>
+    <p style="text-align:center;">Not registered? <a href="{{ route('frontend.user.register') }}">Register Now</a></p>
 </div>
+
+</body>
+</html>
