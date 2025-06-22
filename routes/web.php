@@ -59,7 +59,7 @@ Route::get('send-email', [MailController::class, 'sendEmail']);
 
 Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/profile', [FrontendUser::class, 'profile'])->name('frontend.user.profile');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('frontend.user.dashboard');
 });
 
 
