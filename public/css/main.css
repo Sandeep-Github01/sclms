@@ -405,3 +405,54 @@ body.sidebar-active .sidebar-overlay {
         align-items: flex-start;
     }
 }
+
+@media (max-width: 768px) {
+    .hamburger-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 75%;
+        height: calc(100vh - 70px);
+        background: #2e3c99;
+        transition: left 0.3s ease;
+        z-index: 1000;
+    }
+
+    body.sidebar-active .sidebar {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        display: none;
+    }
+
+    body.sidebar-active .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 999;
+    }
+
+    /* Hide header-center and app name (just logout icon) */
+    .header-center,
+    .app-logo {
+        display: none;
+    }
+
+    .header-right {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

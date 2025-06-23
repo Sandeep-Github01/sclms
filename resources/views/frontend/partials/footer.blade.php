@@ -3,27 +3,37 @@
 </footer>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function () {
     const toggleBtn = document.getElementById('sidebarToggle');
-    const bodyEl = document.body;
     const overlay = document.querySelector('.sidebar-overlay');
+    const body = document.body;
 
-    function openSidebar() {
-        bodyEl.classList.add('sidebar-active');
+    function toggleSidebar() {
+        body.classList.toggle('sidebar-active');
     }
+
     function closeSidebar() {
-        bodyEl.classList.remove('sidebar-active');
+        body.classList.remove('sidebar-active');
     }
 
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', function(){
-            bodyEl.classList.toggle('sidebar-active');
-        });
+        toggleBtn.addEventListener('click', toggleSidebar);
     }
+
     if (overlay) {
-        overlay.addEventListener('click', function(){
-            closeSidebar();
-        });
+        overlay.addEventListener('click', closeSidebar);
     }
+
+    // Also close sidebar if clicked outside (optional fallback)
+    document.addEventListener('click', function (e) {
+        const sidebar = document.querySelector('.sidebar');
+        if (
+            !sidebar.contains(e.target) &&
+            !toggleBtn.contains(e.target) &&
+            body.classList.contains('sidebar-active')
+        ) {
+            closeSidebar();
+        }
+    });
 });
 </script>
