@@ -11,6 +11,7 @@ body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: linear-gradient(to right, #4facfe, #00f2fe);
     overflow-x: hidden;
+    padding-bottom: 50px; /* prevent footer overlap */
 }
 
 /* ===================== LOGIN PAGE ===================== */
@@ -121,37 +122,6 @@ select:focus {
     outline: none;
 }
 
-/* Romanized Nepali comments */
-.password-wrapper {
-    position: relative; /* icon absolute position garna */
-    width: 100%;
-}
-.password-wrapper input {
-    width: 100%;
-    padding-right: 30px; /* icon overlap nagarna jagga */
-}
-.password-wrapper .toggle-password {
-    position: absolute;
-    right: 10px; /* input vitra right side */
-    top: 50%;
-    transform: translateY(-100%); /* vertical center */
-    cursor: pointer;
-    color: #000
-}
-
-.logout-link {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 20px;
-    transform: translateY(-30%); 
-}
-
-.logout-link i {
-    margin-right: 6px;
-}
-
-
 /* ===================== HEADER ===================== */
 .main-header {
     display: flex;
@@ -169,8 +139,9 @@ select:focus {
 }
 
 .header-left {
-    font-weight: bold;
-    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #fff;
 }
 
@@ -185,18 +156,26 @@ select:focus {
     text-align: right;
 }
 
-.logout-btn {
+.logout-link {
     color: #fff;
     text-decoration: none;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: 1px solid white;
-    border-radius: 6px;
-    transition: background 0.3s ease;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+}
+.logout-link i {
+    margin-right: 6px;
 }
 
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+/* Hamburger Button */
+.hamburger-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: none;
 }
 
 /* ===================== SIDEBAR ===================== */
@@ -204,13 +183,14 @@ select:focus {
     width: 230px;
     background: #2e3c99;
     color: white;
-    height: calc(100vh - 70px); /* leave space for header */
+    height: calc(100vh - 70px);
     position: fixed;
-    top: 70px; /* <-- this moves it below the sticky header */
+    top: 70px;
     left: 0;
     padding: 20px 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-    z-index: 10;
+    z-index: 1000;
+    transition: transform 0.3s ease;
 }
 
 .sidebar-nav {
@@ -233,6 +213,24 @@ select:focus {
 
 .sidebar-nav a:hover {
     background: #1a237e;
+}
+
+/* Sidebar Overlay for Mobile */
+.sidebar-overlay {
+    display: none;
+}
+body.sidebar-active .sidebar {
+    transform: translateX(0);
+}
+body.sidebar-active .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 70px);
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 900;
 }
 
 /* ===================== MAIN CONTENT ===================== */
@@ -275,74 +273,39 @@ select:focus {
 
 /* ===================== FOOTER ===================== */
 .main-footer {
-    position: fixed;       /* page ko bottom ma fix garne */
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background: #e0e0e0;
     padding: 12px 30px;
     text-align: center;
-    z-index: 999;          /* upar aune */
-    box-shadow: 0 -1px 5px rgba(0,0,0,0.1); /* optional: top shadow */
+    z-index: 999;
+    box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
 }
 
-/* ===================== ANIMATION ===================== */
-@keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+/* ===================== PASSWORD TOGGLE ===================== */
+.password-wrapper {
+    position: relative;
+}
+.password-wrapper input {
+    padding-right: 30px;
+}
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #000;
 }
 
-/* ===================== RESPONSIVE ===================== */
-@media (max-width: 768px) {
-     .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        top: 0; /* reset it */
-        padding: 20px;
-    }
-
-    .main-header {
-        left: 0;
-        padding: 15px 20px;
-        flex-direction: column;
-        height: auto;
-    }
-
-    .main-content {
-        margin-left: 0;
-        margin-top: 80px;
-        padding: 20px;
-    }
-
-    .header-center {
-        text-align: center;
-        font-size: 18px;
-    }
-
-    .header-right {
-        text-align: right;
-    }
-
-    body.login-page {
-        align-items: flex-start;
-    }
-
-    .auth-container {
-        margin-top: 60px;
-        padding: 25px 20px;
-    }
-}
-
-
-/* ===================== APPLY PAGE LAYOUT ===================== */
-/* Apply Leave page lai responsive two-column banauna */
+/* ===================== APPLY PAGE ===================== */
 .apply-container {
     display: flex;
-    flex-direction: column; /* Mobile maa stacked */
+    flex-direction: column;
     gap: 20px;
-    margin-top: 20px; /* header tala gap */
-    /* main-content padding-top already chha, so yesto margin enough */
+    margin-top: 20px;
 }
 
 .calendar-col,
@@ -350,42 +313,35 @@ select:focus {
     width: 100%;
 }
 
-/* Desktop view: calendar left, form right */
 @media (min-width: 768px) {
     .apply-container {
         flex-direction: row;
     }
     .calendar-col {
-        width: 40%; /* adjust ratio */
+        width: 40%;
     }
     .form-col {
         width: 60%;
     }
 }
 
-/* Calendar container styling */
 #calendar {
     border: 1px solid #ccc;
     border-radius: 6px;
     padding: 10px;
-    /* width: 100% by default inside calendar-col */
 }
 
-/* ===================== FULLCALENDAR SUNDAY & BLACKOUT STYLING ===================== */
-/* FullCalendar automatically adds classes: fc-daygrid-day fc-day-sun for Sundays */
-/* Sunday highlight light red */
+/* FullCalendar Specific */
+.fc .fc-daygrid-day-number {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+}
 .fc .fc-daygrid-day.fc-day-sun {
     background-color: #ffe5e5;
 }
 
-/* If blackout events use JS config with display:'background' and color: 'black' or rgba(...), 
-   that covers blackout styling. But optionally ensure background stays visible: */
-.fc .fc-daygrid-day.fc-event-bg {
-    /* nothing extra needed here if JS provides background color */
-}
-
-/* ===================== FORM SUBMISSION VALIDATION MESSAGES ===================== */
-/* (Optional) If JS alerts overlap, styling of alert paragraphs can be adjusted */
+/* Optional form messages */
 .apply-error, .apply-success {
     padding: 10px;
     margin-bottom: 15px;
@@ -394,16 +350,7 @@ select:focus {
 .apply-error { background: #fdecea; color: #611a15; }
 .apply-success { background: #e6f4ea; color: #1e4620; }
 
-/* ===================== ADJUSTMENTS FOR HEADER OVERLAP ===================== */
-/* Already existing: .main-content has padding-top:70px; */
-/* Ensure calendar/form inside .main-content start below header */
-
-/* ===================== RESPONSIVE TWEAKS ===================== */
-/* If sidebar present, main-content margin-left exists */
-/* On mobile, sidebar becomes relative and full-width as existing media query handles */
-
-/* ===================== OPTIONAL: TOOLTIP OR LEGEND ===================== */
-/* If you add a legend above calendar: */
+/* Calendar legend (optional) */
 .calendar-legend {
     display: flex;
     gap: 10px;
@@ -422,51 +369,39 @@ select:focus {
     border: 1px solid #ccc;
 }
 
-/* ===================== DATE INPUT DISABLE STYLING ===================== */
-/* If you want to visually disable inputs on blackout/Sunday selection, you might add a class .invalid-date */
-/*
-input.invalid-date {
-    border: 2px solid #e74c3c !important;
-    background: #fdecea !important;
-}
-*/
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        height: calc(100vh - 70px);
+        width: 220px;
+    }
 
-/* ===================== PASSWORD TOGGLE ADJUSTMENT ===================== */
-/* Existing has .password-wrapper transform translateY(-100%). To center exactly, use translateY(-50%): */
-.password-wrapper {
-    position: relative; /* ensure this is present */
-}
-.password-wrapper input {
-    padding-right: 30px;
-}
-.password-wrapper .toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #000;
-}
+    .hamburger-btn {
+        display: inline-block;
+    }
 
-/* ===================== LOGOUT LINK TWEAK ===================== */
-/* If logout-link needs vertical centering inside header, adjust margin/padding */
-.header-right .logout-link {
-    display: inline-flex;
-    align-items: center;
+    .main-header {
+        flex-direction: row;
+        align-items: center;
+        padding: 10px 20px;
+        height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+        margin-top: 80px;
+        padding: 20px;
+    }
+
+    .auth-container {
+        margin-top: 60px;
+        padding: 25px 20px;
+    }
+
+    body.login-page {
+        align-items: flex-start;
+    }
 }
-/* .logout-link i margin already defined */
-
-/* ===================== FOOTER & BODY PADDING ===================== */
-/* Existing footer fixed, body padding-bottom: ensure main-content not overlapped by footer */
-body {
-    padding-bottom: 50px; /* adjust if footer height differs */
-}
-
-/* ===================== NOTES ===================== */
-/* - Include these at bottom of main.css, after existing CSS. */
-/* - For FullCalendar, JS config already passes blackout events with color:'black' or rgba; Sunday highlighted by above CSS. */
-/* - apply.blade.php should wrap calendar & form in <div class="apply-container"> with child <div class="calendar-col"> and <div class="form-col">. */
-/* - main-content padding/margin already handles header overlap. */
-/* - Mobile layout stacked, desktop side-by-side. */
-
-/* END of additions for apply page and FullCalendar styling */
