@@ -25,7 +25,7 @@ class LeaveController extends Controller
                 'end' => $item->end_date,
                 'title' => $item->reason,
                 'display' => 'background',
-                'color' => 'red'
+                'color' => 'black'
             ];
         });
 
