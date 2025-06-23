@@ -43,7 +43,7 @@ class UserController extends Controller
     $user->save();
 
     $verificationUrl = URL::temporarySignedRoute(
-        'verify.email',
+        'frontend.emails.verify-email',
         now()->addMinutes(60),
         ['id' => $user->id]
     );
