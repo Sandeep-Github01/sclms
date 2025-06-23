@@ -65,7 +65,7 @@ class UserController extends Controller
     if ($user && Hash::check($request->password, $user->password)) {
         if ($user->email_verified_at) {
             Auth::login($user);
-            return redirect()->route('dashboard');
+            return redirect()->route('frontend.user.dashboard');
         }
 
         return back()->withErrors(['email' => 'Please verify your email before logging in.']);

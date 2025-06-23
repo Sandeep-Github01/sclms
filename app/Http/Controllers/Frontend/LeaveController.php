@@ -17,8 +17,21 @@ class LeaveController extends Controller
     public function create()
     {
         $leaveTypes = LeaveType::all();
-        return view('frontend.leave.apply', compact('leaveTypes'));
+
+        // Fetch blackout periods and format for calendar
+        $blackouts = BlackoutPeriod::all()->map(function ($item) {
+            return [
+                'start' => $item->start_date,
+                'end' => $item->end_date,
+                'title' => $item->reason,
+                'display' => 'background',
+                'color' => 'red'
+            ];
+        });
+
+        return view('frontend.leave.apply', compact('leaveTypes', 'blackouts'));
     }
+
 
     public function store(Request $request)
     {
