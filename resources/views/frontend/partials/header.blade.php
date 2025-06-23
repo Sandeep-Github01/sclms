@@ -17,21 +17,25 @@
 
 </head>
 <body >
-    <header class="main-header">
-        <div class="header-left">
-            <span class="app-logo">Sandeep's App 😜 </span>
-        </div>
-        <div class="header-center">
-            SMART COLLEGE LEAVE MANAGEMENT SYSTEM
-        </div>
-     <div class="header-right">
-    <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display: none;">
-        @csrf
-    </form>
+<header class="main-header">
+    <div class="header-left">
+       <button class="hamburger-btn" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+</button>
+        <span class="app-logo">Sandeep's App 😜</span>
+    </div>
 
-    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-link">
-        <i class="fas fa-sign-out-alt"></i> 
-    </a>
-</div>
+    <div class="header-center">
+        SMART COLLEGE LEAVE MANAGEMENT SYSTEM
+    </div>
 
-    </header>
+    <div class="header-right">
+        <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display: none;">
+            @csrf
+        </form>
+
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-link">
+            <i class="fas fa-sign-out-alt"></i> 
+        </a>
+    </div>
+</header>
