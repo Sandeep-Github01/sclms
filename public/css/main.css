@@ -333,3 +333,140 @@ select:focus {
         padding: 25px 20px;
     }
 }
+
+
+/* ===================== APPLY PAGE LAYOUT ===================== */
+/* Apply Leave page lai responsive two-column banauna */
+.apply-container {
+    display: flex;
+    flex-direction: column; /* Mobile maa stacked */
+    gap: 20px;
+    margin-top: 20px; /* header tala gap */
+    /* main-content padding-top already chha, so yesto margin enough */
+}
+
+.calendar-col,
+.form-col {
+    width: 100%;
+}
+
+/* Desktop view: calendar left, form right */
+@media (min-width: 768px) {
+    .apply-container {
+        flex-direction: row;
+    }
+    .calendar-col {
+        width: 40%; /* adjust ratio */
+    }
+    .form-col {
+        width: 60%;
+    }
+}
+
+/* Calendar container styling */
+#calendar {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    /* width: 100% by default inside calendar-col */
+}
+
+/* ===================== FULLCALENDAR SUNDAY & BLACKOUT STYLING ===================== */
+/* FullCalendar automatically adds classes: fc-daygrid-day fc-day-sun for Sundays */
+/* Sunday highlight light red */
+.fc .fc-daygrid-day.fc-day-sun {
+    background-color: #ffe5e5;
+}
+
+/* If blackout events use JS config with display:'background' and color: 'black' or rgba(...), 
+   that covers blackout styling. But optionally ensure background stays visible: */
+.fc .fc-daygrid-day.fc-event-bg {
+    /* nothing extra needed here if JS provides background color */
+}
+
+/* ===================== FORM SUBMISSION VALIDATION MESSAGES ===================== */
+/* (Optional) If JS alerts overlap, styling of alert paragraphs can be adjusted */
+.apply-error, .apply-success {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+.apply-error { background: #fdecea; color: #611a15; }
+.apply-success { background: #e6f4ea; color: #1e4620; }
+
+/* ===================== ADJUSTMENTS FOR HEADER OVERLAP ===================== */
+/* Already existing: .main-content has padding-top:70px; */
+/* Ensure calendar/form inside .main-content start below header */
+
+/* ===================== RESPONSIVE TWEAKS ===================== */
+/* If sidebar present, main-content margin-left exists */
+/* On mobile, sidebar becomes relative and full-width as existing media query handles */
+
+/* ===================== OPTIONAL: TOOLTIP OR LEGEND ===================== */
+/* If you add a legend above calendar: */
+.calendar-legend {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.calendar-legend .legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+.calendar-legend .legend-color {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    border: 1px solid #ccc;
+}
+
+/* ===================== DATE INPUT DISABLE STYLING ===================== */
+/* If you want to visually disable inputs on blackout/Sunday selection, you might add a class .invalid-date */
+/*
+input.invalid-date {
+    border: 2px solid #e74c3c !important;
+    background: #fdecea !important;
+}
+*/
+
+/* ===================== PASSWORD TOGGLE ADJUSTMENT ===================== */
+/* Existing has .password-wrapper transform translateY(-100%). To center exactly, use translateY(-50%): */
+.password-wrapper {
+    position: relative; /* ensure this is present */
+}
+.password-wrapper input {
+    padding-right: 30px;
+}
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #000;
+}
+
+/* ===================== LOGOUT LINK TWEAK ===================== */
+/* If logout-link needs vertical centering inside header, adjust margin/padding */
+.header-right .logout-link {
+    display: inline-flex;
+    align-items: center;
+}
+/* .logout-link i margin already defined */
+
+/* ===================== FOOTER & BODY PADDING ===================== */
+/* Existing footer fixed, body padding-bottom: ensure main-content not overlapped by footer */
+body {
+    padding-bottom: 50px; /* adjust if footer height differs */
+}
+
+/* ===================== NOTES ===================== */
+/* - Include these at bottom of main.css, after existing CSS. */
+/* - For FullCalendar, JS config already passes blackout events with color:'black' or rgba; Sunday highlighted by above CSS. */
+/* - apply.blade.php should wrap calendar & form in <div class="apply-container"> with child <div class="calendar-col"> and <div class="form-col">. */
+/* - main-content padding/margin already handles header overlap. */
+/* - Mobile layout stacked, desktop side-by-side. */
+
+/* END of additions for apply page and FullCalendar styling */
