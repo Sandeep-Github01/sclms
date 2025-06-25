@@ -136,6 +136,7 @@ select:focus {
     right: 0;
     height: 70px;
     z-index: 100;
+    flex-wrap: wrap;
 }
 
 .header-left {
@@ -146,14 +147,22 @@ select:focus {
 }
 
 .header-center {
-    flex: 1;
     text-align: center;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 16px;
+    white-space: normal;
+    line-height: 1.4;
+    margin-top: 8px;
+    width: 100%;
+    order: 2;
 }
 
 .header-right {
     text-align: right;
+    order: 3;
+    flex-grow: 1;
+    display: flex;             /* ✅ add this */
+    justify-content: flex-end; /* ✅ required */
+    align-items: center;   
 }
 
 .logout-link {
@@ -168,7 +177,6 @@ select:focus {
     margin-right: 6px;
 }
 
-/* Hamburger Button */
 .hamburger-btn {
     font-size: 24px;
     background: none;
@@ -215,7 +223,6 @@ select:focus {
     background: #1a237e;
 }
 
-/* Sidebar Overlay for Mobile */
 .sidebar-overlay {
     display: none;
 }
@@ -230,7 +237,7 @@ body.sidebar-active .sidebar-overlay {
     width: 100%;
     height: calc(100vh - 70px);
     background: rgba(0, 0, 0, 0.4);
-    z-index: 900;
+    z-index: 999;
 }
 
 /* ===================== MAIN CONTENT ===================== */
@@ -295,7 +302,7 @@ body.sidebar-active .sidebar-overlay {
     position: absolute;
     right: 10px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-100%);
     cursor: pointer;
     color: #000;
 }
@@ -341,7 +348,6 @@ body.sidebar-active .sidebar-overlay {
     background-color: #ffe5e5;
 }
 
-/* Optional form messages */
 .apply-error, .apply-success {
     padding: 10px;
     margin-bottom: 15px;
@@ -350,7 +356,6 @@ body.sidebar-active .sidebar-overlay {
 .apply-error { background: #fdecea; color: #611a15; }
 .apply-success { background: #e6f4ea; color: #1e4620; }
 
-/* Calendar legend (optional) */
 .calendar-legend {
     display: flex;
     gap: 10px;
@@ -369,48 +374,49 @@ body.sidebar-active .sidebar-overlay {
     border: 1px solid #ccc;
 }
 
-/* ===================== RESPONSIVE ===================== */
+
 @media (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        left: -100%;
-        top: 70px;
-        height: calc(100vh - 70px);
-        width: 220px;
+    .main-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: auto;
+        padding: 10px 15px;
+        gap: 0;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .header-center {
+        flex: 2;
+        display: block;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .header-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 1;
+    }
+
+    .app-logo {
+        display: none; /* ❌ hide "Sandeep's App" in mobile */
     }
 
     .hamburger-btn {
         display: inline-block;
-    }
-
-    .main-header {
-        flex-direction: row;
-        align-items: center;
-        padding: 10px 20px;
-        height: auto;
-    }
-
-    .main-content {
-        margin-left: 0;
-        margin-top: 80px;
-        padding: 20px;
-    }
-
-    .auth-container {
-        margin-top: 60px;
-        padding: 25px 20px;
-    }
-
-    body.login-page {
-        align-items: flex-start;
-    }
-}
-
-@media (max-width: 768px) {
-    .hamburger-btn {
+        font-size: 24px;
         background: none;
         border: none;
-        font-size: 24px;
         color: #fff;
         cursor: pointer;
     }
@@ -419,10 +425,10 @@ body.sidebar-active .sidebar-overlay {
         position: fixed;
         top: 70px;
         left: -100%;
-        width: 75%;
+        width: 65%; /* 📏 sidebar width reduce to 65% */
+        transition: left 0.3s ease;
         height: calc(100vh - 70px);
         background: #2e3c99;
-        transition: left 0.3s ease;
         z-index: 1000;
     }
 
@@ -442,17 +448,12 @@ body.sidebar-active .sidebar-overlay {
         width: 100%;
         height: calc(100vh - 70px);
         background: rgba(0, 0, 0, 0.4);
-        z-index: 999;
+        z-index: 900;
     }
 
-    /* Hide header-center and app name (just logout icon) */
-    .header-center,
-    .app-logo {
-        display: none;
-    }
-
-    .header-right {
-        display: flex;
-        justify-content: flex-end;
+    .main-content {
+        margin-left: 0;
+        margin-top: 80px;
+        padding: 20px;
     }
 }
