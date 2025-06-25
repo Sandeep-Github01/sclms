@@ -21,10 +21,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'department_id',
+        'dept_name',
     ];
-
-    // Auto-insert LeaveCredits after user creation
     protected static function booted()
     {
         static::created(function ($user) {
