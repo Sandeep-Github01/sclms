@@ -47,8 +47,13 @@
                 <option value="teacher">Teacher</option>
             </select>
 
-            <label>Department ID:</label>
-            <input type="number" name="department_id" required>
+            <label>Department:</label>
+            <select name="dept_name" required>
+                <option value="">-- Select Department --</option>
+                @foreach ($departments as $dept)
+                    <option value="{{ $dept }}">{{ $dept }}</option>
+                @endforeach
+            </select>
 
             <button type="submit">Register</button>
         </form>
@@ -75,7 +80,7 @@
         setupToggle('togglePassword2', 'password2');
     });
     </script>
-    
+
     </body>
 </html>
 
