@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('leave_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Medical, Casual, etc.
+            $table->string('name');
             $table->integer('max_days');
             $table->boolean('requires_documentation')->default(false);
             $table->timestamps();
