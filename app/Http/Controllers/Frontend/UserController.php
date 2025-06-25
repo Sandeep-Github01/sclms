@@ -11,12 +11,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Department;
 
 class UserController extends Controller
 {
     public function register_show()
     {
-        return view("frontend.user.register"); 
+        $departments = Department::pluck('name'); 
+        return view("frontend.user.register", compact('departments'));
     }
 
     public function login_show()
