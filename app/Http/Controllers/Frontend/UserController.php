@@ -24,23 +24,24 @@ class UserController extends Controller
         return view("frontend.user.login"); 
     }
 
-   public function register(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email', // ✅ corrected table name
-        'password' => 'required|confirmed|min:3',
-        'role' => 'required|string',
-        'department_id' => 'required|integer',
-    ]);
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed|min:3',
+            'role' => 'required|string',
+            'dept_name' => 'required|string',
+        ]);
 
-    $user = new User();
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->password = Hash::make($request->password);
-    $user->role = $request->role;
-    $user->department_id = $request->department_id;
-    $user->save();
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->role = $request->role;
+        $user->dept_name = $request->dept_name;
+        $user->save();
+
 
     $verificationUrl = URL::temporarySignedRoute(
         'frontend.emails.verify-email',
