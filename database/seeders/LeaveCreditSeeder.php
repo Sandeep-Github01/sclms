@@ -11,23 +11,14 @@ class LeaveCreditSeeder extends Seeder
 {
     public function run()
     {
-        // Default remaining_days per type:
-        $defaults = [
-            'Casual'    => 5,
-            'Medical'   => 14,
-            'Emergency' => 7,
-            'Academic'  => 3,
-        ];
-
-        $types = LeaveType::all()->keyBy('name');
+        $types = LeaveType::all();
 
         $users = User::all();
+
         foreach ($users as $user) {
-            foreach ($defaults as $typeName => $days) {
-                if (!isset($types[$typeName])) {
-                    continue;
-                }
-                $type = $types[$typeName];
+            foreach ($types as $type) {
+                $days = $type->max_days ?? 0;
+
                 LeaveCredit::updateOrCreate(
                     [
                         'user_id' => $user->id,
