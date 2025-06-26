@@ -1,12 +1,18 @@
-<aside style="width: 220px; float: left; background: #eeeeee; height: 100vh; padding: 15px;">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="{{ asset('images/admin.png') }}" class="rounded-circle" style="width: 60px; height: 60px;">
-        <div>{{ Auth::user()->name }}</div>
-        <small>Admin</small>
+<aside class="admin-sidebar">
+    <div class="admin-profile">
+        <img src="{{ asset('images/admin.png') }}" class="admin-avatar" alt="Admin Image">
+        <div class="admin-name">{{ Auth::user()->name }}</div>
+        <small class="admin-role">Admin</small>
     </div>
-    <ul style="list-style: none; padding-left: 0;">
+
+    <ul class="admin-nav">
         <li><a href="{{ route('admin.user.index') }}">👥 View Users</a></li>
         <li><a href="#">📊 Reports</a></li>
-        <li><a href="{{ route('logout') }}">🚪 Logout</a></li>
+        <li>
+            <form method="POST" action="{{ route('frontend.user.logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">🚪 Logout</button>
+            </form>
+        </li>
     </ul>
 </aside>
