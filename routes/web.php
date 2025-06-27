@@ -34,8 +34,7 @@ Route::post('/user/logout', [FrontendUser::class, 'logout'])->name('frontend.use
 Route::get('/user/register', [FrontendUser::class, 'register_show'])->name('frontend.user.register');
 Route::post('/user/registerSave', [FrontendUser::class, 'register'])->name('frontend.user.registerSave');
 Route::get('/authenticate/verificationSent', [FrontendUser::class, 'verificationSent'])->name('frontend.emails.verificationSent');
-Route::get('/email_verify/{id}', [FrontendUser::class, 'verify_email'])->name('frontend.emails.verify-email')
-     ->middleware('signed');
+Route::get('/email_verify/{id}', [FrontendUser::class, 'verify_email'])->name('frontend.emails.verify-email')->middleware('signed');
 
 Route::get('send-email', [MailController::class, 'sendEmail']);
 
