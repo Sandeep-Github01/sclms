@@ -45,3 +45,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/leave/{id}', [LeaveController::class, 'show'])->name('leave.show');
     Route::get('/leave/result/{id}', [LeaveController::class, 'result'])->name('leave.result');
 });
+
+
+// Forgot Password form
+Route::get('/password/forgot', [FrontendUser::class, 'showForgotForm'])
+    ->name('frontend.password.request');
+
+// Send reset link email
+Route::post('/password/email', [FrontendUser::class, 'sendResetLinkEmail'])
+    ->name('frontend.password.email');
+
+// Password Reset Form (signed URL)
+Route::get('/password/reset/{token}', [FrontendUser::class, 'showResetForm'])
+    ->name('frontend.password.reset');
+
+// Handle new password
+Route::post('/password/reset', [FrontendUser::class, 'reset'])
+    ->name('frontend.password.update');
