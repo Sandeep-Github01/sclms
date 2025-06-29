@@ -1,3 +1,4 @@
+{{-- etaa include huna parxa --}}
 @extends('frontend.partials.layout')
 
 @section('content')
