@@ -93,60 +93,60 @@ class UserController extends Controller
         return redirect()->route('frontend.user.login')->with('success', 'Logged out successfully.');
     }
 
-public function showForgotPasswordForm()
-{
-    return view('frontend.user.forgot-password');
-}
-
-public function sendResetLinkEmail(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email|exists:users,email',
-    ]);
-
-    $user = User::where('email', $request->email)->first();
-    $token = Str::random(60);
-    $user->remember_token = $token;
-    $user->save();
-
-    $link = route('frontend.user.reset-password', ['token' => $token, 'email' => $user->email]);
-
-    Mail::raw("Click to reset your password:\n\n" . $link, function ($message) use ($user) {
-        $message->to($user->email)->subject('Reset Password');
-    });
-
-    return back()->with('status', 'Reset link sent to your email!');
-}
-
-public function showResetPasswordForm(Request $request, $token)
-{
-    $email = $request->query('email');
-    return view('frontend.user.reset-password', compact('token', 'email'));
-}
-
-public function updatePassword(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email|exists:users,email',
-        'password' => 'required|confirmed|min:3',
-        'token' => 'required'
-    ]);
-
-    $user = User::where('email', $request->email)
-                ->where('remember_token', $request->token)
-                ->first();
-
-    if (!$user) {
-        return back()->withErrors(['email' => 'Invalid token or email.']);
+    public function showForgotPasswordForm()
+    {
+        return view('frontend.user.forgot-password');
     }
 
-    $user->password = Hash::make($request->password);
-    $user->remember_token = null;
-    $user->save();
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
 
-    return redirect()->route('frontend.user.login')
-                     ->with('success', 'Password reset successfully. You can now login.');
-}
+        $user = User::where('email', $request->email)->first();
+        $token = Str::random(60);
+        $user->remember_token = $token;
+        $user->save();
+
+        $link = route('frontend.user.reset-password', ['token' => $token, 'email' => $user->email]);
+
+        Mail::raw("Click to reset your password:\n\n" . $link, function ($message) use ($user) {
+            $message->to($user->email)->subject('Reset Password');
+        });
+
+        return back()->with('status', 'Reset link sent to your email!');
+    }
+
+    public function showResetPasswordForm(Request $request, $token)
+    {
+        $email = $request->query('email');
+        return view('frontend.user.reset-password', compact('token', 'email'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|confirmed|min:3',
+            'token' => 'required'
+        ]);
+
+        $user = User::where('email', $request->email)
+                    ->where('remember_token', $request->token)
+                    ->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Invalid token or email.']);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->remember_token = null;
+        $user->save();
+
+        return redirect()->route('frontend.user.login')
+                        ->with('success', 'Password reset successfully. You can now login.');
+    }
 
 
 
