@@ -1,18 +1,30 @@
-{{-- etaa include huna parxa --}}
-@extends('frontend.partials.layout')
+@include('frontend.partials.header')
 
-@section('content')
-  <h2>Forgot Your Password?</h2>
+<div class="auth-container">
+    <h2>Forgot Your Password?</h2>
 
-  @if(session('status'))
-    <p class="success">{{ session('status') }}</p>
-  @endif
+    @if(session('status'))
+        <p class="success">{{ session('status') }}</p>
+    @endif
 
-  <form method="POST" action="{{ route('frontend.password.email') }}">
-    @csrf
-    <label>Email</label>
-    <input type="email" name="email" required>
-    <button type="submit">Send Reset Link</button>
-  </form>
-@endsection
-`
+    @if($errors->any())
+        <div class="alert">
+            @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('frontend.user.forgot-password.send') }}">
+        @csrf
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <button type="submit">Send Reset Link</button>
+    </form>
+
+    <p style="text-align:center;">
+        <a href="{{ route('frontend.user.login') }}">Back to Login</a>
+    </p>
+</div>
+
+@include('frontend.partials.footer')
