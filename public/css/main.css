@@ -46,6 +46,24 @@ body.login-page {
     margin-bottom: 25px;
 }
 
+.auth-container p.success {
+    background: #e6f4ea;
+    color: #1e4620;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.auth-container .alert p {
+    background: #fdecea;
+    color: #611a15;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+
 label {
     font-weight: 600;
     margin-bottom: 6px;
