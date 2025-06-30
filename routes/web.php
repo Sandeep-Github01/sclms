@@ -47,18 +47,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// Forgot Password form
-Route::get('/password/forgot', [FrontendUser::class, 'showForgotForm'])
-    ->name('frontend.password.request');
+Route::get('/forgot-password', [FrontendUser::class, 'showForgotPasswordForm'])
+    ->name('frontend.user.forgot-password');
 
-// Send reset link email
-Route::post('/password/email', [FrontendUser::class, 'sendResetLinkEmail'])
-    ->name('frontend.password.email');
+Route::post('/forgot-password', [FrontendUser::class, 'sendResetLinkEmail'])
+    ->name('frontend.user.forgot-password.send');
 
-// Password Reset Form (signed URL)
-Route::get('/password/reset/{token}', [FrontendUser::class, 'showResetForm'])
-    ->name('frontend.password.reset');
+Route::get('/reset-password/{token}', [FrontendUser::class, 'showResetPasswordForm'])
+    ->name('frontend.user.reset-password');
 
-// Handle new password
-Route::post('/password/reset', [FrontendUser::class, 'reset'])
-    ->name('frontend.password.update');
+Route::post('/reset-password', [FrontendUser::class, 'updatePassword'])
+    ->name('frontend.user.reset-password.update');
+
