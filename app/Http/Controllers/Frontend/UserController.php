@@ -111,8 +111,9 @@ class UserController extends Controller
 
         $link = route('frontend.user.reset-password', ['token' => $token, 'email' => $user->email]);
 
-        Mail::raw("Click to reset your password:\n\n" . $link, function ($message) use ($user) {
-            $message->to($user->email)->subject('Reset Password');
+        \Mail::send('frontend.emails.reset_password', ['user' => $user, 'resetUrl' => $link], function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Reset Your Password');
         });
 
         return back()->with('status', 'Reset link sent to your email!');
