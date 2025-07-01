@@ -14,19 +14,22 @@ body {
     padding-bottom: 50px; /* prevent footer overlap */
 }
 
-/* ===================== LOGIN PAGE ===================== */
+/* Centering auth pages */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px - 50px);
+    padding-top: 50px;
+}
+
+/* ===================== LOGIN / AUTH PAGES ===================== */
 .auth-container h2,
 .auth-container label,
 .auth-container input,
 .auth-container select,
 .auth-container a {
     color: #333 !important;
-}
-
-body.login-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .auth-container {
@@ -45,24 +48,6 @@ body.login-page {
     text-align: center;
     margin-bottom: 25px;
 }
-
-.auth-container p.success {
-    background: #e6f4ea;
-    color: #1e4620;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.auth-container .alert p {
-    background: #fdecea;
-    color: #611a15;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-}
-
 
 label {
     font-weight: 600;
@@ -140,6 +125,24 @@ select:focus {
     outline: none;
 }
 
+/* ====== Success & Error Messages ====== */
+.auth-container p.success {
+    background: #e6f4ea;
+    color: #1e4620;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.auth-container .alert p {
+    background: #fdecea;
+    color: #611a15;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
 /* ===================== HEADER ===================== */
 .main-header {
     display: flex;
@@ -147,40 +150,34 @@ select:focus {
     align-items: center;
     background: #1a237e;
     color: white;
-    padding: 15px 30px;
+    padding: 0 30px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 70px;
     z-index: 100;
-    flex-wrap: wrap;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
+.header-left,
+.header-center,
+.header-right {
+    flex: 1;
 }
 
 .header-center {
     text-align: center;
     font-size: 16px;
-    white-space: normal;
-    line-height: 1.4;
-    margin-top: 8px;
-    width: 100%;
-    order: 2;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 0;
 }
 
 .header-right {
     text-align: right;
-    order: 3;
-    flex-grow: 1;
-    display: flex;             /* ✅ add this */
-    justify-content: flex-end; /* ✅ required */
-    align-items: center;   
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .logout-link {
@@ -191,6 +188,7 @@ select:focus {
     display: inline-flex;
     align-items: center;
 }
+
 .logout-link i {
     margin-right: 6px;
 }
@@ -244,9 +242,11 @@ select:focus {
 .sidebar-overlay {
     display: none;
 }
+
 body.sidebar-active .sidebar {
     transform: translateX(0);
 }
+
 body.sidebar-active .sidebar-overlay {
     display: block;
     position: fixed;
@@ -263,7 +263,6 @@ body.sidebar-active .sidebar-overlay {
     margin-left: 230px;
     margin-top: 70px;
     padding: 40px 30px;
-    padding-top: 70px;
     background: #f4f7fc;
     min-height: calc(100vh - 70px);
 }
@@ -392,7 +391,7 @@ body.sidebar-active .sidebar-overlay {
     border: 1px solid #ccc;
 }
 
-
+/* ========== RESPONSIVE HEADER & SIDEBAR ========== */
 @media (max-width: 768px) {
     .main-header {
         flex-direction: row;
@@ -427,7 +426,7 @@ body.sidebar-active .sidebar-overlay {
     }
 
     .app-logo {
-        display: none; /* ❌ hide "Sandeep's App" in mobile */
+        display: none;
     }
 
     .hamburger-btn {
@@ -443,7 +442,7 @@ body.sidebar-active .sidebar-overlay {
         position: fixed;
         top: 70px;
         left: -100%;
-        width: 65%; /* 📏 sidebar width reduce to 65% */
+        width: 65%;
         transition: left 0.3s ease;
         height: calc(100vh - 70px);
         background: #2e3c99;

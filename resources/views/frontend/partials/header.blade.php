@@ -30,14 +30,15 @@
     </div>
 
     <div class="header-right">
-        @auth
+    @auth
         <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display: none;">
             @csrf
         </form>
         <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-link">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
-        @endauth
+    @endauth
     </div>
+
 </header>
 
