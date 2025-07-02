@@ -4,13 +4,13 @@
     <div class="auth-container">
         <h2>Reset Password</h2>
 
-        @if(session('status'))
+        @if (session('status'))
             <p class="success">{{ session('status') }}</p>
         @endif
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert">
-                @foreach($errors->all() as $error)
+                @foreach ($errors->all() as $error)
                     <p>{{ $error }}</p>
                 @endforeach
             </div>
@@ -18,10 +18,11 @@
 
         <form method="POST" action="{{ route('frontend.user.reset-password.update') }}">
             @csrf
+
             <input type="hidden" name="token" value="{{ $token }}">
 
             <label>Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" required>
+            <input type="email" name="email" value="{{ $email ?? old('email') }}" required>
 
             <label>New Password</label>
             <input type="password" name="password" required>
