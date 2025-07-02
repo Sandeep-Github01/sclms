@@ -21,8 +21,8 @@
 
             <input type="hidden" name="token" value="{{ $token }}">
 
-            <label>Email</label>
-            <input type="email" name="email" value="{{ $email ?? old('email') }}" required>
+            <label>Email Address</label>
+            <input type="email" name="email" value="{{ $email ?? old('email') }}" required autofocus>
 
             <label>New Password</label>
             <input type="password" name="password" required>

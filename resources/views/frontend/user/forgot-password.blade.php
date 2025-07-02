@@ -2,15 +2,15 @@
 
 <div class="login-page">
     <div class="auth-container">
-        <h2>Forgot Your Password?</h2>
+        <h2>Forgot Password</h2>
 
-        @if(session('status'))
+        @if (session('status'))
             <p class="success">{{ session('status') }}</p>
         @endif
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert">
-                @foreach($errors->all() as $error)
+                @foreach ($errors->all() as $error)
                     <p>{{ $error }}</p>
                 @endforeach
             </div>
@@ -18,9 +18,11 @@
 
         <form method="POST" action="{{ route('frontend.user.forgot-password.send') }}">
             @csrf
-            <label>Email</label>
-            <input type="email" name="email" required>
-            <button type="submit">Send Reset Link</button>
+
+            <label>Email Address</label>
+            <input type="email" name="email" value="{{ old('email') }}" required autofocus>
+
+            <button type="submit">Send Password Reset Link</button>
         </form>
 
         <p style="text-align:center;">

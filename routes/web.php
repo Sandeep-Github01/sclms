@@ -54,8 +54,8 @@ Route::post('/forgot-password', [FrontendUser::class, 'sendResetLinkEmail'])
     ->name('frontend.user.forgot-password.send');
 
 Route::get('/reset-password/{token}', [FrontendUser::class, 'showResetPasswordForm'])
-    ->name('frontend.user.reset-password');
+    ->name('password.reset');  
+
 
 Route::post('/reset-password', [FrontendUser::class, 'updatePassword'])
     ->name('frontend.user.reset-password.update');
-

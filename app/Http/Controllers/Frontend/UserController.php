@@ -119,12 +119,13 @@ class UserController extends Controller
         return view('frontend.user.reset-password', compact('token', 'email'));
     }
 
-    public function updatePassword(Request $request)
+
+   public function updatePassword(Request $request)
     {
         $request->validate([
-            'token' => 'required',
             'email' => 'required|email|exists:users,email',
             'password' => 'required|confirmed|min:3',
+            'token' => 'required'
         ]);
 
         $status = Password::reset(
@@ -142,4 +143,5 @@ class UserController extends Controller
             return back()->withErrors(['email' => __($status)]);
         }
     }
+
 }
