@@ -174,10 +174,10 @@ select:focus {
 }
 
 .header-right {
-    text-align: right;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    height: 100%;
 }
 
 .logout-link {
@@ -187,6 +187,17 @@ select:focus {
     font-size: 18px;
     display: inline-flex;
     align-items: center;
+    padding: 8px 12px; 
+    border-radius: 4px; 
+    transition: background-color 0.2s ease; 
+    width: auto;
+    white-space: nowrap;
+    margin: 0;
+    line-height: 1;
+}
+
+.logout-link:hover {
+    background-color: rgba(255, 255, 255, 0.1); 
 }
 
 .logout-link i {
@@ -201,7 +212,6 @@ select:focus {
     cursor: pointer;
     display: none;
 }
-
 /* ===================== SIDEBAR ===================== */
 .sidebar {
     width: 230px;
@@ -425,6 +435,11 @@ body.sidebar-active .sidebar-overlay {
         flex: 1;
     }
 
+    .logout-link {
+        padding: 6px 8px; /* Smaller padding for mobile */
+        font-size: 16px; /* Slightly smaller font for mobile */
+    }
+
     .app-logo {
         display: none;
     }
@@ -436,41 +451,5 @@ body.sidebar-active .sidebar-overlay {
         border: none;
         color: #fff;
         cursor: pointer;
-    }
-
-    .sidebar {
-        position: fixed;
-        top: 70px;
-        left: -100%;
-        width: 65%;
-        transition: left 0.3s ease;
-        height: calc(100vh - 70px);
-        background: #2e3c99;
-        z-index: 1000;
-    }
-
-    body.sidebar-active .sidebar {
-        left: 0;
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
-
-    body.sidebar-active .sidebar-overlay {
-        display: block;
-        position: fixed;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        height: calc(100vh - 70px);
-        background: rgba(0, 0, 0, 0.4);
-        z-index: 900;
-    }
-
-    .main-content {
-        margin-left: 0;
-        margin-top: 80px;
-        padding: 20px;
     }
 }
