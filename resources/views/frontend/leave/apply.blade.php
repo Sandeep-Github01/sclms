@@ -87,28 +87,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 dayEl.classList.add('fc-day-past');
             }
             
-            // Add smooth hover effects
-            dayEl.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.02)';
-                this.style.zIndex = '10';
-                this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+            // Check if this day has blackout events and add blackout-day class
+            const blackoutEvents = @json($blackouts);
+            const dayString = date.toISOString().split('T')[0];
+            
+            blackoutEvents.forEach(event => {
+                const eventStart = new Date(event.start);
+                const eventEnd = event.end ? new Date(event.end) : eventStart;
+                
+                if (date >= eventStart && date <= eventEnd) {
+                    dayEl.classList.add('blackout-day');
+                }
             });
             
-            dayEl.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-                this.style.zIndex = '1';
-                this.style.boxShadow = 'none';
-            });
+            // Add smooth hover effects only for non-blackout days
+            if (!dayEl.classList.contains('blackout-day')) {
+                dayEl.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.zIndex = '10';
+                    this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+                });
+                
+                dayEl.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.zIndex = '1';
+                    this.style.boxShadow = 'none';
+                });
+            }
         },
         
         // Event styling
         eventDidMount: function(info) {
             const eventEl = info.el;
             
-            // Blackout periods - Dark styling
+            // Blackout periods - Much darker styling
             if (info.event.title.toLowerCase().includes('blackout')) {
-                eventEl.style.background = 'linear-gradient(135deg, #2d3748, #1a202c)';
-                eventEl.style.boxShadow = '0 2px 8px rgba(45, 55, 72, 0.4)';
+                eventEl.style.background = 'linear-gradient(135deg, #1a1a1a, #000000)';
+                eventEl.style.border = '1px solid #333333';
+                eventEl.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.6)';
+                eventEl.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.8)';
             }
             // Holiday events - Red styling  
             else if (info.event.title.toLowerCase().includes('holiday')) {
@@ -120,8 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
             eventEl.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-2px) scale(1.05)';
                 if (info.event.title.toLowerCase().includes('blackout')) {
-                    this.style.boxShadow = '0 6px 20px rgba(45, 55, 72, 0.5)';
-                    this.style.background = 'linear-gradient(135deg, #1a202c, #171923)';
+                    this.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.8)';
+                    this.style.background = 'linear-gradient(135deg, #000000, #1a1a1a)';
                 } else if (info.event.title.toLowerCase().includes('holiday')) {
                     this.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)';
                 }
@@ -130,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function () {
             eventEl.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
                 if (info.event.title.toLowerCase().includes('blackout')) {
-                    this.style.boxShadow = '0 2px 8px rgba(45, 55, 72, 0.4)';
-                    this.style.background = 'linear-gradient(135deg, #2d3748, #1a202c)';
+                    this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.6)';
+                    this.style.background = 'linear-gradient(135deg, #1a1a1a, #000000)';
                 } else if (info.event.title.toLowerCase().includes('holiday')) {
                     this.style.boxShadow = '0 2px 8px rgba(255, 107, 107, 0.3)';
                 }
