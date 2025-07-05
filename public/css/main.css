@@ -509,13 +509,13 @@ body.sidebar-active .sidebar-overlay {
     font-weight: 700;
 }
 
-/* Saturday styling (normal weekend, not holiday) */
+/* Saturday styling (normal weekend, not holiday) - same as regular days */
 .fc .fc-daygrid-day.fc-day-sat {
-    background: linear-gradient(135deg, rgba(160, 174, 192, 0.1), rgba(143, 153, 173, 0.1));
+    background: rgba(255, 255, 255, 0.95);
 }
 
 .fc .fc-daygrid-day.fc-day-sat .fc-daygrid-day-number {
-    color: #4a5568;
+    color: #2d3748;
 }
 
 /* Blackout/Event days */
@@ -527,25 +527,42 @@ body.sidebar-active .sidebar-overlay {
     color: #a0a0a0;
 }
 
-/* Blackout period events - Black styling */
+/* Blackout period events - Much darker styling */
 .fc .fc-event {
-    background: linear-gradient(135deg, #2d3748, #1a202c);
-    border: none;
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    border: 1px solid #333333;
     border-radius: 6px;
     padding: 2px 6px;
     margin: 2px;
     font-size: 11px;
     font-weight: 600;
     color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 2px 8px rgba(45, 55, 72, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
     transition: all 0.3s ease;
 }
 
 .fc .fc-event:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(45, 55, 72, 0.5);
-    background: linear-gradient(135deg, #1a202c, #171923);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    background: linear-gradient(135deg, #000000, #1a1a1a);
+}
+
+/* Blackout period days - Dark background for entire day */
+.fc .fc-daygrid-day.blackout-day {
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a) !important;
+    border: 1px solid #444444 !important;
+}
+
+.fc .fc-daygrid-day.blackout-day .fc-daygrid-day-number {
+    color: #cccccc !important;
+    font-weight: 700 !important;
+}
+
+.fc .fc-daygrid-day.blackout-day:hover {
+    background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+    transform: scale(1.02);
+    border-color: #555555 !important;
 }
 
 /* Header styling */
