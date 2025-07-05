@@ -1,7 +1,10 @@
 <aside class="sidebar">
+    {{-- <div>
+        <span class="app-logo">Sandeep's App 😜</span>
+    </div> --}}
     <div class="profile-section">
-        <img src="{{ asset('images/user.png') }}" class="profile-pic">
         <div>
+            <img src="{{ asset('images/user.png') }}" class="profile-pic">
             <a href="{{ route('frontend.user.profile') }}">{{ Auth::user()->name }}</a>
         </div>
     </div>
