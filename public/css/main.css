@@ -498,15 +498,24 @@ body.sidebar-active .sidebar-overlay {
     50% { opacity: 0.7; transform: scale(1.2); }
 }
 
-/* Weekend styling */
-.fc .fc-daygrid-day.fc-day-sun,
-.fc .fc-daygrid-day.fc-day-sat {
-    background: linear-gradient(135deg, rgba(255, 182, 193, 0.1), rgba(255, 160, 160, 0.1));
+/* Holiday styling (Sundays only) */
+.fc .fc-daygrid-day.fc-day-sun {
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.15), rgba(255, 160, 160, 0.15));
+    border: 1px solid rgba(229, 62, 62, 0.3);
 }
 
-.fc .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number,
-.fc .fc-daygrid-day.fc-day-sat .fc-daygrid-day-number {
+.fc .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number {
     color: #e53e3e;
+    font-weight: 700;
+}
+
+/* Saturday styling (normal weekend, not holiday) */
+.fc .fc-daygrid-day.fc-day-sat {
+    background: linear-gradient(135deg, rgba(160, 174, 192, 0.1), rgba(143, 153, 173, 0.1));
+}
+
+.fc .fc-daygrid-day.fc-day-sat .fc-daygrid-day-number {
+    color: #4a5568;
 }
 
 /* Blackout/Event days */
@@ -518,8 +527,9 @@ body.sidebar-active .sidebar-overlay {
     color: #a0a0a0;
 }
 
+/* Blackout period events - Black styling */
 .fc .fc-event {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    background: linear-gradient(135deg, #2d3748, #1a202c);
     border: none;
     border-radius: 6px;
     padding: 2px 6px;
@@ -527,14 +537,15 @@ body.sidebar-active .sidebar-overlay {
     font-size: 11px;
     font-weight: 600;
     color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 8px rgba(45, 55, 72, 0.4);
     transition: all 0.3s ease;
 }
 
 .fc .fc-event:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    box-shadow: 0 4px 12px rgba(45, 55, 72, 0.5);
+    background: linear-gradient(135deg, #1a202c, #171923);
 }
 
 /* Header styling */
