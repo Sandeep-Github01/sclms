@@ -469,7 +469,6 @@ body.sidebar-active .sidebar-overlay {
     justify-content: center;
 }
 
-/* Today highlighting */
 .fc .fc-day-today {
     background: linear-gradient(135deg, rgba(72, 187, 120, 0.2), rgba(56, 178, 172, 0.2));
     border: 2px solid #48bb78;
@@ -509,7 +508,6 @@ body.sidebar-active .sidebar-overlay {
     font-weight: 700;
 }
 
-/* Saturday styling (normal weekend, not holiday) - same as regular days */
 .fc .fc-daygrid-day.fc-day-sat {
     background: rgba(255, 255, 255, 0.95);
 }
@@ -527,7 +525,7 @@ body.sidebar-active .sidebar-overlay {
     color: #a0a0a0;
 }
 
-/* Blackout period events - Much darker styling */
+/* Blackout period events */
 .fc .fc-event {
     background: linear-gradient(135deg, #1a1a1a, #000000);
     border: 1px solid #333333;
@@ -548,7 +546,7 @@ body.sidebar-active .sidebar-overlay {
     background: linear-gradient(135deg, #000000, #1a1a1a);
 }
 
-/* Blackout period days - Dark background for entire day */
+/* Blackout period days */
 .fc .fc-daygrid-day.blackout-day {
     background: linear-gradient(135deg, #2d2d2d, #1a1a1a) !important;
     border: 1px solid #444444 !important;
@@ -642,7 +640,7 @@ body.sidebar-active .sidebar-overlay {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive improvements */
+/* Responsive calendar */
 @media (max-width: 768px) {
     #calendar {
         padding: 15px;
