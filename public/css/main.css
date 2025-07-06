@@ -11,7 +11,8 @@ body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: linear-gradient(to right, #4facfe, #00f2fe);
     overflow-x: hidden;
-    padding-bottom: 50px; /* prevent footer overlap */
+    padding-bottom: 50px;
+    /* prevent footer overlap */
 }
 
 /* Centering auth pages */
@@ -187,9 +188,9 @@ select:focus {
     font-size: 18px;
     display: inline-flex;
     align-items: center;
-    padding: 8px 12px; 
-    border-radius: 4px; 
-    transition: background-color 0.2s ease; 
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
     width: auto;
     white-space: nowrap;
     margin: 0;
@@ -197,7 +198,7 @@ select:focus {
 }
 
 .logout-link:hover {
-    background-color: rgba(255, 255, 255, 0.1); 
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .logout-link i {
@@ -212,9 +213,10 @@ select:focus {
     cursor: pointer;
     display: none;
 }
+
 /* ===================== SIDEBAR ===================== */
 .sidebar {
-    width: 230px; 
+    width: 230px;
     background: #2e3c99;
     color: white;
     height: calc(100vh - 70px);
@@ -225,16 +227,16 @@ select:focus {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     transition: transform 0.3s ease;
-    transform: translateX(0); 
+    transform: translateX(0);
 }
 
 .main-content {
-    margin-left: 30%; 
+    margin-left: 30%;
     margin-top: 70px;
     padding: 40px 30px;
     background: #f4f7fc;
     min-height: calc(100vh - 70px);
-    transition: margin-left 0.3s ease; 
+    transition: margin-left 0.3s ease;
 }
 
 .sidebar-nav {
@@ -301,7 +303,7 @@ body.sidebar-active .sidebar-overlay {
     background: #fff;
     padding: 25px 30px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .summary-box ul {
@@ -325,16 +327,18 @@ body.sidebar-active .sidebar-overlay {
     padding: 12px 30px;
     text-align: center;
     z-index: 999;
-    box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* ===================== PASSWORD TOGGLE ===================== */
 .password-wrapper {
     position: relative;
 }
+
 .password-wrapper input {
     padding-right: 30px;
 }
+
 .password-wrapper .toggle-password {
     position: absolute;
     right: 10px;
@@ -361,9 +365,11 @@ body.sidebar-active .sidebar-overlay {
     .apply-container {
         flex-direction: row;
     }
+
     .calendar-col {
         width: 40%;
     }
+
     .form-col {
         width: 60%;
     }
@@ -493,8 +499,17 @@ body.sidebar-active .sidebar-overlay {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.2); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
 }
 
 /* Holiday styling (Sundays only) */
@@ -591,7 +606,8 @@ body.sidebar-active .sidebar-overlay {
 }
 
 /* Form and Error Styling */
-.apply-error, .apply-success {
+.apply-error,
+.apply-success {
     padding: 15px 20px;
     margin-bottom: 20px;
     border-radius: 12px;
@@ -600,12 +616,12 @@ body.sidebar-active .sidebar-overlay {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.apply-error { 
+.apply-error {
     background: linear-gradient(135deg, #fed7d7, #feb2b2);
     color: #742a2a;
 }
 
-.apply-success { 
+.apply-success {
     background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
     color: #22543d;
 }
@@ -645,15 +661,15 @@ body.sidebar-active .sidebar-overlay {
     #calendar {
         padding: 15px;
     }
-    
+
     .fc .fc-toolbar {
         padding: 10px 15px;
     }
-    
+
     .fc .fc-toolbar-title {
         font-size: 1.4rem;
     }
-    
+
     .fc .fc-button {
         padding: 6px 12px;
         font-size: 14px;
@@ -696,7 +712,7 @@ body.sidebar-active .sidebar-overlay {
 
     .logout-link {
         padding: 6px 8px;
-        font-size: 16px; 
+        font-size: 16px;
     }
 
     .app-logo {
@@ -714,31 +730,31 @@ body.sidebar-active .sidebar-overlay {
 
     /* ===================== SIDEBAR ===================== */
     .sidebar {
-        width: 30%; 
-        transform: translateX(-100%); 
+        width: 30%;
+        transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
 
     body.sidebar-active .sidebar {
-        transform: translateX(0); 
+        transform: translateX(0);
     }
 
     /* ===================== MAIN CONTENT - FIXED ===================== */
     .main-content {
         margin-left: 0;
         padding: 20px;
-        width: 100%; 
-        transition: all 0.3s ease; 
+        width: 100%;
+        transition: all 0.3s ease;
         position: relative;
     }
 
     body.sidebar-active .main-content {
-        margin-left: 30%; 
-        width: 70%; 
+        margin-left: 30%;
+        width: 70%;
         transform: translateX(0);
     }
 
     body.sidebar-active .sidebar-overlay {
-        display: none; /
+        display: none;/
     }
 }

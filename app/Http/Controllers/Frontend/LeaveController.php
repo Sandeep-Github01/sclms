@@ -42,7 +42,7 @@ class LeaveController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'nullable|string',
-            'document' => 'nullable|file|max:2048', 
+            'document' => 'nullable|file|max:2048',
         ]);
 
         $leaveType = LeaveType::findOrFail($request->type_id);
@@ -76,8 +76,7 @@ class LeaveController extends Controller
         if (strtolower($leaveType->name) === 'emergency') {
             $isManual = true;
             $notes[] = 'Emergency leave, manual review required.';
-        }
-        elseif (isset($leaveType->max_days) && $days > $leaveType->max_days) {
+        } elseif (isset($leaveType->max_days) && $days > $leaveType->max_days) {
             $isManual = true;
             $notes[] = "Duration {$days} days exceeds max allowed {$leaveType->max_days}, manual review.";
         }
@@ -93,14 +92,14 @@ class LeaveController extends Controller
             // e.g., Mail::to($adminEmail)->send(...)
 
             return redirect()->route('leave.result', $leave->id)
-                             ->with('info', 'Leave request submitted for manual review.');
+                ->with('info', 'Leave request submitted for manual review.');
         }
 
         $score = 0;
 
         $credit = LeaveCredit::where('user_id', $user->id)
-                              ->where('type_id', $leaveType->id)
-                              ->first();
+            ->where('type_id', $leaveType->id)
+            ->first();
         if ($credit) {
             if ($credit->remaining_days >= $days) {
                 $score += 2;
@@ -114,9 +113,9 @@ class LeaveController extends Controller
         }
 
         $recentCount = LeaveRequest::where('user_id', $user->id)
-                            ->where('status', 'approved')
-                            ->whereBetween('start_date', [Carbon::now()->subDays(10)->toDateString(), Carbon::now()->toDateString()])
-                            ->count();
+            ->where('status', 'approved')
+            ->whereBetween('start_date', [Carbon::now()->subDays(10)->toDateString(), Carbon::now()->toDateString()])
+            ->count();
         if ($recentCount === 0) {
             $score += 2;
         } else {
@@ -134,42 +133,42 @@ class LeaveController extends Controller
                     $data['status_note'] = 'Medical leave requires document.';
                     $leave = LeaveRequest::create($data);
                     return redirect()->route('leave.result', $leave->id)
-                                     ->with('error', 'Medical leave: document required.');
+                        ->with('error', 'Medical leave: document required.');
                 }
             }
         }
 
-        $overlapBlackout = BlackoutPeriod::where(function($q) use ($start, $end) {
+        $overlapBlackout = BlackoutPeriod::where(function ($q) use ($start, $end) {
             $q->whereBetween('start_date', [$start->toDateString(), $end->toDateString()])
-              ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
-              ->orWhere(function($q2) use ($start, $end) {
-                  $q2->where('start_date', '<=', $start->toDateString())
-                     ->where('end_date', '>=', $end->toDateString());
-              });
+                ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
+                ->orWhere(function ($q2) use ($start, $end) {
+                    $q2->where('start_date', '<=', $start->toDateString())
+                        ->where('end_date', '>=', $end->toDateString());
+                });
         })->exists();
         if ($overlapBlackout) {
             $data['status'] = 'rejected';
             $data['status_note'] = 'Leave falls in blackout period.';
             $leave = LeaveRequest::create($data);
             return redirect()->route('leave.result', $leave->id)
-                             ->with('error', 'Requested dates fall in blackout period.');
+                ->with('error', 'Requested dates fall in blackout period.');
         }
 
-        $weekday = $start->format('l'); 
-        if (in_array($weekday, ['Monday','Friday'])) {
+        $weekday = $start->format('l');
+        if (in_array($weekday, ['Monday', 'Friday'])) {
             $score -= 1;
             $notes[] = "Start on {$weekday}, suspicious.";
         }
 
         $conflicts = LeaveRequest::where('status', 'approved')
             ->where('department_id', $user->department_id)
-            ->where(function($q) use ($start, $end) {
+            ->where(function ($q) use ($start, $end) {
                 $q->whereBetween('start_date', [$start->toDateString(), $end->toDateString()])
-                  ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
-                  ->orWhere(function ($q2) use ($start, $end) {
-                      $q2->where('start_date', '<=', $start->toDateString())
-                         ->where('end_date', '>=', $end->toDateString());
-                  });
+                    ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
+                    ->orWhere(function ($q2) use ($start, $end) {
+                        $q2->where('start_date', '<=', $start->toDateString())
+                            ->where('end_date', '>=', $end->toDateString());
+                    });
             })
             ->count();
         if ($conflicts >= 2) {
@@ -177,7 +176,7 @@ class LeaveController extends Controller
             $data['status_note'] = 'Departmental collision: too many on leave.';
             $leave = LeaveRequest::create($data);
             return redirect()->route('leave.result', $leave->id)
-                             ->with('error', 'Too many colleagues already on leave.');
+                ->with('error', 'Too many colleagues already on leave.');
         } elseif ($conflicts === 1) {
             $score -= 1;
             $notes[] = 'One colleague already on leave.';
@@ -188,10 +187,10 @@ class LeaveController extends Controller
         $data['final_score'] = $score;
         if ($score >= 2) {
             $data['status'] = 'approved';
-            $data['status_note'] = 'Auto-approved with score '.$score.'.';
+            $data['status_note'] = 'Auto-approved with score ' . $score . '.';
         } else {
             $data['status'] = 'rejected';
-            $data['status_note'] = 'Auto-rejected with score '.$score.'.';
+            $data['status_note'] = 'Auto-rejected with score ' . $score . '.';
         }
 
         $leave = LeaveRequest::create($data);
@@ -203,11 +202,11 @@ class LeaveController extends Controller
 
         if ($data['status'] === 'approved') {
             return redirect()->route('leave.result', $leave->id)
-                             ->with('success', 'Leave auto-approved.');
+                ->with('success', 'Leave auto-approved.');
         } else {
             $reasonText = implode(' ', $notes);
             return redirect()->route('leave.result', $leave->id)
-                             ->with('error', 'Leave auto-rejected. Reason: '.$data['status_note']);
+                ->with('error', 'Leave auto-rejected. Reason: ' . $data['status_note']);
         }
     }
 
@@ -215,8 +214,8 @@ class LeaveController extends Controller
     {
         $user = Auth::user();
         $leaves = LeaveRequest::where('user_id', $user->id)
-                    ->orderBy('start_date','desc')
-                    ->get();
+            ->orderBy('start_date', 'desc')
+            ->get();
         return view('frontend.leave.list', compact('leaves'));
     }
 
