@@ -143,4 +143,10 @@ class UserController extends Controller
             return back()->withErrors(['email' => __($status)]);
         }
     }
+    public function profile()
+    {
+        $user = Auth::user();
+
+        return view('frontend.user.profile', compact('user'));
+    }
 }
