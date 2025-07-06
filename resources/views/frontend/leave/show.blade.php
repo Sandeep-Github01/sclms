@@ -15,7 +15,7 @@
         <p><strong>Note:</strong> {{ $leave->status_note }}</p>
     @endif
     @if($leave->file_path)
-        <p><a href="{{ asset('storage/'.$leave->file_path) }}" target="_blank">View Document</a></p>
+        <p><a href="{{ asset('storage/' . $leave->file_path) }}" target="_blank">View Document</a></p>
     @endif
 
     <p><a href="{{ route('leave.list') }}">Back to My Leaves</a></p>

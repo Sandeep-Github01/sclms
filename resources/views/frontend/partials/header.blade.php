@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Smart College Leave Management System</title>
@@ -16,29 +17,30 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 </head>
-<body >
-<header class="main-header">
-    <div class="header-left">
-        <button id="sidebarToggle" class="hamburger-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-        <span class="app-logo">Sandeep's App 😜</span>
-    </div>
 
-    <div class="header-center">
-        SMART COLLEGE LEAVE MANAGEMENT SYSTEM
-    </div>
+<body>
+    <header class="main-header">
+        <div class="header-left">
+            <button id="sidebarToggle" class="hamburger-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <span class="app-logo">Sandeep's App 😜</span>
+        </div>
 
-    <div class="header-right">
-        @auth
-            <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display: none;">
-                @csrf
-            </form>
-            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-link">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        @endauth
-    </div>
+        <div class="header-center">
+            SMART COLLEGE LEAVE MANAGEMENT SYSTEM
+        </div>
 
-</header>
+        <div class="header-right">
+            @auth
+                <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display: none;">
+                    @csrf
+                </form>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="logout-link">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            @endauth
+        </div>
 
+    </header>

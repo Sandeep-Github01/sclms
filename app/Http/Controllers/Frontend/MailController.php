@@ -10,8 +10,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\URL;
 
 class MailController extends Controller
-{    
-/*
+{
+    /*
     public function sendVerificationMail($userId)
     {
         $user = User::findOrFail($userId);

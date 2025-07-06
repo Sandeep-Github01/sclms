@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function login_show()
     {
-        return view("frontend.user.login"); 
+        return view("frontend.user.login");
     }
     public function login(Request $request)
     {
@@ -27,21 +27,21 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-    
+
         $user = User::where('email', $request->email)->first();
-    
+
         if ($user && Hash::check($request->password, $user->password)) {
             if ($user->email_verified_at) {
                 Auth::login($user);
                 return redirect()->route('frontend.user.dashboard');
-            }    
+            }
             return back()->withErrors(['email' => 'Please verify your email before logging in.']);
-        }    
+        }
         return back()->withErrors(['email' => 'Invalid credentials.']);
     }
     public function register_show()
     {
-        $departments = Department::pluck('name'); 
+        $departments = Department::pluck('name');
         return view("frontend.user.register", compact('departments'));
     }
     public function register(Request $request)
@@ -74,13 +74,13 @@ class UserController extends Controller
     public function verificationSent()
     {
         return view('frontend.emails.verificationSent');
-    }    
+    }
     public function verify_email(Request $request, $id)
     {
         if (! $request->hasValidSignature()) {
             abort(401, 'Invalid or expired verification link.');
         }
-        
+
         $user = User::findOrFail($id);
         if (! $user->email_verified_at) {
             $user->email_verified_at = now();
@@ -120,7 +120,7 @@ class UserController extends Controller
     }
 
 
-   public function updatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
@@ -143,5 +143,4 @@ class UserController extends Controller
             return back()->withErrors(['email' => __($status)]);
         }
     }
-
 }

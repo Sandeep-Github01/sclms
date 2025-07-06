@@ -19,13 +19,13 @@
             </thead>
             <tbody>
                 @foreach($leaves as $lv)
-                <tr>
-                    <td>{{ $lv->leaveType->name }}</td>
-                    <td>{{ $lv->start_date }}</td>
-                    <td>{{ $lv->end_date }}</td>
-                    <td>{{ ucfirst($lv->status) }}</td>
-                    <td><a href="{{ route('leave.show', $lv->id) }}">View</a></td>
-                </tr>
+                    <tr>
+                        <td>{{ $lv->leaveType->name }}</td>
+                        <td>{{ $lv->start_date }}</td>
+                        <td>{{ $lv->end_date }}</td>
+                        <td>{{ ucfirst($lv->status) }}</td>
+                        <td><a href="{{ route('leave.show', $lv->id) }}">View</a></td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
