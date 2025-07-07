@@ -23,30 +23,42 @@ class UserController extends Controller
     }
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            if ($user->email_verified_at) {
-                Auth::login($user);
+            $user = Auth::user();
 
-                // Check for profile completeness
-                if ($this->isProfileIncomplete($user)) {
-                    return redirect()->route('frontend.user.profile.edit')
-                        ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
-                }
-
-                return redirect()->route('frontend.user.dashboard');
+            if (!$user->email_verified_at) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Please verify your email before logging in.'
+                ]);
             }
 
-            return back()->withErrors(['email' => 'Please verify your email before logging in.']);
+            if ($user->status !== 'Active') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is inactive. Please contact support.'
+                ]);
+            }
+
+            if ($user->isProfileIncomplete()) {
+                return redirect()->route('frontend.user.profile.edit')
+                    ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
+            }
+
+
+            return redirect()->route('frontend.user.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        return back()->withErrors([
+            'email' => 'Invalid credentials.',
+        ]);
     }
 
 
