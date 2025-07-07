@@ -23,6 +23,7 @@ class User extends Authenticatable
         'role',
         'dept_name',
     ];
+
     protected static function booted()
     {
         static::created(function ($user) {
@@ -57,5 +58,44 @@ class User extends Authenticatable
     public function approvals()
     {
         return $this->hasMany(Approval::class, 'approved_by');
+    }
+
+    /**
+     * Check if the user's profile is incomplete based on required fields.
+     *
+     * @return bool
+     */
+    public function isProfileIncomplete()
+    {
+        if (!$this->is_profile_complete || $this->profile_status !== 'Approved') {
+            return true;
+        }
+
+        $requiredFields = [
+            'name',
+            'email',
+            'image',
+            'dept_name',
+            'role',
+            'dob',
+            'phone',
+            'address',
+            'gender',
+            'status',
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($this->{$field})) {
+                return true;
+            }
+        }
+
+        if ($this->role === 'student') {
+            if (empty($this->batch) || empty($this->semester)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
