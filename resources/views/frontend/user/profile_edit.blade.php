@@ -5,11 +5,13 @@
     <h2>Update Profile</h2>
 
     @if(session('popup'))
-        <script>alert('Your profile will be updated after admin approves.');</script>
+        <script>
+            alert('Your profile will be updated after admin approves.');
+        </script>
     @endif
 
     @if ($errors->any())
-        <div class="alert">
+        <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
             @foreach ($errors->all() as $error)
                 <p>{{ $error }}</p>
             @endforeach
@@ -19,54 +21,86 @@
     <form action="{{ route('frontend.user.profileUpdate') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <label>Name:</label>
-        <input type="text" name="name" value="{{ old('name', $user->name) }}">
+        <div style="margin-bottom: 10px;">
+            <label>Name:</label><br>
+            <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
+        </div>
 
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ old('email', $user->email) }}">
+        <div style="margin-bottom: 10px;">
+            <label>Email:</label><br>
+            <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
+        </div>
 
-        <label>Image:</label>
-        <input type="file" name="image">
+        <div style="margin-bottom: 10px;">
+            <label>Current Image:</label><br>
+            @if($user->image)
+                <img src="{{ asset('uploads/users/' . $user->image) }}" alt="Profile Image" width="120" style="display: block; margin-bottom: 5px;">
+            @else
+                <p>No image uploaded yet.</p>
+            @endif
+            <label>Change Image:</label><br>
+            <input type="file" name="image" accept="image/*">
+        </div>
 
-        <label>DOB:</label>
-        <input type="date" name="dob" value="{{ old('dob', $user->dob) }}">
+        <div style="margin-bottom: 10px;">
+            <label>DOB:</label><br>
+            <input type="date" name="dob" value="{{ old('dob', $user->dob) }}" required>
+        </div>
 
-        <label>Address:</label>
-        <input type="text" name="address" value="{{ old('address', $user->address) }}">
+        <div style="margin-bottom: 10px;">
+            <label>Address:</label><br>
+            <input type="text" name="address" value="{{ old('address', $user->address) }}" required>
+        </div>
 
-        <label>Gender:</label>
-        <select name="gender">
-            <option value="">Select Gender</option>
-            <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
-            <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
-        </select>
+        <div style="margin-bottom: 10px;">
+            <label>Gender:</label><br>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male" {{ strtolower($user->gender) == 'male' ? 'selected' : '' }}>Male</option>
+                <option value="female" {{ strtolower($user->gender) == 'female' ? 'selected' : '' }}>Female</option>
+                <option value="other" {{ strtolower($user->gender) == 'other' ? 'selected' : '' }}>Other</option>
+            </select>
+        </div>
 
-        <label>Status:</label>
-        <select name="status">
-            <option value="Active" {{ $user->status == 'Active' ? 'selected' : '' }}>Active</option>
-            <option value="Inactive" {{ $user->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-        </select>
+        <div style="margin-bottom: 10px;">
+            <label>Status:</label><br>
+            <select name="status" required>
+                <option value="">Select Status</option>
+                <option value="Active" {{ $user->status == 'Active' ? 'selected' : '' }}>Active</option>
+                <option value="Inactive" {{ $user->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+        </div>
 
-        <label>Department:</label>
-        <select name="dept_name">
-            <option value="">-- Select Department --</option>
-            @foreach($departments as $dept)
-                <option value="{{ $dept }}" {{ $user->dept_name == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-            @endforeach
-        </select>
+        <div style="margin-bottom: 10px;">
+            <label>Department:</label><br>
+            <select name="dept_name" required>
+                <option value="">-- Select Department --</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept }}" {{ $user->dept_name == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                @endforeach
+            </select>
+        </div>
 
         @if($user->role == 'student')
-            <label>Batch:</label>
-            <input type="text" name="batch" value="{{ old('batch', $user->batch) }}">
+            <div style="margin-bottom: 10px;">
+                <label>Batch:</label><br>
+                <input type="text" name="batch" value="{{ old('batch', $user->batch) }}" required>
+            </div>
 
-            <label>Semester:</label>
-            <input type="text" name="semester" value="{{ old('semester', $user->semester) }}">
+            <div style="margin-bottom: 10px;">
+                <label>Semester:</label><br>
+                <input type="text" name="semester" value="{{ old('semester', $user->semester) }}" required>
+            </div>
         @endif
 
-        <label>Phone:</label>
-        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}">
+        <div style="margin-bottom: 10px;">
+            <label>Phone:</label><br>
+            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" required maxlength="10">
+        </div>
 
-        <button type="submit">Update Profile</button>
+        <button type="submit" style="background-color: #007bff; color: #fff; padding: 10px 15px; border: none; border-radius: 4px;">
+            Update Profile
+        </button>
     </form>
 </div>
 
