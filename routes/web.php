@@ -24,6 +24,8 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
 Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/profile', [FrontendUser::class, 'profile'])->name('frontend.user.profile');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('frontend.user.dashboard');
+    Route::get('/profile/edit', [FrontendUser::class, 'editProfile'])->name('frontend.user.profileEdit');
+    Route::post('/profile/update', [FrontendUser::class, 'updateProfile'])->name('frontend.user.profileUpdate');
 });
 
 Route::get('/', [FrontendUser::class, 'login_show'])->name('login');
