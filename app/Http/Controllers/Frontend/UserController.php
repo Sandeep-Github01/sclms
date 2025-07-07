@@ -33,12 +33,23 @@ class UserController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             if ($user->email_verified_at) {
                 Auth::login($user);
+
+                // Check for profile completeness
+                if ($this->isProfileIncomplete($user)) {
+                    return redirect()->route('frontend.user.profile.edit')
+                        ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
+                }
+
                 return redirect()->route('frontend.user.dashboard');
             }
+
             return back()->withErrors(['email' => 'Please verify your email before logging in.']);
         }
+
         return back()->withErrors(['email' => 'Invalid credentials.']);
     }
+
+
     public function register_show()
     {
         $departments = Department::pluck('name');
@@ -148,5 +159,58 @@ class UserController extends Controller
         $user = Auth::user();
 
         return view('frontend.user.profile', compact('user'));
+    }
+    public function editProfile()
+    {
+        $user = Auth::user();
+
+        $departments = Department::pluck('name');
+
+        return view('frontend.user.profile_edit', compact('user', 'departments'));
+    }
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'dept_name' => 'required|string',
+            'role' => 'required|in:student,teacher',
+            'dob' => 'required|date|after:1950-01-01',
+            'phone' => 'required|string|max:10',
+            'address' => 'required|string',
+            'gender' => 'required|in:male,female,other',
+            'status' => 'required|in:Active,Inactive',
+            'batch' => $request->role === 'student' ? 'required|string' : 'nullable',
+            'semester' => $request->role === 'student' ? 'required|string' : 'nullable',
+        ]);
+
+        // Handle file upload
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('uploads/users'), $imageName);
+            $data['image'] = $imageName;
+        }
+
+        $data['is_profile_complete'] = true;
+        $data['profile_status'] = 'Pending';
+
+        $user->update($data);
+
+        // Notify Admin
+        $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
+
+        \Mail::raw(
+            "User {$user->name} has updated their profile and requires approval.",
+            function ($message) use ($adminEmails) {
+                $message->subject('New User Profile Update')
+                    ->to($adminEmails);
+            }
+        );
+
+        return redirect()->route('frontend.user.dashboard')
+            ->with('success', 'Profile submitted for approval.');
     }
 }
