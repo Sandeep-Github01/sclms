@@ -19,9 +19,18 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
-        'role',
+        'image',
         'dept_name',
+        'role',
+        'dob',
+        'phone',
+        'address',
+        'gender',
+        'status',
+        'batch',
+        'semester',
+        'is_profile_complete',
+        'profile_status',
     ];
 
     protected static function booted()
