@@ -48,7 +48,7 @@ class UserController extends Controller
             }
 
             if ($user->isProfileIncomplete()) {
-                return redirect()->route('frontend.user.profile.edit')
+                return redirect()->route('frontend.user.profileEdit')
                     ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
             }
 

@@ -1,7 +1,7 @@
 @include('frontend.partials.header')
 @include('frontend.partials.sidebar')
 
-<div style="margin-left: 230px; padding: 20px;">
+<div class="main-content">
     <h2>Update Profile</h2>
 
     @if(session('popup'))
@@ -34,7 +34,8 @@
         <div style="margin-bottom: 10px;">
             <label>Current Image:</label><br>
             @if($user->image)
-                <img src="{{ asset('uploads/users/' . $user->image) }}" alt="Profile Image" width="120" style="display: block; margin-bottom: 5px;">
+                <img src="{{ asset('uploads/users/' . $user->image) }}" alt="Profile Image" width="120"
+                    style="display: block; margin-bottom: 5px;">
             @else
                 <p>No image uploaded yet.</p>
             @endif
@@ -72,6 +73,16 @@
         </div>
 
         <div style="margin-bottom: 10px;">
+        <label>Role:</label>
+        <select name="role">
+            <option value="">-- Select Role --</option>
+            <option value="student" {{ old('role', $user->role) == 'student' ? 'selected' : '' }}>Student</option>
+            <option value="teacher" {{ old('role', $user->role) == 'teacher' ? 'selected' : '' }}>Teacher</option>
+        </select>
+        </div>
+
+
+        <div style="margin-bottom: 10px;">
             <label>Department:</label><br>
             <select name="dept_name" required>
                 <option value="">-- Select Department --</option>
@@ -98,7 +109,8 @@
             <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" required maxlength="10">
         </div>
 
-        <button type="submit" style="background-color: #007bff; color: #fff; padding: 10px 15px; border: none; border-radius: 4px;">
+        <button type="submit"
+            style="background-color: #007bff; color: #fff; padding: 10px 15px; border: none; border-radius: 4px;">
             Update Profile
         </button>
     </form>
