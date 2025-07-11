@@ -13,7 +13,7 @@ class AdminProfileController extends Controller
     {
         $admin = Auth::guard('admin')->user();
 
-        return view('backend.profile.index', compact('admin'));
+        return view('backend.admin.profile', compact('admin'));
     }
 
     public function update(Request $request)

@@ -12,7 +12,7 @@ class AdminAuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('backend.auth.login');
+        return view('backend.admin.login');
     }
 
     public function login(Request $request)
@@ -25,7 +25,7 @@ class AdminAuthController extends Controller
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('backend.dashboard'));
         }
 
         return back()->withErrors([
@@ -40,6 +40,6 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('backend.admin.login');
     }
 }

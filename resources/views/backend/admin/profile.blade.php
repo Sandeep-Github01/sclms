@@ -1,38 +1,41 @@
 @include('backend.partials.header')
 @include('backend.partials.sidebar')
 
-<div class="main-content">
+<div class="content">
+    <h1>Admin Profile</h1>
 
-    <div class="profile-container">
-        <h2 class="profile-heading">Admin Profile</h2>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-        <div class="profile-card">
-            <div class="profile-image-section">
-                @if($admin->image)
-                    <img src="{{ asset('uploads/admins/' . $admin->image) }}" alt="Profile Image" class="profile-image">
-                @else
-                    <div class="profile-placeholder">No Image</div>
-                @endif
-            </div>
+    <form action="{{ route('admin.profile.update') }}" method="POST">
+        @csrf
 
-            <ul class="profile-details">
-                <li><span class="profile-label">Name:</span> {{ $admin->name }}</li>
-                <li><span class="profile-label">Email:</span> {{ $admin->email }}</li>
-                <li><span class="profile-label">Role:</span> {{ ucfirst($admin->role) }}</li>
-                <li><span class="profile-label">Department:</span> {{ $admin->department->name ?? $admin->dept_name ?? 'N/A' }}</li>
-                <li><span class="profile-label">DOB:</span> {{ $admin->dob }}</li>
-                <li><span class="profile-label">Address:</span> {{ $admin->address }}</li>
-                <li><span class="profile-label">Gender:</span> {{ ucfirst($admin->gender) }}</li>
-                <li><span class="profile-label">Status:</span> {{ $admin->status }}</li>
-                <li><span class="profile-label">Phone:</span> {{ $admin->phone }}</li>
-            </ul>
-
-            <div class="profile-actions">
-                <a href="{{ route('backend.admin.profileEdit') }}" class="profile-edit-btn">Edit Profile</a>
-            </div>
+        <div>
+            <label>Name</label>
+            <input type="text" name="name" value="{{ old('name', $admin->name) }}">
+            @error('name') <small>{{ $message }}</small> @enderror
         </div>
-    </div>
 
+        <div>
+            <label>Email</label>
+            <input type="email" name="email" value="{{ old('email', $admin->email) }}">
+            @error('email') <small>{{ $message }}</small> @enderror
+        </div>
+
+        <div>
+            <label>New Password</label>
+            <input type="password" name="password">
+            @error('password') <small>{{ $message }}</small> @enderror
+        </div>
+
+        <div>
+            <label>Confirm Password</label>
+            <input type="password" name="password_confirmation">
+        </div>
+
+        <button type="submit">Update Profile</button>
+    </form>
 </div>
 
 @include('backend.partials.footer')
