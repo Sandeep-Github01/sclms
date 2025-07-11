@@ -863,6 +863,7 @@ body.sidebar-active .sidebar-overlay {
         display: none;/
     }
 }
+
 /* ===== User UI Styling (Table + Detail View) ===== */
 
 /* Section Title */
@@ -901,6 +902,8 @@ body.sidebar-active .sidebar-overlay {
     padding: 12px 15px;
     border-bottom: 1px solid #e0e0e0;
     text-align: left;
+    vertical-align: middle;
+    
 }
 
 .user-table th {
@@ -918,13 +921,14 @@ body.sidebar-active .sidebar-overlay {
 .table-actions {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: center;    
 }
 
-/* Reset form margins inside table actions */
+/* Reset form margins and make it transparent to flexbox */
 .table-actions form {
     margin: 0;
     padding: 0;
+    display: contents;
 }
 
 .btn-table-view,
@@ -947,6 +951,7 @@ body.sidebar-active .sidebar-overlay {
 .btn-table-view {
     background-color: #4facfe;
     color: white;
+    margin-top: 0;
 }
 
 .btn-table-view:hover {
