@@ -33,13 +33,13 @@ class AdminAuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request)
-    {
-        Auth::guard('admin')->logout();
+public function logout(Request $request)
+{
+    Auth::guard('admin')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    return redirect()->route('admin.login'); 
+}
 
-        return redirect()->route('backend.admin.login');
-    }
 }

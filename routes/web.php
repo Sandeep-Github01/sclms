@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Backend\UserController as AdminUser;
+use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AdminAuthController;
 use App\Http\Controllers\Backend\AdminDashboardController;
 use App\Http\Controllers\Backend\AdminProfileController;
@@ -14,22 +14,23 @@ use App\Http\Controllers\Frontend\LeaveController;
 use App\Http\Controllers\Frontend\DashboardController;
 
 // Backend Routes
-// Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-//     Route::get('/user', [AdminUser::class, 'index'])->name('admin.user.index');
-//     Route::get('/user/{id}', [AdminUser::class, 'show'])->name('admin.user.show');
-//     Route::delete('/user/{id}', [AdminUser::class, 'destroy'])->name('admin.user.destroy');
-// });
+// Admin Routes
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
     Route::middleware(['auth:admin'])->group(function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('backend.dashboard');
         Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
         Route::post('/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+
+        Route::get('/user', [UserController::class, 'index'])->name('admin.user.index');
+        Route::get('/user/{id}', [UserController::class, 'show'])->name('admin.user.show');
+        Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
     });
 });
+
 
 
 

@@ -1,7 +1,7 @@
 @include('backend.partials.header')
 @include('backend.partials.sidebar')
 
-<div style="margin-left: 230px; padding: 20px;">
+<div class="main-content">
     <h2>All Users (Admin View Only)</h2>
 
     {{-- Students Group --}}
