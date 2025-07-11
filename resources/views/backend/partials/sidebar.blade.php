@@ -1,18 +1,16 @@
-<aside class="admin-sidebar">
-    <div class="admin-profile">
-        <img src="{{ asset('images/admin.png') }}" class="admin-avatar" alt="Admin Image">
-        <div class="admin-name">{{ Auth::user()->name }}</div>
-        <small class="admin-role">Admin</small>
+<aside class="sidebar">
+    <div class="profile-section">
+        <div>
+            <img src="{{ asset('images/user.png') }}" class="profile-pic">
+            <a href="{{ route('admin.profile') }}">{{ Auth::guard('admin')->user()->name }}</a>
+        </div>
     </div>
-
-    <ul class="admin-nav">
-        <li><a href="{{ route('admin.user.index') }}">👥 View Users</a></li>
-        <li><a href="#">📊 Reports</a></li>
-        <li>
-            <form method="POST" action="{{ route('frontend.user.logout') }}">
-                @csrf
-                <button type="submit" class="logout-button">🚪 Logout</button>
-            </form>
-        </li>
+    <ul class="sidebar-nav">
+        <li><a href="{{ route('backend.dashboard') }}">🏠 Dashboard</a></li>
+        <li><a href="{{ route('admin.user.index') }}">👥 Manage Users</a></li>
+        <li><a href="{{ route('admin.profile') }}">⚙️ Profile</a></li>
     </ul>
 </aside>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>

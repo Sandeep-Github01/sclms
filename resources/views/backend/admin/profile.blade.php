@@ -1,40 +1,46 @@
 @include('backend.partials.header')
 @include('backend.partials.sidebar')
 
-<div class="content">
-    <h1>Admin Profile</h1>
+<div class="main-content">
+    <h2>My Profile</h2>
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    @if(session('success'))
+        <p class="apply-success">{{ session('success') }}</p>
     @endif
 
-    <form action="{{ route('admin.profile.update') }}" method="POST">
+    <form method="POST" action="{{ route('admin.profile.update') }}">
         @csrf
 
-        <div>
-            <label>Name</label>
-            <input type="text" name="name" value="{{ old('name', $admin->name) }}">
-            @error('name') <small>{{ $message }}</small> @enderror
+        <div class="form-group">
+            <label>Name:</label>
+            <input name="name" type="text" value="{{ old('name', $admin->name) }}">
+            @error('name')
+                <p class="apply-error">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div>
-            <label>Email</label>
-            <input type="email" name="email" value="{{ old('email', $admin->email) }}">
-            @error('email') <small>{{ $message }}</small> @enderror
+        <div class="form-group">
+            <label>Email:</label>
+            <input name="email" type="email" value="{{ old('email', $admin->email) }}">
+            @error('email')
+                <p class="apply-error">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div>
-            <label>New Password</label>
-            <input type="password" name="password">
-            @error('password') <small>{{ $message }}</small> @enderror
+        <div class="form-group">
+            <label>New Password:</label>
+            <input id="password" name="password" type="password" placeholder="Leave blank to keep current password">
+            @error('password')
+                <p class="apply-error">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div>
-            <label>Confirm Password</label>
-            <input type="password" name="password_confirmation">
+        <div class="form-group">
+            <label>Confirm Password:</label>
+            <input name="password_confirmation" type="password">
         </div>
 
-        <button type="submit">Update Profile</button>
+        <button type="submit" class="btn">Update Profile</button>
     </form>
 </div>
 
