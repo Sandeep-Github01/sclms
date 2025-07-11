@@ -2,7 +2,7 @@
 @include('backend.partials.sidebar')
 
 <div class="main-content">
-    <h2>Welcome, {{ $admin->name }}</h2>
+    <h2>Welcome, {{ Auth::guard('admin')->user()->name ?? '' }}</h2>
     <p class="role-label">Role: Admin</p>
 
     <div class="summary-box">

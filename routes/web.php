@@ -14,11 +14,11 @@ use App\Http\Controllers\Frontend\LeaveController;
 use App\Http\Controllers\Frontend\DashboardController;
 
 // Backend Routes
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
-    Route::get('/user', [AdminUser::class, 'index'])->name('admin.user.index');
-    Route::get('/user/{id}', [AdminUser::class, 'show'])->name('admin.user.show');
-    Route::delete('/user/{id}', [AdminUser::class, 'destroy'])->name('admin.user.destroy');
-});
+// Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
+//     Route::get('/user', [AdminUser::class, 'index'])->name('admin.user.index');
+//     Route::get('/user/{id}', [AdminUser::class, 'show'])->name('admin.user.show');
+//     Route::delete('/user/{id}', [AdminUser::class, 'destroy'])->name('admin.user.destroy');
+// });
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
