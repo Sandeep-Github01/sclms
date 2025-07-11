@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backend\UserController as AdminUser;
+use App\Http\Controllers\Backend\AdminAuthController;
+use App\Http\Controllers\Backend\AdminDashboardController;
+use App\Http\Controllers\Backend\AdminProfileController;
+
 use App\Http\Controllers\Frontend\UserController as FrontendUser;
 use App\Http\Controllers\Frontend\MailController; 
 use App\Http\Controllers\Frontend\LeaveController; 
@@ -14,6 +18,17 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/user', [AdminUser::class, 'index'])->name('admin.user.index');
     Route::get('/user/{id}', [AdminUser::class, 'show'])->name('admin.user.show');
     Route::delete('/user/{id}', [AdminUser::class, 'destroy'])->name('admin.user.destroy');
+});
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
+        Route::post('/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+    });
 });
 
 
