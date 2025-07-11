@@ -32,10 +32,20 @@ class LeaveController extends Controller
         return view('frontend.leave.apply', compact('leaveTypes', 'blackouts'));
     }
 
-
     public function store(Request $request)
     {
         $user = Auth::user();
+
+        if (!$user->dept_name) {
+            return redirect()->back()
+                ->with('error', 'You must be assigned to a department before applying for leave. Please contact your administrator.');
+        }
+
+        $department = \App\Models\Department::where('name', $user->dept_name)->first();
+        if (!$department) {
+            return redirect()->back()
+                ->with('error', 'Your department "' . $user->dept_name . '" was not found in the system. Please contact your administrator.');
+        }
 
         $request->validate([
             'type_id' => 'required|integer|exists:leave_types,id',
@@ -54,7 +64,7 @@ class LeaveController extends Controller
         $data = [
             'user_id' => $user->id,
             'type_id' => $leaveType->id,
-            'department_id' => $user->department_id,
+            'department_id' => $department->id,
             'start_date' => $start->toDateString(),
             'end_date' => $end->toDateString(),
             'reason' => $request->reason,
@@ -155,13 +165,13 @@ class LeaveController extends Controller
         }
 
         $weekday = $start->format('l');
-        if (in_array($weekday, ['Monday', 'Friday'])) {
+        if (in_array($weekday, ['Monday', 'Saturday'])) {
             $score -= 1;
             $notes[] = "Start on {$weekday}, suspicious.";
         }
 
         $conflicts = LeaveRequest::where('status', 'approved')
-            ->where('department_id', $user->department_id)
+            ->where('department_id', $department->id)
             ->where(function ($q) use ($start, $end) {
                 $q->whereBetween('start_date', [$start->toDateString(), $end->toDateString()])
                     ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
