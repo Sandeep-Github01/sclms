@@ -26,22 +26,22 @@
         @endif
 
         <form action="{{ route('admin.login.submit') }}" method="POST">
-        @csrf
+            @csrf
 
-        <div>
-            <label>Email</label>
-            <input type="email" name="email" value="{{ old('email') }}">
-            @error('email') <small>{{ $message }}</small> @enderror
-        </div>
+            <div>
+                <label>Email</label>
+                <input type="email" name="email" value="{{ old('email') }}">
+                @error('email') <small>{{ $message }}</small> @enderror
+            </div>
 
-        <div>
-            <label>Password</label>
-            <input type="password" name="password">
-            @error('password') <small>{{ $message }}</small> @enderror
-        </div>
+            <div>
+                <label>Password</label>
+                <input type="password" name="password">
+                @error('password') <small>{{ $message }}</small> @enderror
+            </div>
 
-        <button type="submit">Login</button>
-    </form>
+            <button type="submit">Login</button>
+        </form>
 
         {{-- <p style="text-align:center;">
             <a href="{{ route('backend.admin.forgot-password') }}">Forgot Password?</a>

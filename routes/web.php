@@ -8,8 +8,8 @@ use App\Http\Controllers\Backend\AdminDashboardController;
 use App\Http\Controllers\Backend\AdminProfileController;
 
 use App\Http\Controllers\Frontend\UserController as FrontendUser;
-use App\Http\Controllers\Frontend\MailController; 
-use App\Http\Controllers\Frontend\LeaveController; 
+use App\Http\Controllers\Frontend\MailController;
+use App\Http\Controllers\Frontend\LeaveController;
 
 use App\Http\Controllers\Frontend\DashboardController;
 
@@ -56,16 +56,16 @@ Route::get('/email_verify/{id}', [FrontendUser::class, 'verify_email'])->name('f
 
 Route::get('send-email', [MailController::class, 'sendEmail']);
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/leave/apply', [LeaveController::class, 'create'])->name('leave.create');
-    Route::post('/leave/apply', [LeaveController::class, 'store'])->name('leave.store');
-    Route::get('/leave/list', [LeaveController::class, 'index'])->name('leave.list');
-    Route::get('/leave/{id}', [LeaveController::class, 'show'])->name('leave.show');
-    Route::get('/leave/result/{id}', [LeaveController::class, 'result'])->name('leave.result');
+Route::middleware(['auth'])->prefix('leave')->group(function () {
+    Route::get('/apply', [LeaveController::class, 'create'])->name('leave.create');
+    Route::post('/process', [LeaveController::class, 'process'])->name('leave.process');
+    Route::get('/process/{id}', [LeaveController::class, 'processView'])->name('leave.process.view');
+    Route::get('/result/{id}', [LeaveController::class, 'result'])->name('leave.result');
+    Route::get('/list', [LeaveController::class, 'index'])->name('leave.list');
+    Route::get('/{id}', [LeaveController::class, 'show'])->name('leave.show');
 });
-
 
 Route::get('/forgot-password', [FrontendUser::class, 'showForgotPasswordForm'])->name('frontend.user.forgot-password');
 Route::post('/forgot-password', [FrontendUser::class, 'sendResetLinkEmail'])->name('frontend.user.forgot-password.send');
-Route::get('/reset-password/{token}', [FrontendUser::class, 'showResetPasswordForm'])->name('password.reset');  
+Route::get('/reset-password/{token}', [FrontendUser::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/reset-password', [FrontendUser::class, 'updatePassword'])->name('frontend.user.reset-password.update');
