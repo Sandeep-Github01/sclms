@@ -2,50 +2,53 @@
 
 namespace App\Http\Controllers\Frontend;
 
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Carbon;
-use App\Models\LeaveRequest;
+use App\Models\Department;
 use App\Models\LeaveType;
+use App\Models\LeaveRequest;
 use App\Models\LeaveCredit;
 use App\Models\BlackoutPeriod;
+use Auth;
+use Carbon\Carbon;
 
 class LeaveController extends Controller
 {
+    // 1. Show apply form
     public function create()
     {
         $leaveTypes = LeaveType::all();
-
-        // Fetch blackout periods and format for calendar
-        $blackouts = BlackoutPeriod::all()->map(function ($item) {
+        $blackouts = BlackoutPeriod::all()->map(function ($b) {
             return [
-                'start' => $item->start_date,
-                'end' => $item->end_date,
-                'title' => $item->reason,
-                'display' => 'background',
-                'color' => 'black'
+                'title' => 'Blackout',
+                'start' => $b->start_date,
+                'end' => $b->end_date,
+                'color' => '#000'
             ];
         });
-
         return view('frontend.leave.apply', compact('leaveTypes', 'blackouts'));
     }
 
-    public function store(Request $request)
+    // 2. Process leave application (validates, evaluates, logs steps)
+    public function process(Request $request)
     {
         $user = Auth::user();
+        $steps = [];
+        $score = 0;
 
         if (!$user->dept_name) {
-            return redirect()->back()
-                ->with('error', 'You must be assigned to a department before applying for leave. Please contact your administrator.');
+            $steps[] = ['text' => "User has no department assigned.", 'score' => $score, 'type' => 'error'];
+            return redirect()->back()->withErrors(['error' => 'You must be assigned to a department.'])->withInput();
         }
+        $steps[] = ['text' => "Department assigned: {$user->dept_name}", 'score' => $score, 'type' => 'success'];
 
-        $department = \App\Models\Department::where('name', $user->dept_name)->first();
+        $department = Department::where('name', $user->dept_name)->first();
         if (!$department) {
-            return redirect()->back()
-                ->with('error', 'Your department "' . $user->dept_name . '" was not found in the system. Please contact your administrator.');
+            $steps[] = ['text' => "Department '{$user->dept_name}' not found.", 'score' => $score, 'type' => 'error'];
+            return redirect()->back()->withErrors(['error' => 'Your department was not found.'])->withInput();
         }
+        $steps[] = ['text' => "Department exists in system.", 'score' => $score, 'type' => 'success'];
 
         $request->validate([
             'type_id' => 'required|integer|exists:leave_types,id',
@@ -54,12 +57,15 @@ class LeaveController extends Controller
             'reason' => 'nullable|string',
             'document' => 'nullable|file|max:2048',
         ]);
+        $steps[] = ['text' => "Form data validated.", 'score' => $score, 'type' => 'success'];
 
         $leaveType = LeaveType::findOrFail($request->type_id);
+        $steps[] = ['text' => "Leave type: {$leaveType->name}", 'score' => $score, 'type' => 'success'];
 
         $start = Carbon::parse($request->start_date);
         $end = Carbon::parse($request->end_date);
         $days = $start->diffInDays($end) + 1;
+        $steps[] = ['text' => "Duration: {$days} day(s)", 'score' => $score, 'type' => 'success'];
 
         $data = [
             'user_id' => $user->id,
@@ -78,48 +84,44 @@ class LeaveController extends Controller
         if ($request->hasFile('document')) {
             $path = $request->file('document')->store('leave_docs', 'public');
             $data['file_path'] = $path;
+            $steps[] = ['text' => "Document uploaded.", 'score' => $score, 'type' => 'document'];
+        } else {
+            $steps[] = ['text' => "No document uploaded.", 'score' => $score, 'type' => 'document'];
         }
 
+        // Manual Review Rules
         $isManual = false;
-        $notes = [];
-
         if (strtolower($leaveType->name) === 'emergency') {
             $isManual = true;
-            $notes[] = 'Emergency leave, manual review required.';
-        } elseif (isset($leaveType->max_days) && $days > $leaveType->max_days) {
+            $steps[] = ['text' => "Emergency leave → manual review required.", 'score' => $score, 'type' => 'warning'];
+        } elseif ($leaveType->max_days && $days > $leaveType->max_days) {
             $isManual = true;
-            $notes[] = "Duration {$days} days exceeds max allowed {$leaveType->max_days}, manual review.";
+            $steps[] = ['text' => "Exceeds max allowed days ({$leaveType->max_days}). Manual review.", 'score' => $score, 'type' => 'warning'];
         }
 
         if ($isManual) {
             $data['review_type'] = 'manual';
             $data['status'] = 'pending';
-            $data['status_note'] = implode(' ', $notes);
-
+            $data['status_note'] = 'Manual review required.';
             $leave = LeaveRequest::create($data);
-
-            // TODO: Notify HOD/admin via email that new manual request aayo
-            // e.g., Mail::to($adminEmail)->send(...)
-
-            return redirect()->route('leave.result', $leave->id)
-                ->with('info', 'Leave request submitted for manual review.');
+            $steps[] = ['text' => "Leave submitted for manual review.", 'score' => $score, 'type' => 'success'];
+            session(['leave_steps' => $steps]);
+            return redirect()->route('leave.process.view', $leave->id);
         }
 
-        $score = 0;
-
-        $credit = LeaveCredit::where('user_id', $user->id)
-            ->where('type_id', $leaveType->id)
-            ->first();
+        // Auto Evaluation
+        $credit = LeaveCredit::where('user_id', $user->id)->where('type_id', $leaveType->id)->first();
         if ($credit) {
             if ($credit->remaining_days >= $days) {
                 $score += 2;
+                $steps[] = ['text' => "Sufficient leave credits ({$credit->remaining_days}).", 'score' => $score, 'type' => 'success'];
             } else {
                 $score -= 2;
-                $notes[] = 'Insufficient leave credits.';
+                $steps[] = ['text' => "Insufficient leave credits ({$credit->remaining_days}).", 'score' => $score, 'type' => 'error'];
             }
         } else {
             $score -= 2;
-            $notes[] = 'No leave credit record found.';
+            $steps[] = ['text' => "No leave credit record.", 'score' => $score, 'type' => 'error'];
         }
 
         $recentCount = LeaveRequest::where('user_id', $user->id)
@@ -128,79 +130,81 @@ class LeaveController extends Controller
             ->count();
         if ($recentCount === 0) {
             $score += 2;
+            $steps[] = ['text' => "No recent leaves taken.", 'score' => $score, 'type' => 'success'];
         } else {
             $score -= 1;
-            $notes[] = "Recently applied leave in past 10 days ({$recentCount}).";
+            $steps[] = ['text' => "{$recentCount} recent leave(s) in past 10 days.", 'score' => $score, 'type' => 'warning'];
         }
 
         if (strtolower($leaveType->name) === 'medical') {
             $score += 1;
             if ($data['file_path']) {
                 $score += 3;
-            } else {
-                if ($leaveType->requires_documentation) {
-                    $data['status'] = 'rejected';
-                    $data['status_note'] = 'Medical leave requires document.';
-                    $leave = LeaveRequest::create($data);
-                    return redirect()->route('leave.result', $leave->id)
-                        ->with('error', 'Medical leave: document required.');
-                }
+                $steps[] = ['text' => "Medical document attached.", 'score' => $score, 'type' => 'success'];
+            } elseif ($leaveType->requires_documentation) {
+                $data['status'] = 'rejected';
+                $data['status_note'] = 'Medical document required.';
+                $leave = LeaveRequest::create($data);
+                $steps[] = ['text' => "Rejected: Missing medical document.", 'score' => $score, 'type' => 'error'];
+                session(['leave_steps' => $steps]);
+                return redirect()->route('leave.process.view', $leave->id);
             }
         }
 
-        $overlapBlackout = BlackoutPeriod::where(function ($q) use ($start, $end) {
-            $q->whereBetween('start_date', [$start->toDateString(), $end->toDateString()])
-                ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
+        $blackout = BlackoutPeriod::where(function ($q) use ($start, $end) {
+            $q->whereBetween('start_date', [$start, $end])
+                ->orWhereBetween('end_date', [$start, $end])
                 ->orWhere(function ($q2) use ($start, $end) {
-                    $q2->where('start_date', '<=', $start->toDateString())
-                        ->where('end_date', '>=', $end->toDateString());
+                    $q2->where('start_date', '<=', $start)
+                        ->where('end_date', '>=', $end);
                 });
         })->exists();
-        if ($overlapBlackout) {
-            $data['status'] = 'rejected';
-            $data['status_note'] = 'Leave falls in blackout period.';
-            $leave = LeaveRequest::create($data);
-            return redirect()->route('leave.result', $leave->id)
-                ->with('error', 'Requested dates fall in blackout period.');
-        }
 
-        $weekday = $start->format('l');
-        if (in_array($weekday, ['Monday', 'Saturday'])) {
-            $score -= 1;
-            $notes[] = "Start on {$weekday}, suspicious.";
+        if ($blackout) {
+            $data['status'] = 'rejected';
+            $data['status_note'] = 'Falls in blackout period.';
+            $leave = LeaveRequest::create($data);
+            $steps[] = ['text' => "Rejected due to blackout period.", 'score' => $score, 'type' => 'error'];
+            session(['leave_steps' => $steps]);
+            return redirect()->route('leave.process.view', $leave->id);
         }
+        $steps[] = ['text' => "No blackout conflict.", 'score' => $score, 'type' => 'success'];
 
         $conflicts = LeaveRequest::where('status', 'approved')
             ->where('department_id', $department->id)
             ->where(function ($q) use ($start, $end) {
-                $q->whereBetween('start_date', [$start->toDateString(), $end->toDateString()])
-                    ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
+                $q->whereBetween('start_date', [$start, $end])
+                    ->orWhereBetween('end_date', [$start, $end])
                     ->orWhere(function ($q2) use ($start, $end) {
-                        $q2->where('start_date', '<=', $start->toDateString())
-                            ->where('end_date', '>=', $end->toDateString());
+                        $q2->where('start_date', '<=', $start)
+                            ->where('end_date', '>=', $end);
                     });
-            })
-            ->count();
+            })->count();
+
         if ($conflicts >= 2) {
             $data['status'] = 'rejected';
-            $data['status_note'] = 'Departmental collision: too many on leave.';
+            $data['status_note'] = 'Too many colleagues already on leave.';
             $leave = LeaveRequest::create($data);
-            return redirect()->route('leave.result', $leave->id)
-                ->with('error', 'Too many colleagues already on leave.');
+            $steps[] = ['text' => "Rejected: Departmental conflict.", 'score' => $score, 'type' => 'error'];
+            session(['leave_steps' => $steps]);
+            return redirect()->route('leave.process.view', $leave->id);
         } elseif ($conflicts === 1) {
             $score -= 1;
-            $notes[] = 'One colleague already on leave.';
+            $steps[] = ['text' => "One colleague already on leave.", 'score' => $score, 'type' => 'warning'];
         } else {
             $score += 1;
+            $steps[] = ['text' => "No conflict in department.", 'score' => $score, 'type' => 'success'];
         }
 
         $data['final_score'] = $score;
         if ($score >= 2) {
             $data['status'] = 'approved';
             $data['status_note'] = 'Auto-approved with score ' . $score . '.';
+            $steps[] = ['text' => "Final decision: Approved", 'score' => $score, 'type' => 'success'];
         } else {
             $data['status'] = 'rejected';
             $data['status_note'] = 'Auto-rejected with score ' . $score . '.';
+            $steps[] = ['text' => "Final decision: Rejected", 'score' => $score, 'type' => 'error'];
         }
 
         $leave = LeaveRequest::create($data);
@@ -210,14 +214,24 @@ class LeaveController extends Controller
             $credit->save();
         }
 
-        if ($data['status'] === 'approved') {
-            return redirect()->route('leave.result', $leave->id)
-                ->with('success', 'Leave auto-approved.');
-        } else {
-            $reasonText = implode(' ', $notes);
-            return redirect()->route('leave.result', $leave->id)
-                ->with('error', 'Leave auto-rejected. Reason: ' . $data['status_note']);
-        }
+        session(['leave_steps' => $steps]);
+        return redirect()->route('leave.process.view', $leave->id);
+    }
+
+
+    // 3. Show the process log
+    public function processView($id)
+    {
+        $leave = LeaveRequest::with('leaveType')->findOrFail($id);
+        $steps = session('leave_steps', []);
+        return view('frontend.leave.process', compact('leave', 'steps'));
+    }
+
+    // 4. Show final result page
+    public function result($id)
+    {
+        $leave = LeaveRequest::with('leaveType')->findOrFail($id);
+        return view('frontend.leave.result', compact('leave'));
     }
 
     public function index()
@@ -228,18 +242,9 @@ class LeaveController extends Controller
             ->get();
         return view('frontend.leave.list', compact('leaves'));
     }
-
     public function show($id)
     {
-        $user = Auth::user();
-        $leave = LeaveRequest::where('id', $id)->where('user_id', $user->id)->firstOrFail();
+        $leave = LeaveRequest::with('leaveType')->findOrFail($id);
         return view('frontend.leave.show', compact('leave'));
-    }
-
-    public function result($id)
-    {
-        $user = Auth::user();
-        $leave = LeaveRequest::where('id', $id)->where('user_id', $user->id)->firstOrFail();
-        return view('frontend.leave.result', compact('leave'));
     }
 }
