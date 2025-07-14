@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@include('backend.partials.header')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Login</title>
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-
-<body class="login-page">
+<div class="login-page">
 
     <div class="auth-container">
         <h2>Admin Login</h2>
@@ -63,6 +55,4 @@
         });
     </script>
 
-</body>
-
-</html>
+@include('backend.partials.footer')
