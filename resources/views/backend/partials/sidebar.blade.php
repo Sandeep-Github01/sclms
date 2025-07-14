@@ -1,14 +1,26 @@
 <aside class="sidebar">
     <div class="profile-section">
         <div>
-            <img src="{{ asset('images/user.png') }}" class="profile-pic">
             <a href="{{ route('admin.profile') }}">{{ Auth::guard('admin')->user()->name }}</a>
         </div>
     </div>
     <ul class="sidebar-nav">
         <li><a href="{{ route('backend.dashboard') }}">🏠 Dashboard</a></li>
-        <li><a href="{{ route('admin.user.index') }}">👥 Manage Users</a></li>
-        <li><a href="{{ route('admin.profile') }}">⚙️ Profile</a></li>
+        <li>
+            <a href="javascript:void(0);" class="admin-works-toggle">
+                <span class="toggle-label">Admin Works</span>
+                <span class="toggle-icon">&gt;</span>
+            </a>
+            <ul class="sidebar-submenu admin-works-submenu">
+                <li>
+                    <a href="{{ route('admin.department.index') }}">Departments</a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.blackout.index') }}">Blackout Periods</a>
+                </li>
+            </ul>
+        </li>
+
     </ul>
 </aside>
 

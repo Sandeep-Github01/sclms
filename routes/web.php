@@ -2,13 +2,22 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Backend\UserController;
+// --------------------
+// BACKEND IMPORTS
+// --------------------
 use App\Http\Controllers\Backend\AdminController as AdminUser;
+use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\DepartmentController;
+use App\Http\Controllers\Backend\BlackoutPeriodController;
 
+// --------------------
+// FRONTEND IMPORTS
+// --------------------
 use App\Http\Controllers\Frontend\UserController as FrontendUser;
 use App\Http\Controllers\Frontend\MailController;
 use App\Http\Controllers\Frontend\LeaveController;
 use App\Http\Controllers\Frontend\DashboardController;
+
 
 // --------------------
 // BACKEND ROUTES
@@ -27,8 +36,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/user', [UserController::class, 'index'])->name('admin.user.index');
         Route::get('/user/{id}', [UserController::class, 'show'])->name('admin.user.show');
         Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+
+        Route::resource('department', DepartmentController::class, ['as' => 'admin']);
+        Route::resource('blackout', BlackoutPeriodController::class, ['as' => 'admin']);
     });
 });
+
 
 // --------------------
 // FRONTEND ROUTES

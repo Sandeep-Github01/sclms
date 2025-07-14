@@ -4,6 +4,21 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.querySelector('.admin-works-toggle');
+        const submenu = document.querySelector('.admin-works-submenu');
+        const icon = document.querySelector('.toggle-icon');
+
+        if (toggle && submenu && icon) {
+            toggle.addEventListener('click', function () {
+                submenu.classList.toggle('show');
+                icon.classList.toggle('rotate');
+            });
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         const toggleBtn = document.getElementById('sidebarToggle');
         const overlay = document.querySelector('.sidebar-overlay');
         const body = document.body;
@@ -36,5 +51,7 @@
         });
     });
 </script>
+
 </body>
+
 </html>

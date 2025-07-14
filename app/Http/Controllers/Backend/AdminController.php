@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Admin;
+use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Admin;
 
 class AdminController extends Controller
 {
@@ -17,7 +19,7 @@ class AdminController extends Controller
      */
     public function showLoginForm()
     {
-        return view('backend.auth.login');
+        return view('backend.admin.login');
     }
 
     /**
@@ -59,7 +61,19 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('backend.dashboard.index');
+        // Count all users
+        $totalUsers = User::count();
+
+        // Count students
+        $studentsCount = User::where('role', 'student')->count();
+
+        // Count teachers
+        $teachersCount = User::where('role', 'teacher')->count();
+
+        // Count pending leave requests
+        $pendingLeaves = LeaveRequest::where('status', 'pending')->count();
+
+        return view('backend.admin.dashboard', compact('totalUsers', 'studentsCount', 'teachersCount', 'pendingLeaves'));
     }
 
     /**
@@ -70,7 +84,8 @@ class AdminController extends Controller
     public function profileIndex()
     {
         $admin = Auth::guard('admin')->user();
-        return view('backend.profile.index', compact('admin'));
+
+        return view('backend.admin.profile', compact('admin'));
     }
     /**
      * Update the admin profile.
@@ -93,7 +108,7 @@ class AdminController extends Controller
         $admin->email = $request->email;
 
         if ($request->filled('password')) {
-            $admin->password = \Hash::make($request->password);
+            $admin->password = Hash::make($request->password);
         }
 
         $admin->save();
