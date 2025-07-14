@@ -1045,3 +1045,44 @@ body.sidebar-active .sidebar-overlay {
 .btn-submit:hover {
     background-color: #08306b;
 }
+
+/* ======= Admin Works Toggle ======= */
+.sidebar-submenu {
+    display: none;
+    list-style: none;
+    padding-left: 15px;
+}
+
+.sidebar-submenu li a {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.sidebar-nav li.active > .sidebar-submenu {
+    display: block;
+}
+
+.admin-works-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-right: 10px;
+    text-decoration: none;
+    position: relative;
+}
+
+.toggle-icon {
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    position: absolute; 
+    right: 10px; 
+}
+
+.toggle-icon.rotate {
+    transform: rotate(90deg);
+}
+
+.sidebar-submenu.show {
+    display: block;
+}
