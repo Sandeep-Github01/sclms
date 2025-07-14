@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\User;
+use App\Models\Admin;
 use App\Mail\VerifyMail;
 use App\Models\Department;
 use Illuminate\Support\Str;
@@ -211,18 +212,14 @@ class UserController extends Controller
 
         $user->update($data);
 
-        // Notify Admin
-        $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
+        //Notify Admin
+        $adminEmails = Admin::pluck('email')->toArray();
+        Mail::send('backend.emails.profile_update_notification', ['user' => $user], function ($message) use ($adminEmails) {
+            $message->subject('New User Profile Update')
+                ->to($adminEmails);
+        });
 
-        \Mail::raw(
-            "User {$user->name} has updated their profile and requires approval.",
-            function ($message) use ($adminEmails) {
-                $message->subject('New User Profile Update')
-                    ->to($adminEmails);
-            }
-        );
-
-        return redirect()->route('frontend.user.dashboard')
+        return redirect()->route('frontend.user.profile')
             ->with('success', 'Profile submitted for approval.');
     }
 }
