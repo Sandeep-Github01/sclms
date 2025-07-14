@@ -15,6 +15,20 @@ body {
     /* prevent footer overlap */
 }
 
+a {
+    color: #f1f1f1 !important;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 /* Centering auth pages */
 .login-page {
     display: flex;
@@ -74,6 +88,37 @@ input:focus {
     outline: none;
 }
 
+.auth-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+    color: #333;
+}
+
+.auth-row label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    margin: 0;
+    color: #000;
+}
+
+.auth-row .forgot-password a {
+    color: #000 !important;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.auth-row .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.auth-row.single-item {
+    justify-content: flex-end;
+}
+
 button {
     width: 100%;
     background-color: #007bff;
@@ -85,24 +130,40 @@ button {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 20px;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
-a {
-    color: #f1f1f1;
+.auth-container a {
+    color: #f1f1f1 !important;
     text-decoration: none;
     font-size: 14px;
-    display: inline-block;
-    margin-top: 10px;
-    text-align: center;
-    width: 100%;
+    display: inline;
+    margin: 0;
+    width: auto;
 }
 
-a:hover {
+.auth-container a:hover {
     text-decoration: underline;
+}
+
+.register-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.register-container p {
+    margin: 0;
+    font-size: 16px;
+    color: #f1f1f1;
+}
+
+.register-container a {
+    font-weight: 500;
+    color: #000 !important;
 }
 
 select {

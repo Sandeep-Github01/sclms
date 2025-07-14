@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@include('frontend.partials.header')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-</head>
-
-<body class="login-page">
+<div class="login-page">
 
     <div class="auth-container">
         <h2>Register New Account</h2>
@@ -60,8 +51,12 @@
             <button type="submit">Register</button>
         </form>
 
-        <p style="text-align:center;">Already registered? <a href="{{ route('frontend.user.login') }}">Login here</a>
-        </p>
+        <div class="register-container">
+            <p>
+                Already registered?
+                <a href="{{ route('frontend.user.login') }}">Login here</a>
+            </p>
+        </div>
     </div>
 
     <script>
@@ -84,6 +79,4 @@
         });
     </script>
 
-</body>
-
-</html>
+    @include('frontend.partials.footer')

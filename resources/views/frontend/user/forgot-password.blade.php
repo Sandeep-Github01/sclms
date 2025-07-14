@@ -25,9 +25,11 @@
             <button type="submit">Send Password Reset Link</button>
         </form>
 
-        <p style="text-align:center;">
-            <a href="{{ route('frontend.user.login') }}">Back to Login</a>
-        </p>
+        <div class="register-container">
+            <p>
+                <a href="{{ route('frontend.user.login') }}">Back to Login</a>
+            </p>
+        </div>
     </div>
 </div>
 
