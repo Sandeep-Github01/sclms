@@ -20,13 +20,19 @@
         <form method="POST" action="{{ route('frontend.user.loginMatch') }}">
             @csrf
 
-            <label>Email:</label>
-            <input type="email" name="email" required>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="email" value="{{ old('email') }}" required>
+                @error('email') <small>{{ $message }}</small> @enderror
+            </div>
 
-            <label>Password:</label>
-            <div class="password-wrapper">
-                <input type="password" name="password" id="password" required>
-                <i id="togglePassword" class="far fa-eye toggle-password"></i>
+            <div>
+                <label>Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" name="password" id="password" required>
+                    <i id="togglePassword" class="far fa-eye toggle-password"></i>
+                    @error('password') <small>{{ $message }}</small> @enderror
+                </div>
             </div>
 
             <div class="auth-row single-item">
