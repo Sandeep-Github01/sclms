@@ -3,25 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 // --------------------
-// BACKEND IMPORTS
+// ==== BACKEND ==== 
 // --------------------
 use App\Http\Controllers\Backend\AdminController as AdminUser;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\BlackoutPeriodController;
-
-// --------------------
-// FRONTEND IMPORTS
-// --------------------
-use App\Http\Controllers\Frontend\UserController as FrontendUser;
-use App\Http\Controllers\Frontend\MailController;
-use App\Http\Controllers\Frontend\LeaveController;
-use App\Http\Controllers\Frontend\DashboardController;
-
-
-// --------------------
-// BACKEND ROUTES
-// --------------------
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminUser::class, 'showLoginForm'])->name('admin.login');
@@ -50,10 +37,13 @@ Route::prefix('admin')->group(function () {
 
 
 
-
 // --------------------
-// FRONTEND ROUTES
+// ==== FRONTEND ==== 
 // --------------------
+use App\Http\Controllers\Frontend\UserController as FrontendUser;
+use App\Http\Controllers\Frontend\MailController;
+use App\Http\Controllers\Frontend\LeaveController;
+use App\Http\Controllers\Frontend\DashboardController;
 
 Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/profile', [FrontendUser::class, 'profile'])->name('frontend.user.profile');

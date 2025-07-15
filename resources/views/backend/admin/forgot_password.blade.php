@@ -1,6 +1,7 @@
 @include('backend.partials.header')
 
 <div class="login-page">
+    
     <div class="auth-container">
         <h2>Admin - Forgot Password</h2>
 

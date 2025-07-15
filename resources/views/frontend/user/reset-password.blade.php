@@ -24,19 +24,47 @@
             <label>Email Address</label>
             <input type="email" name="email" value="{{ $email ?? old('email') }}" required autofocus>
 
-            <label>New Password</label>
-            <input type="password" name="password" required>
+            <label>Password:</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="password" required>
+                <i id="togglePassword1" class="far fa-eye toggle-password"></i>
+            </div>
 
-            <label>Confirm Password</label>
-            <input type="password" name="password_confirmation" required>
+            <label>Confirm Password:</label>
+            <div class="password-wrapper">
+                <input type="password" name="password_confirmation" id="password2" required>
+                <i id="togglePassword2" class="far fa-eye toggle-password"></i>
+            </div>
 
             <button type="submit">Reset Password</button>
         </form>
 
-        <p style="text-align:center;">
-            <a href="{{ route('frontend.user.login') }}">Back to Login</a>
-        </p>
+        <div class="register-container">
+            <p>
+                <a href="{{ route('frontend.user.login') }}">Back to Login</a>
+            </p>
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function setupToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+
+            if (toggle && input) {
+                toggle.addEventListener('click', function () {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+
+        setupToggle('togglePassword1', 'password');
+        setupToggle('togglePassword2', 'password2');
+    });
+</script>
 
 @include('frontend.partials.footer')

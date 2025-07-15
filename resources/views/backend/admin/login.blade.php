@@ -27,9 +27,12 @@
             </div>
 
             <div>
-                <label>Password</label>
-                <input type="password" name="password">
-                @error('password') <small>{{ $message }}</small> @enderror
+                <label>Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" name="password" id="password" required>
+                    <i id="togglePassword" class="far fa-eye toggle-password"></i>
+                    @error('password') <small>{{ $message }}</small> @enderror
+                </div>
             </div>
 
             <div class="auth-row single-item">
