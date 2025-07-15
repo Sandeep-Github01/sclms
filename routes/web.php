@@ -40,7 +40,15 @@ Route::prefix('admin')->group(function () {
         Route::resource('department', DepartmentController::class, ['as' => 'admin']);
         Route::resource('blackout', BlackoutPeriodController::class, ['as' => 'admin']);
     });
+
+    Route::get('/forgot-password', [AdminUser::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
+    Route::post('/forgot-password', [AdminUser::class, 'sendResetLinkEmail'])->name('admin.forgot-password.send');
+    Route::get('/reset-password/{token}', [AdminUser::class, 'showResetPasswordForm'])->name('admin.password.reset');
+    Route::post('/reset-password', [AdminUser::class, 'updatePassword'])->name('admin.reset-password.update');
+    
 });
+
+
 
 
 // --------------------
