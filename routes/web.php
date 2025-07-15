@@ -64,7 +64,7 @@ Route::post('/user/registerSave', [FrontendUser::class, 'register'])->name('fron
 Route::get('/authenticate/verificationSent', [FrontendUser::class, 'verificationSent'])->name('frontend.emails.verificationSent');
 Route::get('/email_verify/{id}', [FrontendUser::class, 'verify_email'])->name('frontend.emails.verify-email')->middleware('signed');
 
-Route::get('send-email', [MailController::class, 'sendEmail']);
+// Route::get('send-email', [MailController::class, 'sendEmail']);
 
 Route::middleware(['auth'])->prefix('leave')->group(function () {
     Route::get('/apply', [LeaveController::class, 'create'])->name('leave.create');

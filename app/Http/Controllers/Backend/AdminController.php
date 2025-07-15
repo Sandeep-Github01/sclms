@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class AdminController extends Controller
 {
@@ -114,5 +115,55 @@ class AdminController extends Controller
         $admin->save();
 
         return redirect()->route('admin.profile')->with('success', 'Profile updated successfully.');
+    }
+
+    public function showForgotPasswordForm()
+    {
+        return view('backend.admin.forgot_password');
+    }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:admins,email',
+        ]);
+
+        $status = Password::broker('admins')->sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('status', __($status))
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function showResetPasswordForm(Request $request, $token)
+    {
+        $email = $request->query('email');
+        return view('backend.admin.reset_password', compact('token', 'email'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:admins,email',
+            'password' => 'required|confirmed|min:3',
+            'token' => 'required'
+        ]);
+
+        $status = Password::broker('admins')->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($admin, $password) {
+                $admin->password = Hash::make($password);
+                $admin->save();
+            }
+        );
+
+        if ($status == Password::PASSWORD_RESET) {
+            return redirect()->route('admin.login')
+                ->with('success', 'Password reset successfully. You can now login.');
+        } else {
+            return back()->withErrors(['email' => __($status)]);
+        }
     }
 }
