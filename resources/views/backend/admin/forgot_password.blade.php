@@ -1,4 +1,3 @@
-
 @include('backend.partials.header')
 
 <div class="login-page">

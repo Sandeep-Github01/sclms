@@ -32,12 +32,14 @@
                 @error('password') <small>{{ $message }}</small> @enderror
             </div>
 
+            <div class="auth-row single-item">
+                <div class="forgot-password">
+                    <a href="{{ route('admin.forgot-password') }}">Forgot Password?</a>
+                </div>
+            </div>
+
             <button type="submit">Login</button>
         </form>
-
-        {{-- <p style="text-align:center;">
-            <a href="{{ route('backend.admin.forgot-password') }}">Forgot Password?</a>
-        </p> --}}
 
     </div>
 
@@ -55,4 +57,4 @@
         });
     </script>
 
-@include('backend.partials.footer')
+    @include('backend.partials.footer')
