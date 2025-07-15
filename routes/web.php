@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\AdminController as AdminUser;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\BlackoutPeriodController;
+use App\Http\Controllers\Backend\SidebarController;
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminUser::class, 'showLoginForm'])->name('admin.login');
@@ -26,13 +27,14 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('department', DepartmentController::class, ['as' => 'admin']);
         Route::resource('blackout', BlackoutPeriodController::class, ['as' => 'admin']);
+        Route::get('/recent-leaves', [SidebarController::class, 'leavesByRole'])->name('admin.recent_leaves');
+        Route::get('/review-leave', [SidebarController::class, 'manualReview'])->name('admin.review_leave');
     });
 
     Route::get('/forgot-password', [AdminUser::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
     Route::post('/forgot-password', [AdminUser::class, 'sendResetLinkEmail'])->name('admin.forgot-password.send');
     Route::get('/reset-password/{token}', [AdminUser::class, 'showResetPasswordForm'])->name('admin.password.reset');
     Route::post('/reset-password', [AdminUser::class, 'updatePassword'])->name('admin.reset-password.update');
-    
 });
 
 

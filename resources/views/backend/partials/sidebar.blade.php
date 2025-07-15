@@ -7,6 +7,9 @@
     <ul class="sidebar-nav">
         <li><a href="{{ route('backend.dashboard') }}">🏠 Dashboard</a></li>
         <li>
+            <a href="{{ route('admin.recent_leaves') }}">Recent Leaves</a>
+        </li>
+        <li>
             <a href="javascript:void(0);" class="admin-works-toggle">
                 <span class="toggle-label">Admin Works</span>
                 <span class="toggle-icon">&gt;</span>
@@ -20,7 +23,6 @@
                 </li>
             </ul>
         </li>
-
     </ul>
 </aside>
 
