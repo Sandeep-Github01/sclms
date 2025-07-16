@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\BlackoutPeriod;
+use App\Http\Controllers\Controller;
 
 class BlackoutPeriodController extends Controller
 {
@@ -16,7 +17,8 @@ class BlackoutPeriodController extends Controller
 
     public function create()
     {
-        return view('backend.AdminWorks.blackout.create');
+        $departments = Department::all();
+        return view('backend.AdminWorks.blackout.create', compact('departments'));
     }
 
     public function store(Request $request)
@@ -25,7 +27,10 @@ class BlackoutPeriodController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'nullable|string|max:255',
+            'department_id' => 'nullable|exists:departments,id',
+            'semester' => 'nullable|string|max:20',
         ]);
+
 
         BlackoutPeriod::create($validated);
 
@@ -36,7 +41,8 @@ class BlackoutPeriodController extends Controller
     public function edit($id)
     {
         $blackout = BlackoutPeriod::findOrFail($id);
-        return view('backend.AdminWorks.blackout.edit', compact('blackout'));
+        $departments = Department::all();
+        return view('backend.AdminWorks.blackout.edit', compact('blackout', 'departments'));
     }
 
     public function update(Request $request, $id)
@@ -47,7 +53,10 @@ class BlackoutPeriodController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'nullable|string|max:255',
+            'department_id' => 'nullable|exists:departments,id',
+            'semester' => 'nullable|string|max:20',
         ]);
+
 
         $blackout->update($validated);
 

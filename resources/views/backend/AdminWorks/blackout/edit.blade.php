@@ -27,6 +27,26 @@
         <label for="reason">Reason</label>
         <input type="text" name="reason" value="{{ old('reason', $blackout->reason) }}">
 
+        <label for="department_id">Department</label>
+        <select name="department_id">
+            <option value="">-- All Departments --</option>
+            @foreach($departments as $dept)
+                <option value="{{ $dept->id }}" {{ old('department_id', $blackout->department_id ?? '') == $dept->id ? 'selected' : '' }}>
+                    {{ $dept->name }}
+                </option>
+            @endforeach
+        </select>
+
+        <label for="semester">Semester</label>
+        <select name="semester">
+            <option value="">-- All Semesters --</option>
+            @for($i = 1; $i <= 8; $i++)
+                <option value="{{ $i }}" {{ old('semester', $blackout->semester ?? '') == $i ? 'selected' : '' }}>
+                    Semester {{ $i }}
+                </option>
+            @endfor
+        </select>
+        
         <button type="submit" class="btn-submit">Update</button>
     </form>
 </div>
