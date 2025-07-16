@@ -23,7 +23,7 @@
                         <tr>
                             <td>{{ $student->name }}</td>
                             <td>{{ $student->email }}</td>
-                            <td>{{ $student->department->name ?? 'N/A' }}</td>
+                            <td>{{ $student->dept_name ?? 'N/A' }}</td>
                             <td>
                                 <div class="table-actions">
                                     <a href="{{ route('admin.user.show', $student->id) }}" class="btn-table-view">View</a>
@@ -61,7 +61,7 @@
                         <tr>
                             <td>{{ $teacher->name }}</td>
                             <td>{{ $teacher->email }}</td>
-                            <td>{{ $teacher->department->name ?? 'N/A' }}</td>
+                            <td>{{ $teacher->dept_name ?? 'N/A' }}</td>
                             <td>
                                 <div class="table-actions">
                                     <a href="{{ route('admin.user.show', $teacher->id) }}" class="btn-table-view">View</a>

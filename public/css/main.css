@@ -1051,7 +1051,7 @@ body.sidebar-active .sidebar-overlay {
 
 .btn-back {
     background-color: #e0e0e0;
-    color: #000;
+    color: #000 !important;
 }
 
 .btn-back:hover {
