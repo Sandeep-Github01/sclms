@@ -31,6 +31,7 @@ class User extends Authenticatable
         'semester',
         'is_profile_complete',
         'profile_status',
+        'last_login_at',
     ];
 
     protected static function booted()

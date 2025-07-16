@@ -12,7 +12,7 @@ class UserController extends Controller
     {
         $students = User::where('role', 'student')
             ->orderBy('name')
-            ->get(['id', 'name', 'email', 'dept_name']);
+            ->get(['id', 'image', 'name', 'email', 'dept_name']);
 
         $teachers = User::where('role', 'teacher')
             ->orderBy('name')
