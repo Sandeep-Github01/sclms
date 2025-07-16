@@ -24,13 +24,17 @@
                     <tr>
                         <td>{{ $department->id }}</td>
                         <td>{{ $department->name }}</td>
-                        <td class="table-actions">
-                            <a href="{{ route('admin.department.edit', $department->id) }}" class="btn-table-view">Edit</a>
-                            <form method="POST" action="{{ route('admin.department.destroy', $department->id) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-table-delete" onclick="return confirm('Delete this department?')">Delete</button>
-                            </form>
+                        <td>
+                            <div class="table-actions">
+                                <a href="{{ route('admin.department.edit', $department->id) }}"
+                                    class="btn-table-view">Edit</a>
+                                <form method="POST" action="{{ route('admin.department.destroy', $department->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-table-delete"
+                                        onclick="return confirm('Delete this department?')">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

@@ -2,7 +2,7 @@
 @include('backend.partials.sidebar')
 
 <div class="main-content">
-    <h2>All Users <span class="text-muted">(Admin View Only)</span></h2>
+    <h2>All Users</h2>
 
     {{-- Students Section --}}
     <div class="user-section">

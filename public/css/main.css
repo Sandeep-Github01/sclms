@@ -130,7 +130,6 @@ button {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-bottom: 20px;
 }
 
 button:hover {
