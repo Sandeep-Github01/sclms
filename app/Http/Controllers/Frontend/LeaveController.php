@@ -27,6 +27,7 @@ class LeaveController extends Controller
                 'color' => '#000'
             ];
         });
+
         return view('frontend.leave.apply', compact('leaveTypes', 'blackouts'));
     }
 
