@@ -69,8 +69,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
+        const blackoutRanges = @json($blackouts);
+        const blackoutDates = [];
+
+        blackoutRanges.forEach(event => {
+            let current = new Date(event.start);
+            const end = new Date(event.end);
+
+            current.setHours(0, 0, 0, 0);
+            end.setHours(0, 0, 0, 0);
+
+            while (current <= end) {
+                const formatted = current.toISOString().split('T')[0];
+                blackoutDates.push(formatted);
+                current.setDate(current.getDate() + 1);
+            }
+        });
+
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             headerToolbar: {
                 left: 'prev,next today',
@@ -78,11 +95,19 @@
                 right: ''
             },
             height: 'auto',
-            events: @json($blackouts),
+            events: blackoutRanges,
             selectable: false,
             dayMaxEvents: 3,
-            moreLinkText: 'more'
+            moreLinkText: 'more',
+
+            dayCellDidMount: function (info) {
+                const dateStr = info.date.toISOString().split('T')[0];
+                if (blackoutDates.includes(dateStr)) {
+                    info.el.classList.add('blackout-day');
+                }
+            }
         });
+
         calendar.render();
     });
 </script>
