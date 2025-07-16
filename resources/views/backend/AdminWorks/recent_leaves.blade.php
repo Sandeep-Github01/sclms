@@ -2,7 +2,7 @@
 @include('backend.partials.sidebar')
 
 <div class="main-content">
-    <h2>Recent Leave Requests <span class="text-muted">(Admin View Only)</span></h2>
+    <h2>Recent Leave Requests</h2>
 
     {{-- Students Section --}}
     <div class="user-section">
