@@ -31,6 +31,7 @@
                 <li><strong>Semester:</strong> {{ $user->semester ?? '-' }}</li>
             @endif
 
+            <li><strong>Last Login:</strong>{{ $user->last_login_at ? $user->last_login_at->format('d M Y, h:i A') : ' -' }}</li>
             <li><strong>Joined:</strong> {{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}</li>
         </ul>
         <a href="{{ route('admin.user.index') }}" class="btn-back">Back</a>

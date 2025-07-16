@@ -53,6 +53,10 @@ class UserController extends Controller
                     ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
             }
 
+            $user->update([
+                'last_login_at' => now(),
+            ]);
+
 
             return redirect()->route('frontend.user.dashboard');
         }
