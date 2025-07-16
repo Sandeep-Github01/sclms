@@ -19,14 +19,26 @@ class LeaveController extends Controller
     public function create()
     {
         $leaveTypes = LeaveType::all();
-        $blackouts = BlackoutPeriod::all()->map(function ($b) {
-            return [
-                'title' => 'Blackout',
-                'start' => $b->start_date,
-                'end' => $b->end_date,
-                'color' => '#000'
-            ];
-        });
+        $user = Auth::user();
+
+        $blackouts = BlackoutPeriod::query()
+            ->where(function ($q) use ($user) {
+                $q->whereNull('department_id')
+                    ->orWhere('department_id', $user->department_id);
+            })
+            ->where(function ($q) use ($user) {
+                $q->whereNull('semester')
+                    ->orWhere('semester', $user->semester);
+            })
+            ->get()
+            ->map(function ($b) {
+                return [
+                    'title' => 'Blackout',
+                    'start' => $b->start_date,
+                    'end' => $b->end_date,
+                    'color' => '#000',
+                ];
+            });
 
         return view('frontend.leave.apply', compact('leaveTypes', 'blackouts'));
     }

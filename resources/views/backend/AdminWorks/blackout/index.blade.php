@@ -18,6 +18,8 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Reason</th>
+                    <th>Department id</th>
+                    <th>Semester</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -28,6 +30,8 @@
                         <td>{{ $blackout->start_date }}</td>
                         <td>{{ $blackout->end_date }}</td>
                         <td>{{ $blackout->reason }}</td>
+                        <td>{{ $blackout->department_id}}</td>
+                        <td>{{ $blackout->semester}}</td>
                         <td class="table-actions">
                             <a href="{{ route('admin.blackout.edit', $blackout->id) }}" class="btn-table-view">Edit</a>
                             <form method="POST" action="{{ route('admin.blackout.destroy', $blackout->id) }}">
