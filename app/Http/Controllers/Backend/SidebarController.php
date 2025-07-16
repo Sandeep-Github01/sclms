@@ -8,22 +8,22 @@ use App\Models\LeaveRequest;
 
 class SidebarController extends Controller
 {
-public function leavesByRole()
-{
-    $leaveRequests = LeaveRequest::with(['user', 'leaveType'])->get();
+    public function leavesByRole()
+    {
+        $leaveRequests = LeaveRequest::with(['user', 'leaveType'])->get();
 
-    $grouped = $leaveRequests->groupBy(function ($leave) {
-        return $leave->user->role ?? 'Unknown';
-    });
+        $grouped = $leaveRequests->groupBy(function ($leave) {
+            return $leave->user->role ?? 'Unknown';
+        });
 
-    $students = $grouped->get('student', collect());
-    $teachers = $grouped->get('teacher', collect());
+        $students = $grouped->get('student', collect());
+        $teachers = $grouped->get('teacher', collect());
 
-    return view('backend.AdminWorks.recent_leaves', [
-        'students' => $students,
-        'teachers' => $teachers,
-    ]);
-}
+        return view('backend.AdminWorks.recent_leaves', [
+            'students' => $students,
+            'teachers' => $teachers,
+        ]);
+    }
 
 
     public function manualReview()
