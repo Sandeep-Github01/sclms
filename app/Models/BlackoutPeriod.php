@@ -10,13 +10,17 @@ class BlackoutPeriod extends Model
     use HasFactory;
 
     protected $fillable = [
+        'department_id',
+        'semester',
         'start_date',
         'end_date',
         'reason',
-        'department_id',
-        'semester'
     ];
-    
+
+    protected $casts = [
+        'department_id' => 'array',
+        'semester' => 'array',
+    ];
     public function department()
     {
         return $this->belongsTo(Department::class);

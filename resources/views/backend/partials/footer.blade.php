@@ -2,6 +2,10 @@
     <small>&copy; {{ date('Y') }} SCLMS Admin Panel - All rights reserved.</small>
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const toggle = document.querySelector('.admin-works-toggle');
@@ -48,6 +52,16 @@
             ) {
                 closeSidebar();
             }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.select2').select2({
+            placeholder: "Select options",
+            allowClear: true,
+            closeOnSelect: false
         });
     });
 </script>

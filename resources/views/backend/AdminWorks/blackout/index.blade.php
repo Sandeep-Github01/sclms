@@ -18,35 +18,45 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Reason</th>
-                    <th>Department id</th>
-                    <th>Semester</th>
+                    <th>Departments</th>
+                    <th>Semesters</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($blackouts as $blackout)
+                @forelse($blackouts as $blackout)
                     <tr>
                         <td>{{ $blackout->id }}</td>
                         <td>{{ $blackout->start_date }}</td>
                         <td>{{ $blackout->end_date }}</td>
                         <td>{{ $blackout->reason }}</td>
-                        <td>{{ $blackout->department_id}}</td>
-                        <td>{{ $blackout->semester}}</td>
+                        <td>
+                            @if(!empty($blackout->department_id))
+                                @foreach($blackout->department_id as $deptId)
+                                    {{ \App\Models\Department::find($deptId)->name ?? 'Unknown' }}{{ !$loop->last ? ', ' : '' }}
+                                @endforeach
+                            @else
+                                All Departments
+                            @endif
+                        </td>
+                        <td>
+                            {{ !empty($blackout->semester) ? implode(', ', $blackout->semester) : 'All Semesters' }}
+                        </td>
                         <td class="table-actions">
                             <a href="{{ route('admin.blackout.edit', $blackout->id) }}" class="btn-table-view">Edit</a>
                             <form method="POST" action="{{ route('admin.blackout.destroy', $blackout->id) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn-table-delete" onclick="return confirm('Delete this blackout period?')">Delete</button>
+                                <button type="submit" class="btn-table-delete"
+                                    onclick="return confirm('Delete this blackout period?')">Delete</button>
                             </form>
                         </td>
                     </tr>
-                @endforeach
-                @if ($blackouts->isEmpty())
+                @empty
                     <tr>
-                        <td colspan="5">No blackout periods found.</td>
+                        <td colspan="7">No blackout periods found.</td>
                     </tr>
-                @endif
+                @endforelse
             </tbody>
         </table>
     </div>

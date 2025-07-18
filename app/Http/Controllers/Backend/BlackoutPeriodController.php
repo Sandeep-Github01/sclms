@@ -27,12 +27,19 @@ class BlackoutPeriodController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'nullable|string|max:255',
-            'department_id' => 'nullable|exists:departments,id',
-            'semester' => 'nullable|string|max:20',
+            'department_id' => 'nullable|array',
+            'department_id.*' => 'exists:departments,id',
+            'semester' => 'nullable|array',
+            'semester.*' => 'string|max:20', 
         ]);
 
-
-        BlackoutPeriod::create($validated);
+        BlackoutPeriod::create([
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'reason' => $validated['reason'] ?? null,
+            'department_id' => $validated['department_id'] ?? [],
+            'semester' => $validated['semester'] ?? [],
+        ]);
 
         return redirect()->route('admin.blackout.index')
             ->with('success', 'Blackout period created successfully.');
@@ -53,12 +60,19 @@ class BlackoutPeriodController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'nullable|string|max:255',
-            'department_id' => 'nullable|exists:departments,id',
-            'semester' => 'nullable|string|max:20',
+            'department_id' => 'nullable|array',
+            'department_id.*' => 'exists:departments,id',
+            'semester' => 'nullable|array',
+            'semester.*' => 'string|max:20',
         ]);
 
-
-        $blackout->update($validated);
+        $blackout->update([
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'reason' => $validated['reason'] ?? null,
+            'department_id' => $validated['department_id'] ?? [],
+            'semester' => $validated['semester'] ?? [],
+        ]);
 
         return redirect()->route('admin.blackout.index')
             ->with('success', 'Blackout period updated successfully.');
