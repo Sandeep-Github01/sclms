@@ -21,14 +21,18 @@ class LeaveController extends Controller
         $leaveTypes = LeaveType::all();
         $user = Auth::user();
 
+        // Get department ID from dept_name
+        $department = Department::where('name', $user->dept_name)->first();
+        $departmentId = $department ? $department->id : null;
+
         $blackouts = BlackoutPeriod::query()
-            ->where(function ($q) use ($user) {
+            ->where(function ($q) use ($departmentId) {
                 $q->whereNull('department_id')
-                    ->orWhere('department_id', $user->department_id);
+                    ->orWhereJsonContains('department_id', $departmentId);
             })
             ->where(function ($q) use ($user) {
                 $q->whereNull('semester')
-                    ->orWhere('semester', $user->semester);
+                    ->orWhereJsonContains('semester', $user->semester);
             })
             ->get()
             ->map(function ($b) {
@@ -41,6 +45,7 @@ class LeaveController extends Controller
             });
 
         return view('frontend.leave.apply', compact('leaveTypes', 'blackouts'));
+
     }
 
     // 2. Process leave application (validates, evaluates, logs steps)
