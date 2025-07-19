@@ -85,18 +85,10 @@
                 <td>Department:</td>
                 <td>{{ $user->dept_name }}</td>
             </tr>
-            <tr>
-                <td>Phone:</td>
-                <td>{{ $user->phone }}</td>
-            </tr>
-            <tr>
-                <td>Status:</td>
-                <td>{{ $user->status }}</td>
-            </tr>
         </table>
 
         <div style="text-align: center; margin: 20px 0;">
-            <a href="{{ route('admin.login') }}" class="button">Review Profile</a>
+            <a href="{{ route('admin.user.profileReview') }}" class="button">Review Profile</a>
         </div>
 
         <div class="footer">
