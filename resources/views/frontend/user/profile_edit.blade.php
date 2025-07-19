@@ -44,7 +44,7 @@
         </div>
 
         <div style="margin-bottom: 10px;">
-            <label>DOB:</label><br>
+            <label>DOB (In AD):</label><br>
             <input type="date" name="dob" value="{{ old('dob', $user->dob) }}" required>
         </div>
 
@@ -73,12 +73,12 @@
         </div>
 
         <div style="margin-bottom: 10px;">
-        <label>Role:</label>
-        <select name="role">
-            <option value="">-- Select Role --</option>
-            <option value="student" {{ old('role', $user->role) == 'student' ? 'selected' : '' }}>Student</option>
-            <option value="teacher" {{ old('role', $user->role) == 'teacher' ? 'selected' : '' }}>Teacher</option>
-        </select>
+            <label>Role:</label>
+            <select name="role">
+                <option value="">-- Select Role --</option>
+                <option value="student" {{ old('role', $user->role) == 'student' ? 'selected' : '' }}>Student</option>
+                <option value="teacher" {{ old('role', $user->role) == 'teacher' ? 'selected' : '' }}>Teacher</option>
+            </select>
         </div>
 
 
@@ -94,13 +94,19 @@
 
         @if($user->role == 'student')
             <div style="margin-bottom: 10px;">
-                <label>Batch:</label><br>
+                <label>Batch (In AD):</label><br>
                 <input type="text" name="batch" value="{{ old('batch', $user->batch) }}" required>
             </div>
-
             <div style="margin-bottom: 10px;">
-                <label>Semester:</label><br>
-                <input type="text" name="semester" value="{{ old('semester', $user->semester) }}" required>
+                <label for="semester">Semester:</label><br>
+                <select name="semester" id="semester" required>
+                    <option value="">-- Select Semester --</option>
+                    @for($i = 1; $i <= 8; $i++)
+                        <option value="{{ $i }}" {{ old('semester', $user->semester) == $i ? 'selected' : '' }}>
+                            Semester {{ $i }}
+                        </option>
+                    @endfor
+                </select>
             </div>
         @endif
 
