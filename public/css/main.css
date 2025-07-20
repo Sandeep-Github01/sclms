@@ -839,6 +839,11 @@ body.sidebar-active .sidebar-overlay {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Distance between icon and text in process log */
+.log-item .log-icon {
+    margin-right: 0.5rem;
+}
+
 /* Responsive calendar */
 @media (max-width: 768px) {
     #calendar {
