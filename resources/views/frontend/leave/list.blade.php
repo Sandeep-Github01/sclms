@@ -7,28 +7,34 @@
     @if($leaves->isEmpty())
         <p>No leave records yet. <a href="{{ route('leave.create') }}">Apply now</a></p>
     @else
-        <table border="1" cellpadding="5" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($leaves as $lv)
+        <div class="table-wrapper">
+            <table class="user-table">
+                <thead>
                     <tr>
-                        <td>{{ $lv->leaveType->name }}</td>
-                        <td>{{ $lv->start_date }}</td>
-                        <td>{{ $lv->end_date }}</td>
-                        <td>{{ ucfirst($lv->status) }}</td>
-                        <td><a href="{{ route('leave.show', $lv->id) }}">View</a></td>
+                        <th>Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($leaves as $lv)
+                        <tr>
+                            <td>{{ $lv->leaveType->name }}</td>
+                            <td>{{ $lv->start_date }}</td>
+                            <td>{{ $lv->end_date }}</td>
+                            <td>{{ ucfirst($lv->status) }}</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="{{ route('leave.show', $lv->id) }}" class="btn-table-view">View</a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
 </div>
 
