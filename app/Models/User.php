@@ -114,8 +114,29 @@ class User extends Authenticatable
         return $this->hasMany(ProfileUpdateRequest::class);
     }
 
-    public function latestProfileUpdateRequest()
+    public function latestPendingUpdate()
     {
-        return $this->hasOne(ProfileUpdateRequest::class)->latestOfMany();
+        return $this->profileUpdateRequests()->where('status', 'Pending')->latest()->first();
+    }
+
+    public function applyPendingChanges()
+    {
+        $request = $this->latestPendingUpdate();
+
+        if ($request) {
+            foreach ($request->data as $field => $value) {
+                $this->{$field} = $value;
+            }
+            $this->save();
+        }
+    }
+
+    public function clearPendingChanges()
+    {
+        $request = $this->latestPendingUpdate();
+        if ($request) {
+            $request->status = 'Declined'; // fallback
+            $request->save();
+        }
     }
 }

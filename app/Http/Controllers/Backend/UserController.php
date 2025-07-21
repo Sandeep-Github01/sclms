@@ -40,7 +40,7 @@ class UserController extends Controller
     public function profileReviewForm($id)
     {
         $user = User::findOrFail($id);
-        $proposed = $user->pendingChanges(); // You need to implement this in the model
+        $proposed = $user->latestPendingUpdate()?->data ?? [];  // You need to implement this in the model
         return view('backend.user.profile_review', compact('user', 'proposed'));
     }
 
