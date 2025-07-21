@@ -108,4 +108,14 @@ class User extends Authenticatable
 
         return false;
     }
+
+    public function profileUpdateRequests()
+    {
+        return $this->hasMany(ProfileUpdateRequest::class);
+    }
+
+    public function latestProfileUpdateRequest()
+    {
+        return $this->hasOne(ProfileUpdateRequest::class)->latestOfMany();
+    }
 }

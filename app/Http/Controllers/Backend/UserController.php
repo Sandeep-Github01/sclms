@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Mail\ProfileUpdateResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -36,36 +37,41 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User deleted (internally only).');
     }
 
-    public function reviewForm($id)
+    public function profileReviewForm($id)
     {
         $user = User::findOrFail($id);
-        return view('backend.user.profile_review', compact('user'));
+        $proposed = $user->pendingChanges(); // You need to implement this in the model
+        return view('backend.user.profile_review', compact('user', 'proposed'));
     }
 
-    public function review(Request $request, $id)
+    public function processProfileReview(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
         if ($request->input('action') === 'approve') {
+            // Apply the pending changes
+            $user->applyPendingChanges(); // Implement in User model
+            $user->clearPendingChanges(); // Implement in User model
             $user->profile_status = 'Approved';
             $user->status = 'Active';
             $user->save();
 
-            // TODO: Send acceptance email to user
-            // Mail::to($user->email)->send(new ProfileApprovedMail($user));
+            // Send approved mail
+            Mail::to($user->email)->send(new ProfileUpdateResponse($user, true, 'Your changes have been approved.'));
 
-            return redirect()->route('admin.user.index')->with('success', 'Profile approved and activated.');
+            return redirect()->route('admin.user.index')->with('success', 'Profile approved and user notified.');
         }
 
         if ($request->input('action') === 'decline') {
             $reason = $request->input('reason');
+            $user->clearPendingChanges(); // Implement in User model
             $user->profile_status = 'Declined';
             $user->save();
 
-            // TODO: Send decline email with reason
-            // Mail::to($user->email)->send(new ProfileDeclinedMail($user, $reason));
+            // Send rejection mail
+            Mail::to($user->email)->send(new ProfileUpdateResponse($user, false, $reason ?? 'Your changes were rejected.'));
 
-            return redirect()->route('admin.user.index')->with('error', 'Profile declined.');
+            return redirect()->route('admin.user.index')->with('error', 'Profile rejected and user notified.');
         }
 
         return back()->with('error', 'Invalid action.');
