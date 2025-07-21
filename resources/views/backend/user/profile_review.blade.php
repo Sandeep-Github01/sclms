@@ -6,34 +6,101 @@
         <h3 class="section-title">Review Profile Update</h3>
 
         <div class="user-detail-image-section">
-            @if($user->image)
+            @if ($user->image)
                 <img src="{{ asset('uploads/users/' . $user->image) }}" alt="Profile Image" class="profile-image">
             @else
                 <div class="user-detail-placeholder">No Image</div>
             @endif
         </div>
 
-        <br><hr><br>
+        <br>
+        <hr><br>
+
+        @php
+            $requested = $profileRequest->data ?? [];
+        @endphp
 
         <ul class="user-detail-list">
-            <li><strong>Name:</strong> {{ $user->name }}</li>
-            <li><strong>Email:</strong> {{ $user->email }}</li>
-            <li><strong>Role:</strong> {{ ucfirst($user->role) }}</li>
-            <li><strong>Department:</strong> {{ $user->department->name ?? $user->dept_name ?? 'N/A' }}</li>
-            <li><strong>DOB:</strong> {{ $user->dob ?? '-' }}</li>
-            <li><strong>Address:</strong> {{ $user->address ?? '-' }}</li>
-            <li><strong>Gender:</strong> {{ ucfirst($user->gender) ?? '-' }}</li>
-            <li><strong>Status:</strong> {{ $user->status ?? '-' }}</li>
-            <li><strong>Phone:</strong> {{ $user->phone ?? '-' }}</li>
+            <li>
+                <strong>Name:</strong> {{ $user->name }}
+                @if (isset($requested['name']) && $requested['name'] !== $user->name)
+                    <br><span class="text-warning">Requested: {{ $requested['name'] }}</span>
+                @endif
+            </li>
 
-            @if($user->role == 'student')
-                <li><strong>Batch:</strong> {{ $user->batch ?? '-' }}</li>
-                <li><strong>Semester:</strong> {{ $user->semester ?? '-' }}</li>
+            <li>
+                <strong>Email:</strong> {{ $user->email }}
+                @if (isset($requested['email']) && $requested['email'] !== $user->email)
+                    <br><span class="text-warning">Requested: {{ $requested['email'] }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>Role:</strong> {{ ucfirst($user->role) }}
+                @if (isset($requested['role']) && $requested['role'] !== $user->role)
+                    <br><span class="text-warning">Requested: {{ ucfirst($requested['role']) }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>Department:</strong> {{ $user->department->name ?? ($user->dept_name ?? 'N/A') }}
+                @if (isset($requested['dept_name']) && $requested['dept_name'] !== $user->dept_name)
+                    <br><span class="text-warning">Requested: {{ $requested['dept_name'] }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>DOB:</strong> {{ $user->dob }}
+                @if (isset($requested['dob']) && $requested['dob'] !== $user->dob)
+                    <br><span class="text-warning">Requested: {{ $requested['dob'] }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>Address:</strong> {{ $user->address }}
+                @if (isset($requested['address']) && $requested['address'] !== $user->address)
+                    <br><span class="text-warning">Requested: {{ $requested['address'] }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>Gender:</strong> {{ ucfirst($user->gender) }}
+                @if (isset($requested['gender']) && $requested['gender'] !== $user->gender)
+                    <br><span class="text-warning">Requested: {{ ucfirst($requested['gender']) }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>Status:</strong> {{ $user->status }}
+                @if (isset($requested['status']) && $requested['status'] !== $user->status)
+                    <br><span class="text-warning">Requested: {{ $requested['status'] }}</span>
+                @endif
+            </li>
+
+            <li>
+                <strong>Phone:</strong> {{ $user->phone }}
+                @if (isset($requested['phone']) && $requested['phone'] !== $user->phone)
+                    <br><span class="text-warning">Requested: {{ $requested['phone'] }}</span>
+                @endif
+            </li>
+
+            @if ($user->role == 'student')
+                <li>
+                    <strong>Batch:</strong> {{ $user->batch }}
+                    @if (isset($requested['batch']) && $requested['batch'] !== $user->batch)
+                        <br><span class="text-warning">Requested: {{ $requested['batch'] }}</span>
+                    @endif
+                </li>
+
+                <li>
+                    <strong>Semester:</strong> {{ $user->semester }}
+                    @if (isset($requested['semester']) && $requested['semester'] !== $user->semester)
+                        <br><span class="text-warning">Requested: {{ $requested['semester'] }}</span>
+                    @endif
+                </li>
             @endif
-
-            <li><strong>Last Login:</strong> {{ $user->last_login_at ? $user->last_login_at->format('d M Y, h:i A') : '-' }}</li>
-            <li><strong>Joined:</strong> {{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}</li>
         </ul>
+
 
         <form action="{{ route('admin.user.review', $user->id) }}" method="POST" style="margin-top: 20px;">
             @csrf
@@ -53,7 +120,8 @@
             </button>
         </form>
 
-        <a href="{{ route('admin.user.index') }}" class="btn-back" style="margin-top: 20px; display: inline-block;">Back</a>
+        <a href="{{ route('admin.user.index') }}" class="btn-back"
+            style="margin-top: 20px; display: inline-block;">Back</a>
     </div>
 </div>
 

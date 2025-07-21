@@ -23,6 +23,7 @@ class UserController extends Controller
     {
         return view("frontend.user.login");
     }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -67,12 +68,12 @@ class UserController extends Controller
         ]);
     }
 
-
     public function register_show()
     {
         $departments = Department::pluck('name');
         return view("frontend.user.register", compact('departments'));
     }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -100,10 +101,12 @@ class UserController extends Controller
 
         return redirect()->route('frontend.emails.verificationSent');
     }
+
     public function verificationSent()
     {
         return view('frontend.emails.verificationSent');
     }
+
     public function verify_email(Request $request, $id)
     {
         if (! $request->hasValidSignature()) {
@@ -117,11 +120,13 @@ class UserController extends Controller
         }
         return redirect()->route('frontend.user.login')->with('success', 'Email verified successfully. You can now log in.');
     }
+
     public function logout(Request $request)
     {
         Auth::logout();
         return redirect()->route('frontend.user.login')->with('success', 'Logged out successfully.');
     }
+
     public function showForgotPasswordForm()
     {
         return view('frontend.user.forgot-password');
@@ -148,7 +153,6 @@ class UserController extends Controller
         return view('frontend.user.reset-password', compact('token', 'email'));
     }
 
-
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -172,12 +176,14 @@ class UserController extends Controller
             return back()->withErrors(['email' => __($status)]);
         }
     }
+
     public function profile()
     {
         $user = Auth::user();
 
         return view('frontend.user.profile', compact('user'));
     }
+
     public function editProfile()
     {
         $user = Auth::user();
@@ -186,8 +192,6 @@ class UserController extends Controller
 
         return view('frontend.user.profile_edit', compact('user', 'departments'));
     }
-
-
 
     public function updateProfile(Request $request)
     {
@@ -208,7 +212,6 @@ class UserController extends Controller
             'semester' => $request->role === 'student' ? 'required|string' : 'nullable',
         ]);
 
-        // Handle file upload
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('uploads/users'), $imageName);
@@ -218,7 +221,6 @@ class UserController extends Controller
         $data['is_profile_complete'] = true;
         $data['profile_status'] = 'Pending';
 
-        // Save to profile_update_requests instead of directly updating the user
         $existingRequest = ProfileUpdateRequest::where('user_id', $user->id)->where('status', 'pending')->first();
 
         if ($existingRequest) {
@@ -231,6 +233,10 @@ class UserController extends Controller
                 'data' => $data,
             ]);
         }
+
+        $user->is_profile_complete = true;
+        $user->profile_status = 'Pending';
+        $user->save();
 
         // Notify Admin
         $adminEmails = Admin::pluck('email')->toArray();

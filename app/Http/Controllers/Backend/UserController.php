@@ -40,9 +40,21 @@ class UserController extends Controller
     public function profileReviewForm($id)
     {
         $user = User::findOrFail($id);
-        $proposed = $user->latestPendingUpdate()?->data ?? [];  // You need to implement this in the model
-        return view('backend.user.profile_review', compact('user', 'proposed'));
+        $profileRequest = $user->latestPendingUpdate();
+
+        if (!$profileRequest) {
+            return redirect()->route('admin.user.index')->with('error', 'No pending profile update found for this user.');
+        }
+
+        $proposed = $profileRequest->data;
+
+        return view('backend.user.profile_review', [
+            'user' => $user,
+            'profileRequest' => $profileRequest,
+            'proposed' => $proposed,
+        ]);
     }
+
 
     public function processProfileReview(Request $request, $id)
     {

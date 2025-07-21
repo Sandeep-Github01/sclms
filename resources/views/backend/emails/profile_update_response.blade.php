@@ -23,10 +23,10 @@
         </p>
 
         <p style="font-size: 16px;">
-            {!! nl2br(e($messageLine)) !!}
+            {!! nl2br(e($messageContent)) !!}
         </p>
 
-        @if (! $approved)
+        @if (!$approved)
             <p style="font-size: 16px;">
                 You may log in and re-submit the required changes.
             </p>
