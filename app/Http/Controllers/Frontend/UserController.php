@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use App\Models\ProfileUpdateRequest;
 
 class UserController extends Controller
 {
@@ -185,6 +186,9 @@ class UserController extends Controller
 
         return view('frontend.user.profile_edit', compact('user', 'departments'));
     }
+
+
+
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -214,16 +218,27 @@ class UserController extends Controller
         $data['is_profile_complete'] = true;
         $data['profile_status'] = 'Pending';
 
-        $user->update($data);
+        // Save to profile_update_requests instead of directly updating the user
+        $existingRequest = ProfileUpdateRequest::where('user_id', $user->id)->where('status', 'pending')->first();
 
-        //Notify Admin
+        if ($existingRequest) {
+            $existingRequest->update([
+                'data' => $data,
+            ]);
+        } else {
+            ProfileUpdateRequest::create([
+                'user_id' => $user->id,
+                'data' => $data,
+            ]);
+        }
+
+        // Notify Admin
         $adminEmails = Admin::pluck('email')->toArray();
         Mail::send('backend.emails.profile_update_notification', ['user' => $user], function ($message) use ($adminEmails) {
-            $message->subject('New User Profile Update')
-                ->to($adminEmails);
+            $message->subject('New User Profile Update')->to($adminEmails);
         });
 
         return redirect()->route('frontend.user.profile')
-            ->with('success', 'Profile submitted for approval.');
+            ->with('success', 'Profile submitted for admin review.');
     }
 }
