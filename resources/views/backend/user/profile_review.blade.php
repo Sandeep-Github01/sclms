@@ -102,7 +102,7 @@
         </ul>
 
 
-        <form action="{{ route('admin.user.review', $user->id) }}" method="POST" style="margin-top: 20px;">
+        <form action="{{ route('admin.user.profileReview', $user->id) }}" method="POST" style="margin-top: 20px;">
             @csrf
             @method('PUT')
 
@@ -120,8 +120,7 @@
             </button>
         </form>
 
-        <a href="{{ route('admin.user.index') }}" class="btn-back"
-            style="margin-top: 20px; display: inline-block;">Back</a>
+        <a href="{{ route('admin.user.review_index') }}" class="btn-back">Back</a>
     </div>
 </div>
 

@@ -38,13 +38,22 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User deleted (internally only).');
     }
 
+    public function reviewIndex()
+    {
+        $pendingRequests = ProfileUpdateRequest::with('user')
+            ->where('status', 'pending')
+            ->get();
+
+        return view('backend.user.review_index', compact('pendingRequests'));
+    }
+
     public function profileReviewForm($id)
     {
         $user = User::findOrFail($id);
         $profileRequest = $user->latestPendingUpdate();
 
         if (!$profileRequest) {
-            return redirect()->route('admin.user.index')->with('error', 'No pending profile update found for this user.');
+            return redirect()->route('admin.user.review_index')->with('error', 'No pending profile update found for this user.');
         }
 
         $proposed = $profileRequest->data;
@@ -56,43 +65,55 @@ class UserController extends Controller
         ]);
     }
 
-    public function reviewIndex()
-    {
-        $pendingRequests = ProfileUpdateRequest::with('user')
-            ->where('status', 'pending')
-            ->get();
-
-        return view('backend.user.review_index', compact('pendingRequests'));
-    }
-
     public function processProfileReview(Request $request, $id)
     {
         $user = User::findOrFail($id);
+        $profileRequest = $user->latestPendingUpdate();
+
+        if (!$profileRequest) {
+            return redirect()->route('admin.user.review_index')->with('error', 'No pending profile update found for this user.');
+        }
 
         if ($request->input('action') === 'approve') {
-            // Apply the pending changes
-            $user->applyPendingChanges(); // Implement in User model
-            $user->clearPendingChanges(); // Implement in User model
+            // Apply the pending changes to user object
+            $user->applyPendingChanges();
+
+            // Update user status and profile_status
             $user->profile_status = 'Approved';
             $user->status = 'Active';
-            $user->save();
+            $user->save(); // Save the user with applied changes
+
+            // Clear any pending data (cleanup)
+            $user->clearPendingChanges();
+
+            // Update the ProfileUpdateRequest status to approved
+            $profileRequest->status = 'approved';
+            $profileRequest->save();
 
             // Send approved mail
             Mail::to($user->email)->send(new ProfileUpdateResponse($user, true, 'Your changes have been approved.'));
 
-            return redirect()->route('admin.user.index')->with('success', 'Profile approved and user notified.');
+            return redirect()->route('admin.user.review_index')->with('success', 'Profile approved and user notified.');
         }
 
         if ($request->input('action') === 'decline') {
             $reason = $request->input('reason');
-            $user->clearPendingChanges(); // Implement in User model
+
+            // Clear any pending data (cleanup)
+            $user->clearPendingChanges();
+
+            // Update user profile_status
             $user->profile_status = 'Declined';
             $user->save();
+
+            // Update the ProfileUpdateRequest status to declined
+            $profileRequest->status = 'declined';
+            $profileRequest->save();
 
             // Send rejection mail
             Mail::to($user->email)->send(new ProfileUpdateResponse($user, false, $reason ?? 'Your changes were rejected.'));
 
-            return redirect()->route('admin.user.index')->with('error', 'Profile rejected and user notified.');
+            return redirect()->route('admin.user.review_index')->with('error', 'Profile rejected and user notified.');
         }
 
         return back()->with('error', 'Invalid action.');

@@ -21,7 +21,7 @@
                     <a href="{{ route('admin.blackout.index') }}">Blackout Periods</a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.user.reviewIndex') }}">Review User</a>
+                    <a href="{{ route('admin.user.review_index') }}">Review User</a>
                 </li>
             </ul>
         </li>
