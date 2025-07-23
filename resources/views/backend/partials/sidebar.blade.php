@@ -20,6 +20,9 @@
                 <li>
                     <a href="{{ route('admin.blackout.index') }}">Blackout Periods</a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.user.profileReview') }}">Review User</a>
+                </li>
             </ul>
         </li>
     </ul>
