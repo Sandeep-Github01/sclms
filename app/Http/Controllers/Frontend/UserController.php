@@ -50,15 +50,14 @@ class UserController extends Controller
                 ]);
             }
 
-            if ($user->isProfileIncomplete()) {
-                return redirect()->route('frontend.user.profileEdit')
-                    ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
-            }
-
             $user->update([
                 'last_login_at' => now(),
             ]);
 
+            if ($user->isProfileIncomplete()) {
+                return redirect()->route('frontend.user.profileEdit')
+                    ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
+            }
 
             return redirect()->route('frontend.user.dashboard');
         }
