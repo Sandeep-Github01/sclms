@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +63,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>New User Profile Update</h2>
@@ -88,7 +90,7 @@
         </table>
 
         <div style="text-align: center; margin: 20px 0;">
-            <a href="{{ route('admin.user.profileReview') }}" class="button">Review Profile</a>
+            <a href="{{ route('admin.user.profileReview', $user->id) }}" class="button">Review Profile</a>
         </div>
 
         <div class="footer">

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Mail\ProfileUpdateResponse;
 use Illuminate\Http\Request;
+use App\Mail\ProfileUpdateResponse;
+use App\Http\Controllers\Controller;
+use App\Models\ProfileUpdateRequest;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
@@ -55,6 +56,14 @@ class UserController extends Controller
         ]);
     }
 
+    public function reviewIndex()
+    {
+        $pendingRequests = ProfileUpdateRequest::with('user')
+            ->where('status', 'pending')
+            ->get();
+
+        return view('backend.user.review_index', compact('pendingRequests'));
+    }
 
     public function processProfileReview(Request $request, $id)
     {
