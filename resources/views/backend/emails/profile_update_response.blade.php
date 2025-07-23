@@ -23,7 +23,7 @@
         </p>
 
         <p style="font-size: 16px;">
-            {!! nl2br(e($messageContent)) !!}
+            Reason for declining : {!! nl2br(e($messageContent)) !!}
         </p>
 
         @if (!$approved)

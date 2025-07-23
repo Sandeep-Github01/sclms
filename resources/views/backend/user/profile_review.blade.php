@@ -24,63 +24,63 @@
             <li>
                 <strong>Name:</strong> {{ $user->name }}
                 @if (isset($requested['name']) && $requested['name'] !== $user->name)
-                    <br><span class="text-warning">Requested: {{ $requested['name'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['name'] }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Email:</strong> {{ $user->email }}
                 @if (isset($requested['email']) && $requested['email'] !== $user->email)
-                    <br><span class="text-warning">Requested: {{ $requested['email'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['email'] }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Role:</strong> {{ ucfirst($user->role) }}
                 @if (isset($requested['role']) && $requested['role'] !== $user->role)
-                    <br><span class="text-warning">Requested: {{ ucfirst($requested['role']) }}</span>
+                    <br><span class="text-warning">Requested change: {{ ucfirst($requested['role']) }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Department:</strong> {{ $user->department->name ?? ($user->dept_name ?? 'N/A') }}
                 @if (isset($requested['dept_name']) && $requested['dept_name'] !== $user->dept_name)
-                    <br><span class="text-warning">Requested: {{ $requested['dept_name'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['dept_name'] }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>DOB:</strong> {{ $user->dob }}
                 @if (isset($requested['dob']) && $requested['dob'] !== $user->dob)
-                    <br><span class="text-warning">Requested: {{ $requested['dob'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['dob'] }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Address:</strong> {{ $user->address }}
                 @if (isset($requested['address']) && $requested['address'] !== $user->address)
-                    <br><span class="text-warning">Requested: {{ $requested['address'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['address'] }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Gender:</strong> {{ ucfirst($user->gender) }}
                 @if (isset($requested['gender']) && $requested['gender'] !== $user->gender)
-                    <br><span class="text-warning">Requested: {{ ucfirst($requested['gender']) }}</span>
+                    <br><span class="text-warning">Requested change: {{ ucfirst($requested['gender']) }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Status:</strong> {{ $user->status }}
                 @if (isset($requested['status']) && $requested['status'] !== $user->status)
-                    <br><span class="text-warning">Requested: {{ $requested['status'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['status'] }}</span>
                 @endif
             </li>
 
             <li>
                 <strong>Phone:</strong> {{ $user->phone }}
                 @if (isset($requested['phone']) && $requested['phone'] !== $user->phone)
-                    <br><span class="text-warning">Requested: {{ $requested['phone'] }}</span>
+                    <br><span class="text-warning">Requested change: {{ $requested['phone'] }}</span>
                 @endif
             </li>
 
@@ -88,14 +88,14 @@
                 <li>
                     <strong>Batch:</strong> {{ $user->batch }}
                     @if (isset($requested['batch']) && $requested['batch'] !== $user->batch)
-                        <br><span class="text-warning">Requested: {{ $requested['batch'] }}</span>
+                        <br><span class="text-warning">Requested change: {{ $requested['batch'] }}</span>
                     @endif
                 </li>
 
                 <li>
                     <strong>Semester:</strong> {{ $user->semester }}
                     @if (isset($requested['semester']) && $requested['semester'] !== $user->semester)
-                        <br><span class="text-warning">Requested: {{ $requested['semester'] }}</span>
+                        <br><span class="text-warning">Requested change: {{ $requested['semester'] }}</span>
                     @endif
                 </li>
             @endif
@@ -106,13 +106,17 @@
             @csrf
             @method('PUT')
 
-            <label for="reason"><strong>Decline Reason (if applicable):</strong></label><br>
-            <textarea name="reason" id="reason" rows="4" style="width: 100%; margin-bottom: 15px;"></textarea>
-
             <button type="submit" name="action" value="approve"
                 style="background-color: #28a745; color: #fff; padding: 10px 15px; border: none; border-radius: 4px; margin-right: 10px;">
                 Approve
             </button>
+            <br>
+            <hr>
+<br>
+            <label for="reason"><strong>Decline Reason (if applicable):</strong></label><br>
+            <textarea name="reason" id="reason" rows="4" style="width: 100%; margin-bottom: 15px;"></textarea>
+
+
 
             <button type="submit" name="action" value="decline"
                 style="background-color: #dc3545; color: #fff; padding: 10px 15px; border: none; border-radius: 4px;">
