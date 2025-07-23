@@ -70,11 +70,16 @@ class User extends Authenticatable
         return $this->hasMany(Approval::class, 'approved_by');
     }
 
-    /**
-     * Check if the user's profile is incomplete based on required fields.
-     *
-     * @return bool
-     */
+    public function profileUpdateRequests()
+    {
+        return $this->hasMany(ProfileUpdateRequest::class);
+    }
+
+    public function latestPendingUpdate()
+    {
+        return $this->profileUpdateRequests()->where('status', 'pending')->latest()->first();
+    }
+
     public function isProfileIncomplete()
     {
         if (!$this->is_profile_complete || $this->profile_status !== 'Approved') {
@@ -91,7 +96,7 @@ class User extends Authenticatable
             'phone',
             'address',
             'gender',
-            'status',
+            'status'
         ];
 
         foreach ($requiredFields as $field) {
@@ -109,34 +114,21 @@ class User extends Authenticatable
         return false;
     }
 
-    public function profileUpdateRequests()
-    {
-        return $this->hasMany(ProfileUpdateRequest::class);
-    }
-
-    public function latestPendingUpdate()
-    {
-        return $this->profileUpdateRequests()->where('status', 'Pending')->latest()->first();
-    }
-
     public function applyPendingChanges()
     {
         $request = $this->latestPendingUpdate();
 
-        if ($request) {
+        if ($request && $request->data) {
             foreach ($request->data as $field => $value) {
-                $this->{$field} = $value;
+                if (in_array($field, $this->fillable)) {
+                    $this->{$field} = $value;
+                }
             }
-            $this->save();
         }
     }
 
     public function clearPendingChanges()
     {
-        $request = $this->latestPendingUpdate();
-        if ($request) {
-            $request->status = 'Declined'; // fallback
-            $request->save();
-        }
+        // Reserved for future cleanup logic
     }
 }
