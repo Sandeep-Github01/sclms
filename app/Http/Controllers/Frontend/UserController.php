@@ -43,7 +43,7 @@ class UserController extends Controller
                 ]);
             }
 
-            if ($user->status !== 'Active') {
+            if ($user->status !== 'active') {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'Your account is inactive. Please contact support.'
@@ -206,7 +206,7 @@ class UserController extends Controller
             'phone' => 'required|string|max:10',
             'address' => 'required|string',
             'gender' => 'required|in:male,female,other',
-            'status' => 'required|in:Active,Inactive',
+            'status' => 'required|in:active,inactive',
             'batch' => $request->role === 'student' ? 'required|string' : 'nullable',
             'semester' => $request->role === 'student' ? 'required|string' : 'nullable',
         ]);

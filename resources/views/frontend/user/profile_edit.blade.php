@@ -67,8 +67,8 @@
             <label>Status:</label><br>
             <select name="status" required>
                 <option value="">Select Status</option>
-                <option value="Active" {{ $user->status == 'Active' ? 'selected' : '' }}>Active</option>
-                <option value="Inactive" {{ $user->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>
         </div>
 

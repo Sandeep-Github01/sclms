@@ -79,8 +79,8 @@ class UserController extends Controller
             $user->applyPendingChanges();
 
             // Update user status and profile_status
-            $user->profile_status = 'Approved';
-            $user->status = 'Active';
+            $user->profile_status = 'approved';
+            $user->status = 'active';
             $user->save(); // Save the user with applied changes
 
             // Clear any pending data (cleanup)
@@ -103,7 +103,7 @@ class UserController extends Controller
             $user->clearPendingChanges();
 
             // Update user profile_status
-            $user->profile_status = 'Declined';
+            $user->profile_status = 'declined';
             $user->save();
 
             // Update the ProfileUpdateRequest status to declined
