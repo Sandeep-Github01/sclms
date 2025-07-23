@@ -24,6 +24,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/user', [UserController::class, 'index'])->name('admin.user.index');
         Route::get('/user/{id}', [UserController::class, 'show'])->name('admin.user.show');
         Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+        Route::get('/user/review-requests', [UserController::class, 'reviewIndex'])->name('admin.user.reviewIndex');
         Route::get('/user/profile-review/{id}', [UserController::class, 'profileReviewForm'])->name('admin.user.profileReviewForm');
         Route::post('/user/profile-review/{id}', [UserController::class, 'processProfileReview'])->name('admin.user.profileReview');
 
