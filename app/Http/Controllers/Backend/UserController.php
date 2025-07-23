@@ -75,22 +75,18 @@ class UserController extends Controller
         }
 
         if ($request->input('action') === 'approve') {
-            // Apply the pending changes to user object
             $user->applyPendingChanges();
 
-            // Update user status and profile_status
             $user->profile_status = 'approved';
             $user->status = 'active';
-            $user->save(); // Save the user with applied changes
+            $user->save();
 
-            // Clear any pending data (cleanup)
             $user->clearPendingChanges();
 
-            // Update the ProfileUpdateRequest status to approved
             $profileRequest->status = 'approved';
+            $profileRequest->admin_comment = $request->input('admin_comment') ?? 'Profile approved by admin.';
             $profileRequest->save();
 
-            // Send approved mail
             Mail::to($user->email)->send(new ProfileUpdateResponse($user, true, 'Your changes have been approved.'));
 
             return redirect()->route('admin.user.review_index')->with('success', 'Profile approved and user notified.');
@@ -98,19 +94,17 @@ class UserController extends Controller
 
         if ($request->input('action') === 'decline') {
             $reason = $request->input('reason');
+            $adminComment = $request->input('admin_comment');
 
-            // Clear any pending data (cleanup)
             $user->clearPendingChanges();
 
-            // Update user profile_status
             $user->profile_status = 'declined';
             $user->save();
 
-            // Update the ProfileUpdateRequest status to declined
             $profileRequest->status = 'declined';
+            $profileRequest->admin_comment = $adminComment ?? $reason ?? 'Profile declined by admin.';
             $profileRequest->save();
 
-            // Send rejection mail
             Mail::to($user->email)->send(new ProfileUpdateResponse($user, false, $reason ?? 'Your changes were rejected.'));
 
             return redirect()->route('admin.user.review_index')->with('error', 'Profile rejected and user notified.');
