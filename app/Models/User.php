@@ -82,7 +82,7 @@ class User extends Authenticatable
 
     public function isProfileIncomplete()
     {
-        if (!$this->is_profile_complete || $this->profile_status !== 'Approved') {
+        if (!$this->is_profile_complete || $this->profile_status !== 'approved') {
             return true;
         }
 
