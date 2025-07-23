@@ -4,7 +4,7 @@
 <div class="main-content">
     <h2>Update Profile</h2>
 
-    @if(session('popup'))
+    @if (session('popup'))
         <script>
             alert('Your profile will be updated after admin approves.');
         </script>
@@ -33,7 +33,7 @@
 
         <div style="margin-bottom: 10px;">
             <label>Current Image:</label><br>
-            @if($user->image)
+            @if ($user->image)
                 <img src="{{ asset('uploads/users/' . $user->image) }}" alt="Profile Image" width="120"
                     style="display: block; margin-bottom: 5px;">
             @else
@@ -81,18 +81,18 @@
             </select>
         </div>
 
-
         <div style="margin-bottom: 10px;">
             <label>Department:</label><br>
             <select name="dept_name" required>
                 <option value="">-- Select Department --</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept }}" {{ $user->dept_name == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                @foreach ($departments as $dept)
+                    <option value="{{ $dept }}" {{ $user->dept_name == $dept ? 'selected' : '' }}>
+                        {{ $dept }}</option>
                 @endforeach
             </select>
         </div>
 
-        @if($user->role == 'student')
+        @if ($user->role == 'student')
             <div style="margin-bottom: 10px;">
                 <label>Batch (In AD):</label><br>
                 <input type="text" name="batch" value="{{ old('batch', $user->batch) }}" required>
@@ -101,8 +101,9 @@
                 <label for="semester">Semester:</label><br>
                 <select name="semester" id="semester" required>
                     <option value="">-- Select Semester --</option>
-                    @for($i = 1; $i <= 8; $i++)
-                        <option value="{{ $i }}" {{ old('semester', $user->semester) == $i ? 'selected' : '' }}>
+                    @for ($i = 1; $i <= 8; $i++)
+                        <option value="{{ $i }}"
+                            {{ old('semester', $user->semester) == $i ? 'selected' : '' }}>
                             Semester {{ $i }}
                         </option>
                     @endfor

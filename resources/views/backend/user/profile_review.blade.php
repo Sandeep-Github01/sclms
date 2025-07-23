@@ -112,7 +112,7 @@
             </button>
             <br>
             <hr>
-<br>
+            <br>
             <label for="reason"><strong>Decline Reason (if applicable):</strong></label><br>
             <textarea name="reason" id="reason" rows="4" style="width: 100%; margin-bottom: 15px;"></textarea>
 
