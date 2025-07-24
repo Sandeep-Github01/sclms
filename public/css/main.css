@@ -8,7 +8,7 @@
 /* General layout */
 body {
     min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: "Segoe UI", Tahoma, sans-serif;
     background: linear-gradient(to right, #4facfe, #00f2fe);
     overflow-x: hidden;
     padding-bottom: 50px;
@@ -202,7 +202,7 @@ select:focus {
     font-weight: 500;
     color: #000;
     appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' heigFht='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
     background-position: right 10px center;
     cursor: pointer;
@@ -308,7 +308,7 @@ select:focus {
     width: 230px;
     background: #2e3c99;
     color: white;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 70px - 50px);
     position: fixed;
     top: 70px;
     left: 0;
@@ -430,6 +430,7 @@ body.sidebar-active .sidebar-overlay {
 
 /* ===================== FOOTER ===================== */
 .main-footer {
+    height: 50px;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -437,7 +438,7 @@ body.sidebar-active .sidebar-overlay {
     background: #e0e0e0;
     padding: 12px 30px;
     text-align: center;
-    z-index: 999;
+    z-index: 1000;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -480,7 +481,7 @@ body.sidebar-active .sidebar-overlay {
     flex-wrap: wrap;
     background: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
@@ -550,8 +551,37 @@ body.sidebar-active .sidebar-overlay {
     background-color: #0056b3;
 }
 
-/* Responsive */
+/* ===================== RESPONSIVE PROFILE CONTAINER ===================== */
+
 @media (max-width: 768px) {
+    .profile-container {
+        margin-left: 0;
+        width: 100%;
+        padding: 2px;
+        transition: all 0.3s ease;
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 100%;
+    }
+
+    .profile-field .value {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    .profile-field .value.email {
+        font-size: 11px;
+    }
+
     .profile-card {
         flex-direction: column;
         align-items: center;
@@ -562,7 +592,6 @@ body.sidebar-active .sidebar-overlay {
         margin-bottom: 20px;
     }
 }
-
 
 /* ===================== APPLY PAGE ===================== */
 .apply-container {
@@ -607,7 +636,7 @@ body.sidebar-active .sidebar-overlay {
 }
 /* FullCalendar Modern Styling */
 .fc {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .fc .fc-toolbar {
@@ -669,7 +698,11 @@ body.sidebar-active .sidebar-overlay {
 }
 
 .fc .fc-daygrid-day:hover {
-    background: linear-gradient(135deg, rgba(66, 153, 225, 0.1), rgba(159, 122, 234, 0.1)) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(66, 153, 225, 0.1),
+        rgba(159, 122, 234, 0.1)
+    ) !important;
     transform: scale(1.02);
     z-index: 2;
     border-color: rgba(66, 153, 225, 0.3) !important;
@@ -691,7 +724,11 @@ body.sidebar-active .sidebar-overlay {
 }
 
 .fc .fc-day-today {
-    background: linear-gradient(135deg, rgba(72, 187, 120, 0.2), rgba(56, 178, 172, 0.2)) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(72, 187, 120, 0.2),
+        rgba(56, 178, 172, 0.2)
+    ) !important;
     border: 2px solid #48bb78 !important;
     position: relative;
 }
@@ -702,7 +739,7 @@ body.sidebar-active .sidebar-overlay {
 }
 
 .fc .fc-day-today::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 5px;
     right: 5px;
@@ -714,7 +751,8 @@ body.sidebar-active .sidebar-overlay {
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
@@ -726,7 +764,11 @@ body.sidebar-active .sidebar-overlay {
 
 /* Holiday styling (Sundays only) */
 .fc .fc-daygrid-day.fc-day-sun {
-    background: linear-gradient(135deg, rgba(255, 182, 193, 0.15), rgba(255, 160, 160, 0.15)) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 182, 193, 0.15),
+        rgba(255, 160, 160, 0.15)
+    ) !important;
     border: 1px solid rgba(229, 62, 62, 0.3) !important;
 }
 
@@ -745,7 +787,11 @@ body.sidebar-active .sidebar-overlay {
 
 /* Blackout/Event days */
 .fc .fc-daygrid-day.fc-day-past {
-    background: linear-gradient(135deg, rgba(160, 160, 160, 0.1), rgba(140, 140, 140, 0.1)) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(160, 160, 160, 0.1),
+        rgba(140, 140, 140, 0.1)
+    ) !important;
 }
 
 .fc .fc-daygrid-day.fc-day-past .fc-daygrid-day-number {
@@ -947,7 +993,7 @@ body.sidebar-active .sidebar-overlay {
 
     /* ===================== SIDEBAR ===================== */
     .sidebar {
-        width: 30%;
+        width: 40%;
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
@@ -966,13 +1012,13 @@ body.sidebar-active .sidebar-overlay {
     }
 
     body.sidebar-active .main-content {
-        margin-left: 30%;
-        width: 70%;
+        margin-left: 40%;
+        width: 60%;
         transform: translateX(0);
     }
 
     body.sidebar-active .sidebar-overlay {
-        display: none;/
+        display: none;
     }
 }
 
@@ -1015,7 +1061,6 @@ body.sidebar-active .sidebar-overlay {
     border-bottom: 1px solid #e0e0e0;
     text-align: left;
     vertical-align: middle;
-    
 }
 
 .user-table th {
@@ -1033,7 +1078,7 @@ body.sidebar-active .sidebar-overlay {
 .table-actions {
     display: flex;
     gap: 8px;
-    align-items: center;    
+    align-items: center;
 }
 
 /* Reset form margins and make it transparent to flexbox */
@@ -1047,7 +1092,7 @@ body.sidebar-active .sidebar-overlay {
 .btn-table-delete,
 .btn-back {
     width: 80px;
-    height: 32px;        
+    height: 32px;
     padding: 0;
     display: inline-flex;
     justify-content: center;
@@ -1093,7 +1138,7 @@ body.sidebar-active .sidebar-overlay {
     background: #ffffff;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
     max-width: 600px;
 }
 
@@ -1114,7 +1159,7 @@ body.sidebar-active .sidebar-overlay {
     background: #fff;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-top: 30px;
 }
 
@@ -1187,8 +1232,8 @@ body.sidebar-active .sidebar-overlay {
 .toggle-icon {
     font-weight: bold;
     transition: transform 0.3s ease;
-    position: absolute; 
-    right: 10px; 
+    position: absolute;
+    right: 10px;
 }
 
 .toggle-icon.rotate {
@@ -1201,24 +1246,28 @@ body.sidebar-active .sidebar-overlay {
 
 /* --- BlackoutPeriod Select2 --- */
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
     background-color: #f9f9f9;
     border: 1px solid #ccc;
-    padding: 4px 8px; 
+    padding: 4px 8px;
     margin: 4px 4px 0 0;
     border-radius: 4px;
-    display: inline-flex !important; 
+    display: inline-flex !important;
     align-items: center;
     font-size: 14px;
     line-height: 1.4;
     position: relative;
     min-height: 20px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s ease;
     white-space: nowrap;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__remove {
     opacity: 0;
     position: absolute;
     pointer-events: auto;
@@ -1226,9 +1275,11 @@ body.sidebar-active .sidebar-overlay {
     height: 100%;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice::after {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice::after {
     content: "×";
-    position: static; 
+    position: static;
     color: #666;
     font-weight: bold;
     font-size: 14px;
@@ -1240,16 +1291,20 @@ body.sidebar-active .sidebar-overlay {
     justify-content: center;
     border-radius: 50%;
     transition: background-color 0.2s ease;
-    flex-shrink: 0; 
-    margin-left: 4px; 
+    flex-shrink: 0;
+    margin-left: 4px;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice:hover::after {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice:hover::after {
     background-color: #e0e0e0;
     color: #000;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice:hover {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice:hover {
     background-color: #f0f0f0;
 }
 
@@ -1263,12 +1318,16 @@ body.sidebar-active .sidebar-overlay {
     border: 1px solid #ccc;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__display {
     padding-right: 0;
     display: inline-block !important;
     white-space: nowrap;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
     cursor: pointer;
 }
