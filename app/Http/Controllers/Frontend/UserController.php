@@ -54,11 +54,6 @@ class UserController extends Controller
                 'last_login_at' => now(),
             ]);
 
-            if ($user->isProfileIncomplete()) {
-                return redirect()->route('frontend.user.profileEdit')
-                    ->with('info', 'Please complete your profile. It will be sent to the admin for approval.');
-            }
-
             return redirect()->route('frontend.user.dashboard');
         }
 
@@ -89,6 +84,8 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->role = $request->role;
         $user->dept_name = $request->dept_name;
+        $user->is_profile_complete = false; // Ensure this is set
+        $user->profile_status = 'Incomplete'; // Set initial status
         $user->save();
 
         $verificationUrl = URL::temporarySignedRoute(
@@ -179,16 +176,13 @@ class UserController extends Controller
     public function profile()
     {
         $user = Auth::user();
-
         return view('frontend.user.profile', compact('user'));
     }
 
     public function editProfile()
     {
         $user = Auth::user();
-
         $departments = Department::pluck('name');
-
         return view('frontend.user.profile_edit', compact('user', 'departments'));
     }
 
@@ -237,13 +231,12 @@ class UserController extends Controller
         $user->profile_status = 'Pending';
         $user->save();
 
-        // Notify Admin
         $adminEmails = Admin::pluck('email')->toArray();
         Mail::send('backend.emails.profile_update_notification', ['user' => $user], function ($message) use ($adminEmails) {
             $message->subject('New User Profile Update')->to($adminEmails);
         });
 
         return redirect()->route('frontend.user.profile')
-            ->with('success', 'Profile submitted for admin review.');
+            ->with('success', 'Profile submitted for admin review. You will be able to access other features once approved.');
     }
 }

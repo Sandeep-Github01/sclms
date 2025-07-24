@@ -11,6 +11,7 @@ use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Middleware\HandleCors;
 
+use App\Http\Middleware\CheckProfileComplete;
 use Illuminate\Session\Middleware\StartSession;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Routing\Middleware\ThrottleRequests;
@@ -65,5 +66,6 @@ class Kernel extends HttpKernel
         'guest' => RedirectIfAuthenticated::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
+        'profile.complete' => CheckProfileComplete::class,
     ];
 }
