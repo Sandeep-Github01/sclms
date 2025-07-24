@@ -186,6 +186,35 @@ select:focus {
     outline: none;
 }
 
+.status-select-wrapper {
+    position: relative;
+    margin-top: 20px;
+}
+
+.status-select {
+    width: 100%;
+    padding: 12px 14px;
+    padding-right: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #f4f7fc;
+    font-size: 15px;
+    font-weight: 500;
+    color: #000;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' heigFht='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.status-select:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px #007bff;
+    outline: none;
+}
+
 /* ====== Success & Error Messages ====== */
 .auth-container p.success {
     background: #e6f4ea;
