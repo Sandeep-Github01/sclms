@@ -30,6 +30,19 @@ class UserController extends Controller
         return view('backend.user.show', compact('user'));
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->status = $request->status;
+        $user->save();
+
+        return redirect()->route('admin.user.show', $user->id)->with('success', 'User status updated successfully.');
+    }
+
     public function destroy($id)
     {
         $user = User::findOrFail($id);

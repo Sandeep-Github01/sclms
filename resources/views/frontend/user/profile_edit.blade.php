@@ -63,15 +63,6 @@
             </select>
         </div>
 
-        {{-- <div style="margin-bottom: 10px;">
-            <label>Status:</label><br>
-            <select name="status" required>
-                <option value="">Select Status</option>
-                <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-            </select>
-        </div> --}}
-
         <div style="margin-bottom: 10px;">
             <label>Role:</label>
             <select name="role">

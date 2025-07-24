@@ -73,7 +73,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:3',
+            'password' => 'required|confirmed|min:8',
             'role' => 'required|string',
             'dept_name' => 'required|string',
         ]);
@@ -84,8 +84,8 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->role = $request->role;
         $user->dept_name = $request->dept_name;
-        $user->is_profile_complete = false; // Ensure this is set
-        $user->profile_status = 'Incomplete'; // Set initial status
+        $user->is_profile_complete = false; 
+        $user->profile_status = 'incomplete'; 
         $user->save();
 
         $verificationUrl = URL::temporarySignedRoute(
@@ -200,7 +200,6 @@ class UserController extends Controller
             'phone' => 'required|string|max:10',
             'address' => 'required|string',
             'gender' => 'required|in:male,female,other',
-            // 'status' => 'required|in:active,inactive',
             'batch' => $request->role === 'student' ? 'required|string' : 'nullable',
             'semester' => $request->role === 'student' ? 'required|string' : 'nullable',
         ]);
