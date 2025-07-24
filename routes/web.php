@@ -50,17 +50,19 @@ use App\Http\Controllers\Frontend\MailController;
 use App\Http\Controllers\Frontend\LeaveController;
 use App\Http\Controllers\Frontend\DashboardController;
 
+use App\Http\Middleware\CheckProfileComplete;
+
 Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/profile', [FrontendUser::class, 'profile'])->name('frontend.user.profile');
     Route::get('/profile/edit', [FrontendUser::class, 'editProfile'])->name('frontend.user.profileEdit');
     Route::post('/profile/update', [FrontendUser::class, 'updateProfile'])->name('frontend.user.profileUpdate');
 });
 
-Route::middleware(['auth', 'profile.complete'])->prefix('user')->group(function () {
+Route::middleware(['auth', CheckProfileComplete::class])->prefix('user')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('frontend.user.dashboard');
 });
 
-Route::middleware(['auth', 'profile.complete'])->prefix('leave')->group(function () {
+Route::middleware(['auth', CheckProfileComplete::class])->prefix('leave')->group(function () {
     Route::get('/apply', [LeaveController::class, 'create'])->name('leave.create');
     Route::post('/process', [LeaveController::class, 'process'])->name('leave.process');
     Route::get('/process/{id}', [LeaveController::class, 'processView'])->name('leave.process.view');
