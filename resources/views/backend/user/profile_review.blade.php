@@ -13,8 +13,7 @@
             @endif
         </div>
 
-        <br>
-        <hr><br>
+        <br> <hr> <br>
 
         @php
             $requested = $profileRequest->data ?? [];
@@ -70,12 +69,12 @@
                 @endif
             </li>
 
-            <li>
+            {{-- <li>
                 <strong>Status:</strong> {{ $user->status }}
                 @if (isset($requested['status']) && $requested['status'] !== $user->status)
                     <br><span class="text-warning">Requested change: {{ $requested['status'] }}</span>
                 @endif
-            </li>
+            </li> --}}
 
             <li>
                 <strong>Phone:</strong> {{ $user->phone }}
@@ -101,25 +100,19 @@
             @endif
         </ul>
 
-
         <form action="{{ route('admin.user.profileReview', $user->id) }}" method="POST" style="margin-top: 20px;">
             @csrf
             @method('PUT')
 
-            <button type="submit" name="action" value="approve"
-                style="background-color: #28a745; color: #fff; padding: 10px 15px; border: none; border-radius: 4px; margin-right: 10px;">
+            <button type="submit" name="action" value="approve" class="btn-table-view">
                 Approve
             </button>
-            <br>
-            <hr>
-            <br>
+
+            <br> <hr> <br>
+
             <label for="reason"><strong>Decline Reason (if applicable):</strong></label><br>
             <textarea name="reason" id="reason" rows="4" style="width: 100%; margin-bottom: 15px;"></textarea>
-
-
-
-            <button type="submit" name="action" value="decline"
-                style="background-color: #dc3545; color: #fff; padding: 10px 15px; border: none; border-radius: 4px;">
+            <button type="submit" name="action" value="decline" class="btn-table-delete">
                 Decline
             </button>
         </form>
