@@ -100,6 +100,7 @@
 </div>
 
 @include('backend.partials.footer')
+
 {{-- @include('backend.partials.header')
 @include('backend.partials.sidebar')
 
