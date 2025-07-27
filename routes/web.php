@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\AdminController as AdminUser;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\BlackoutPeriodController;
+use App\Http\Controllers\Backend\LeaveController as BackendLeaveController;
 use App\Http\Controllers\Backend\SidebarController;
 
 Route::prefix('admin')->group(function () {
@@ -31,10 +32,16 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('department', DepartmentController::class, ['as' => 'admin']);
         Route::resource('blackout', BlackoutPeriodController::class, ['as' => 'admin']);
-        Route::get('/recent-leaves', [SidebarController::class, 'leavesByRole'])->name('admin.recent_leaves');
-        Route::get('/review-leave', [SidebarController::class, 'manualReview'])->name('admin.review_leave');
-    });
+        Route::get('/leaves/recent', [BackendLeaveController::class, 'recentLeaves'])->name('admin.leaves.recent');
+        Route::get('/leaves/pending', [BackendLeaveController::class, 'index'])->name('admin.leaves.index');
+        Route::get('/leaves/{id}/show', [BackendLeaveController::class, 'show'])->name('admin.leaves.show');
+        Route::get('/leaves/{id}/review', [BackendLeaveController::class, 'reviewLeave'])->name('admin.review_leave');
+        Route::post('/leaves/{id}/decision', [BackendLeaveController::class, 'processDecision'])->name('admin.process_decision');
 
+        // Keep backward compatibility (optional - can redirect to new routes)
+        Route::get('/recent-leaves', [BackendLeaveController::class, 'recentLeaves'])->name('admin.recent_leaves');
+        Route::get('/review-leave', [BackendLeaveController::class, 'index'])->name('admin.review_leave_old');
+    });
     Route::get('/forgot-password', [AdminUser::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
     Route::post('/forgot-password', [AdminUser::class, 'sendResetLinkEmail'])->name('admin.forgot-password.send');
     Route::get('/reset-password/{token}', [AdminUser::class, 'showResetPasswordForm'])->name('admin.password.reset');
