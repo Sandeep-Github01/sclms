@@ -7,22 +7,28 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggle = document.querySelector('.admin-works-toggle');
-        const submenu = document.querySelector('.admin-works-submenu');
-        const icon = document.querySelector('.toggle-icon');
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.dashboard-toggle');
 
-        if (toggle && submenu && icon) {
-            toggle.addEventListener('click', function () {
-                submenu.classList.toggle('show');
-                icon.classList.toggle('rotate');
+        toggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                const submenu = toggle.nextElementSibling;
+                const icon = toggle.querySelector('.toggle-icon');
+
+                if (submenu && submenu.classList.contains('sidebar-submenu')) {
+                    submenu.classList.toggle('show');
+                }
+
+                if (icon) {
+                    icon.classList.toggle('rotate');
+                }
             });
-        }
+        });
     });
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const toggleBtn = document.getElementById('sidebarToggle');
         const overlay = document.querySelector('.sidebar-overlay');
         const body = document.body;
@@ -43,7 +49,7 @@
             overlay.addEventListener('click', closeSidebar);
         }
 
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             const sidebar = document.querySelector('.sidebar');
             if (
                 !sidebar.contains(e.target) &&
@@ -57,7 +63,7 @@
 </script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.select2').select2({
             placeholder: "Select options",
             allowClear: true,
