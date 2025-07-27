@@ -17,7 +17,8 @@
                     <p><strong>Semester:</strong> {{ $leave->user->semester }}</p>
                 @endif
             </div>
-
+            <br>
+            <hr><br>
             <div class="detail-section">
                 <h3>Leave Information</h3>
                 <p><strong>Type:</strong> {{ $leave->leaveType->name }}</p>
@@ -36,7 +37,8 @@
                     </div>
                 </div>
             @endif
-
+            <br>
+            <hr><br>
             @if ($leave->file_path)
                 <div class="detail-section">
                     <h3>Attached Document</h3>
@@ -45,7 +47,8 @@
                 </div>
             @endif
         </div>
-
+        <br>
+        <hr><br>
         {{-- Review Info Sidebar --}}
         <div class="review-sidebar">
             {{-- Leave Credit Status --}}
@@ -65,7 +68,8 @@
                     <p class="no-credit">No leave credit record found</p>
                 @endif
             </div>
-
+            <br>
+            <hr><br>
             {{-- Recent Leave History --}}
             <div class="info-card">
                 <h4>Recent Leave History (30 days)</h4>
@@ -84,7 +88,8 @@
             </div>
         </div>
     </div>
-
+    <br>
+    <hr><br>
     {{-- Decision Form --}}
     <div class="decision-form">
         <h3>Admin Decision</h3>

@@ -33,9 +33,7 @@
                             <td>
                                 <div class="table-actions">
                                     <a href="{{ route('admin.review_leave', ['id' => $leave->id]) }}"
-                                        class="btn-table-review">Review</a>
-                                    <a href="{{ route('admin.leaves.show', ['id' => $leave->id]) }}"
-                                        class="btn-table-view">View</a>
+                                        class="btn-table-view">Review</a>
                                 </div>
                             </td>
                         </tr>
@@ -78,9 +76,7 @@
                             <td>
                                 <div class="table-actions">
                                     <a href="{{ route('admin.review_leave', ['id' => $leave->id]) }}"
-                                        class="btn-table-review">Review</a>
-                                    <a href="{{ route('admin.leaves.show', ['id' => $leave->id]) }}"
-                                        class="btn-table-view">View</a>
+                                        class="btn-table-view">Review</a>
                                 </div>
                             </td>
                         </tr>
