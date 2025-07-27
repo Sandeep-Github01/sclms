@@ -146,8 +146,8 @@ class LeaveController extends Controller
             }
         }
 
-        $message = $decision === 'approved' 
-            ? 'Leave application has been approved successfully.' 
+        $message = $decision === 'approved'
+            ? 'Leave application has been approved successfully.'
             : 'Leave application has been rejected.';
 
         return redirect()->route('admin.leaves.index')
