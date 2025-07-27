@@ -1203,7 +1203,7 @@ body.sidebar-active .sidebar-overlay {
     background-color: #08306b;
 }
 
-/* ======= Admin Works Toggle ======= */
+/* ======= Dashboard Toggle ======= */
 .sidebar-submenu {
     display: none;
     list-style: none;
@@ -1219,7 +1219,7 @@ body.sidebar-active .sidebar-overlay {
     display: block;
 }
 
-.admin-works-toggle {
+.dashboard-toggle {
     display: flex !important;
     align-items: center;
     justify-content: center;
