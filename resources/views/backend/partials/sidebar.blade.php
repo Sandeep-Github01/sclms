@@ -23,6 +23,9 @@
                 <li>
                     <a href="{{ route('admin.user.review_index') }}">Review User</a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.leaves.index') }}">Review Leaves</a>
+                </li>
             </ul>
         </li>
     </ul>

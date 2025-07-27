@@ -15,7 +15,8 @@
                 <p><strong>Semester:</strong> {{ $leave->user->semester }}</p>
             @endif
         </div>
-
+        <br>
+        <hr><br>
         <div class="detail-section">
             <h3>Leave Information</h3>
             <p><strong>Type:</strong> {{ $leave->leaveType->name }}</p>
@@ -72,7 +73,8 @@
                 <p><strong>Reviewed At:</strong> {{ $leave->approval->created_at->format('M d, Y g:i A') }}</p>
             </div>
         @endif
-
+        <br>
+        <hr><br>
         <div class="detail-section">
             <h3>Application Details</h3>
             <p><strong>Applied At:</strong> {{ $leave->created_at->format('M d, Y g:i A') }}</p>
@@ -81,7 +83,7 @@
     </div>
 
     <div class="action-buttons">
-        <a href="{{ route('admin.leaves.recent') }}" class="btn-back">Back to Recent Leaves</a>
+        <a href="{{ route('admin.leaves.recent') }}" class="btn-back">Back</a>
         @if ($leave->status === 'pending' && $leave->review_type === 'manual')
             <a href="{{ route('admin.review_leave', ['id' => $leave->id]) }}" class="btn-primary">Review
                 Application</a>
