@@ -6,7 +6,7 @@
         <h2>Review Leave Application</h2>
 
         <div class="review-container">
-            {{-- Leave Details Section --}}
+            
             <div class="leave-details">
                 <div class="detail-section">
                     <h3>Applicant Information</h3>
@@ -52,9 +52,9 @@
             </div>
             <br>
             <hr><br>
-            {{-- Review Info Sidebar --}}
+            
             <div class="review-sidebar">
-                {{-- Leave Credit Status --}}
+                
                 <div class="info-card">
                     <h4>Leave Credit Status</h4>
                     @if ($leaveCredit)
@@ -73,7 +73,7 @@
                 </div>
                 <br>
                 <hr><br>
-                {{-- Recent Leave History --}}
+                
                 <div class="info-card">
                     <h4>Recent Leave History (30 days)</h4>
                     @if ($recentLeaves->count() > 0)
@@ -93,14 +93,14 @@
         </div>
         <br>
         <hr><br>
-        {{-- Decision Form --}}
+        
+
         <div class="decision-form">
             <h3>Admin Decision</h3>
 
             <form method="POST" action="{{ route('admin.process_decision', $leave->id) }}">
                 @csrf
 
-                {{-- Approve Button --}}
                 <button type="submit" name="decision" value="approved" class="btn-table-view">
                     Approve
                 </button>
@@ -108,12 +108,10 @@
                 <br><br>
                 <hr><br>
 
-                {{-- Decline Reason Textarea --}}
                 <label for="comment"><strong>Decline Reason (if applicable):</strong></label><br>
                 <textarea id="comment" name="comment" rows="4" style="width: 100%; margin-bottom: 15px;"
                     placeholder="Add a reason if you're rejecting..."></textarea>
 
-                {{-- Decline Button --}}
                 <button type="submit" name="decision" value="rejected" class="btn-table-delete">
                     Decline
                 </button>
