@@ -12,7 +12,6 @@ use Carbon\Carbon;
 
 class LeaveController extends Controller
 {
-    // 1. Show all recent leaves (approved/rejected) - for recent_leaves.blade
     public function recentLeaves()
     {
         $leaveRequests = LeaveRequest::with(['user', 'leaveType', 'department'])
@@ -33,7 +32,6 @@ class LeaveController extends Controller
         ]);
     }
 
-    // 2. Show specific leave details - for show.blade
     public function show($id)
     {
         $leave = LeaveRequest::with(['user', 'leaveType', 'department', 'approval', 'approval.approver'])
@@ -42,7 +40,6 @@ class LeaveController extends Controller
         return view('backend.AdminWorks.leaves.show', compact('leave'));
     }
 
-    // 3. Show pending manual review leaves - for index.blade
     public function index()
     {
         $leaveRequests = LeaveRequest::where('status', 'pending')
@@ -64,7 +61,6 @@ class LeaveController extends Controller
         ]);
     }
 
-    // 4. Show review form for specific leave - for review_leave.blade
     public function reviewLeave($id)
     {
         $leave = LeaveRequest::with(['user', 'leaveType', 'department'])
@@ -73,17 +69,14 @@ class LeaveController extends Controller
             ->where('review_type', 'manual')
             ->firstOrFail();
 
-        // Get additional info for review
         $leaveCredit = LeaveCredit::where('user_id', $leave->user_id)
             ->where('type_id', $leave->type_id)
             ->first();
 
-        // Calculate duration
         $start = Carbon::parse($leave->start_date);
         $end = Carbon::parse($leave->end_date);
         $days = $start->diffInDays($end) + 1;
 
-        // Get recent leaves for this user
         $recentLeaves = LeaveRequest::where('user_id', $leave->user_id)
             ->where('id', '!=', $leave->id)
             ->where('status', 'approved')
@@ -98,7 +91,6 @@ class LeaveController extends Controller
         return view('backend.AdminWorks.leaves.review_leave', compact('leave', 'leaveCredit', 'days', 'recentLeaves'));
     }
 
-    // 5. Process admin decision (approve/reject)
     public function processDecision(Request $request, $id)
     {
         $request->validate([
@@ -115,13 +107,11 @@ class LeaveController extends Controller
         $decision = $request->decision;
         $comment = $request->comment;
 
-        // Update leave status
         $leave->update([
             'status' => $decision,
             'status_note' => $comment ?: "Manually {$decision} by admin.",
         ]);
 
-        // Create approval record
         Approval::create([
             'leave_request_id' => $leave->id,
             'approved_by' => $admin->id,
@@ -129,7 +119,6 @@ class LeaveController extends Controller
             'comment' => $comment,
         ]);
 
-        // If approved, deduct leave credits
         if ($decision === 'approved') {
             $start = Carbon::parse($leave->start_date);
             $end = Carbon::parse($leave->end_date);
