@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // -------------------
-// <==== BACKEND ====> 
+// <==== BACKEND ====>
 // -------------------
 use App\Http\Controllers\Backend\AdminController as AdminUser;
 use App\Http\Controllers\Backend\UserController;
@@ -13,8 +13,8 @@ use App\Http\Controllers\Backend\LeaveController as BackendLeaveController;
 use App\Http\Controllers\Backend\SidebarController;
 
 Route::prefix('admin')->group(function () {
-    Route::get('/login', [AdminUser::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [AdminUser::class, 'login'])->name('admin.login.submit');
+    Route::get('/', [AdminUser::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/', [AdminUser::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [AdminUser::class, 'logout'])->name('admin.logout');
 
     Route::middleware(['auth:admin'])->group(function () {
@@ -38,7 +38,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/leaves/{id}/review', [BackendLeaveController::class, 'reviewLeave'])->name('admin.review_leave');
         Route::post('/leaves/{id}/decision', [BackendLeaveController::class, 'processDecision'])->name('admin.process_decision');
 
-        // Keep backward compatibility (optional - can redirect to new routes)
         Route::get('/recent-leaves', [BackendLeaveController::class, 'recentLeaves'])->name('admin.recent_leaves');
         Route::get('/review-leave', [BackendLeaveController::class, 'index'])->name('admin.review_leave_old');
     });
@@ -51,7 +50,7 @@ Route::prefix('admin')->group(function () {
 
 
 // --------------------
-// <==== FRONTEND ====> 
+// <==== FRONTEND ====>
 // --------------------
 use App\Http\Controllers\Frontend\UserController as FrontendUser;
 use App\Http\Controllers\Frontend\MailController;
