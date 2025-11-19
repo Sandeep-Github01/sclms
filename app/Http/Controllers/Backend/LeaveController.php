@@ -9,6 +9,9 @@ use App\Models\LeaveCredit;
 use App\Models\Approval;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LeaveDecisionMail;
+
 
 class LeaveController extends Controller
 {
@@ -40,8 +43,7 @@ class LeaveController extends Controller
         return view('backend.AdminWorks.leaves.show', compact('leave'));
     }
 
-    public function index()
-    {
+    public function index(){
         $leaveRequests = LeaveRequest::where('status', 'pending')
             ->where('review_type', 'manual')
             ->with(['user', 'leaveType', 'department'])
@@ -134,6 +136,9 @@ class LeaveController extends Controller
                 ]);
             }
         }
+
+        // Send decision mail to user
+        Mail::to($leave->user->email)->send(new LeaveDecisionMail($leave));
 
         $message = $decision === 'approved'
             ? 'Leave application has been approved successfully.'
