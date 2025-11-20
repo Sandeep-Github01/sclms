@@ -2,15 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 
-// -------------------
-// <==== BACKEND ====>
-// -------------------
+use Illuminate\Support\Facades\Auth;
+// ---------------------------------
+// <==== BACKEND (Admin Side) ====>
+// ---------------------------------
 use App\Http\Controllers\Backend\AdminController as AdminUser;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\BlackoutPeriodController;
 use App\Http\Controllers\Backend\LeaveController as BackendLeaveController;
 use App\Http\Controllers\Backend\SidebarController;
+
+
 
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminUser::class, 'showLoginForm'])->name('admin.login');
@@ -47,11 +50,17 @@ Route::prefix('admin')->group(function () {
     Route::post('/reset-password', [AdminUser::class, 'updatePassword'])->name('admin.reset-password.update');
 });
 
+// Catch-all for admin routes if not logged in
+Route::any('admin/{any}', function ($any) {
+    if (!Auth::guard('admin')->check()) {
+        return redirect()->route('admin.login');
+    }
+    abort(404); // If logged in but route doesn't exist, show 404
+})->where('any', '.*');
 
-
-// --------------------
-// <==== FRONTEND ====>
-// --------------------
+// ---------------------------------
+// <==== FRONTEND (User Side) ====>
+// ---------------------------------
 use App\Http\Controllers\Frontend\UserController as FrontendUser;
 use App\Http\Controllers\Frontend\MailController;
 use App\Http\Controllers\Frontend\LeaveController;

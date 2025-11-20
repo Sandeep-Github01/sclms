@@ -21,9 +21,16 @@
         </p>
 
         <p style="font-size: 16px;">
-            <strong>Leave Type:</strong> {{ $leave->leaveType->name }}<br>
-            <strong>Dates:</strong> {{ $leave->start_date }} to {{ $leave->end_date }}
+            <strong>Leave Type:</strong> {{ $leave->leaveType->name ?? 'N/A' }}<br>
+            <strong>Dates:</strong> {{ $leave->start_date }} to {{ $leave->end_date }}<br>
+            <strong>Status:</strong> {{ ucfirst($leave->status) }}<br>
+            <strong>Review Type:</strong> {{ ucfirst($leave->review_type) }}
         </p>
+
+        @if ($leave->status_note)
+            <p style="font-size: 16px;"><strong>Note:</strong> {{ $leave->status_note }}</p>
+        @endif
+
 
         <p style="font-size: 16px;">You will be notified when a decision is made.</p>
 
