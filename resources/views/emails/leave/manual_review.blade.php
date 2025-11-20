@@ -26,7 +26,7 @@
         </p>
 
         <p style="text-align: center; margin: 30px 0;">
-            <a href="{{ route('admin.leave.show', $leave->id) }}"
+            <a href="{{ route('admin.leaves.show', $leave->id) }}"
                style="display: inline-block; padding: 12px 25px; background-color: #ff9800; color: #ffffff;
                text-decoration: none; border-radius: 4px; font-weight: bold;">
                 Review Leave Request

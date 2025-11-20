@@ -28,10 +28,12 @@ class LeaveRequest extends Model
         'review_type',
         'final_score',
         'status_note',
-        'fraud_score',    
-        'risk_score',     
-        'probability',    
-        'notes',          
+        'fraud_score',
+        'risk_score',
+        'probability',
+        'notes',
+        'role',       
+        'semester',
     ];
 
     public function user()
