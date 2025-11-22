@@ -12,7 +12,7 @@
         style="background: #ffffff; padding: 30px; border-radius: 5px; max-width: 600px; margin: auto;
         box-shadow: 0 0 10px rgba(0,0,0,0.05);">
 
-        <h2 style="color: #333333;">Smart College Leave Management System</h2>
+        <h2 style="color: #333333;">{{ config('app.name', 'SCLMS') }}</h2>
 
         <p style="font-size: 16px;">Dear Admin,</p>
 
@@ -33,7 +33,7 @@
             </a>
         </p>
 
-        <p style="font-size: 16px;">Regards,<br><strong>Smart College LMS Team</strong></p>
+        <p style="font-size: 16px;">Regards,<br><strong>{{ config('app.name', 'SCLMS') }} Team</strong></p>
 
     </div>
 </body>

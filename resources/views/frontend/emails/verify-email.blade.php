@@ -9,7 +9,7 @@
 
 <body style="font-family: Arial, sans-serif; background: #f6f6f6; padding: 20px;">
     <div style="background: #fff; padding: 30px; border-radius: 5px; max-width: 600px; margin: auto;">
-        <h2>Smart College Leave Management System</h2>
+        <h2>{{ config('app.name', 'SCLMS') }}</h2>
         <p>Dear {{ $user->name }},</p>
         <p>Thank you for registering. Please verify your email address to complete your registration:</p>
 
@@ -21,7 +21,7 @@
         <p>This link will expire in 60 minutes.</p>
         <p>If you didn’t request this, please ignore this email.</p>
         <br>
-        <p>Regards,<br>Smart College LMS Team</p>
+        <p>Regards,<br>{{ config('app.name', 'SCLMS') }} Team</p>
     </div>
 </body>
 

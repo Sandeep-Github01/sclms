@@ -7,7 +7,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; background: #f6f6f6; padding: 20px;">
     <div style="background: #ffffff; padding: 30px; border-radius: 5px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
-        <h2 style="color: #333333;">{{ config('app.name', 'Smart College LMS') }}</h2>
+        <h2 style="color: #333333;">{{ config('app.name', 'SCLMS') }}</h2>
         <p style="font-size: 16px;">Dear {{ $user->name }},</p>
         <p style="font-size: 16px;">
             This is to inform you that your recent profile update has been
@@ -23,7 +23,7 @@
             <p style="font-size: 16px;">You may log in and re-submit the required changes.</p>
         @endif
         <br>
-        <p style="font-size: 16px;">Regards,<br><strong>{{ config('app.name', 'Smart College LMS Team') }}</strong></p>
+        <p style="font-size: 16px;">Regards,<br><strong>{{ config('app.name', 'SCLMS') }} Team</strong></p>
     </div>
 </body>
 </html>

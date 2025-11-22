@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel - Smart College Leave Management System</title>
+    <title>Admin Panel - {{ config('app.name', 'SCLMS') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Link to CSS -->
@@ -25,7 +25,7 @@
         </div>
 
         <div class="header-center">
-            SMART COLLEGE LEAVE MANAGEMENT SYSTEM
+            {{ config('app.name', 'SCLMS') }}
         </div>
 
         <div class="header-right">
