@@ -11,8 +11,10 @@ class BlackoutPeriodController extends Controller
 {
     public function index()
     {
-        $blackouts = BlackoutPeriod::all();
-        return view('backend.AdminWorks.blackout.index', compact('blackouts'));
+        $departments = Department::all()->keyBy('id');
+        $blackouts   = BlackoutPeriod::all();
+
+        return view('backend.AdminWorks.blackout.index',compact('blackouts', 'departments'));
     }
 
     public function create()
@@ -30,7 +32,7 @@ class BlackoutPeriodController extends Controller
             'department_id' => 'nullable|array',
             'department_id.*' => 'exists:departments,id',
             'semester' => 'nullable|array',
-            'semester.*' => 'string|max:20', 
+            'semester.*' => 'string|max:20',
         ]);
 
         BlackoutPeriod::create([

@@ -54,8 +54,8 @@
             @if ($leave->file_path)
                 <div class="detail-section">
                     <h3>Attached Document</h3>
-                    <p><a href="{{ asset('storage/' . $leave->file_path) }}" target="_blank" class="btn-document">View
-                            Document</a></p>
+                    <p><a href="{{ route('leave.document', $leave) }}" target="_blank">View Document</a>
+                    </p>
                 </div>
             @endif
 

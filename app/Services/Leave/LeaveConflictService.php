@@ -70,7 +70,7 @@ class LeaveConflictService
         $steps[] = ['text' => "No blackout conflict.", 'score' => $score, 'type' => 'success'];
 
         // -------------------------
-        // Department load & conflicts
+        // Department load & conflicts  (👻 GHOST-FIX INSIDE)
         // -------------------------
         $current = $start->copy();
         $dailyDetails = [];
@@ -78,11 +78,14 @@ class LeaveConflictService
 
         while ($current->lte($end)) {
             $d = $current->toDateString();
+
+            // 🔍 Only count REAL kids (not soft-deleted ghosts)
             $dailyCountQuery = LeaveRequest::where('status', 'approved')
                 ->where('department_id', $department->id)
                 ->whereDate('start_date', '<=', $d)
                 ->whereDate('end_date', '>=', $d)
-                ->where('role', $role);
+                ->where('role', $role)
+                ->whereHas('user', fn($q) => $q->whereNull('deleted_at')); // 👻 ghost filter
 
             if ($role === 'student' && $semester) {
                 $dailyCountQuery->where('semester', $semester);
@@ -113,7 +116,6 @@ class LeaveConflictService
                     'riskRatio' => $riskRatio,
                 ];
             } else {
-                // student -> manual review
                 $steps[] = ['text' => "High department load risk (students) → manual review.", 'score' => $score, 'type' => 'warning'];
                 return [
                     'success' => true,
@@ -128,10 +130,11 @@ class LeaveConflictService
         }
 
         // -------------------------
-        // Conflict checks (approved leaves overlapping)
+        // Conflict checks (approved leaves overlapping)  (👻 GHOST-FIX AGAIN)
         // -------------------------
         $startCopy = $start;
         $endCopy = $end;
+
         $conflictsQuery = LeaveRequest::where('status', 'approved')
             ->where('department_id', $department->id)
             ->where('role', $role)
@@ -141,7 +144,8 @@ class LeaveConflictService
                     ->orWhere(function ($q2) use ($startCopy, $endCopy) {
                         $q2->where('start_date', '<=', $startCopy)->where('end_date', '>=', $endCopy);
                     });
-            });
+            })
+            ->whereHas('user', fn($q) => $q->whereNull('deleted_at')); // 👻 ghost filter
 
         if ($role === 'student') {
             $conflictsQuery->where('semester', $semester);

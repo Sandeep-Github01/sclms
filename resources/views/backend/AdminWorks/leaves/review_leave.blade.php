@@ -6,7 +6,7 @@
         <h2>Review Leave Application</h2>
 
         <div class="review-container">
-            
+
             <div class="leave-details">
                 <div class="detail-section">
                     <h3>Applicant Information</h3>
@@ -44,17 +44,16 @@
                     <hr><br>
                     <div class="detail-section">
                         <h3>Attached Document</h3>
-                        <p><a href="{{ asset('storage/' . $leave->file_path) }}" target="_blank"
-                                class="btn-document">View Document</a>
+                        <p><a href="{{ route('leave.document', $leave) }}" target="_blank">View Document</a>
                         </p>
                     </div>
                 @endif
             </div>
             <br>
             <hr><br>
-            
+
             <div class="review-sidebar">
-                
+
                 <div class="info-card">
                     <h4>Leave Credit Status</h4>
                     @if ($leaveCredit)
@@ -73,7 +72,7 @@
                 </div>
                 <br>
                 <hr><br>
-                
+
                 <div class="info-card">
                     <h4>Recent Leave History (30 days)</h4>
                     @if ($recentLeaves->count() > 0)
@@ -93,7 +92,7 @@
         </div>
         <br>
         <hr><br>
-        
+
 
         <div class="decision-form">
             <h3>Admin Decision</h3>
@@ -101,20 +100,25 @@
             <form method="POST" action="{{ route('admin.process_decision', $leave->id) }}">
                 @csrf
 
-                <button type="submit" name="decision" value="approved" class="btn-table-view">
-                    Approve
-                </button>
+                <!-- Decision buttons -->
+                <button type="submit" name="decision" value="approved" class="btn-table-view">Approve</button>
 
-                <br><br>
-                <hr><br>
+                <label for="comment"><strong>Decline Reason:</strong></label>
+                <textarea id="comment" name="comment" rows="4" placeholder="Add a reason if you're rejecting..."></textarea>
 
-                <label for="comment"><strong>Decline Reason (if applicable):</strong></label><br>
-                <textarea id="comment" name="comment" rows="4" style="width: 100%; margin-bottom: 15px;"
-                    placeholder="Add a reason if you're rejecting..."></textarea>
+                <button type="submit" name="decision" value="rejected" class="btn-table-delete">Decline</button>
+            </form>
 
-                <button type="submit" name="decision" value="rejected" class="btn-table-delete">
-                    Decline
-                </button>
+            <hr>
+
+            <!-- SEPARATE abuse form -->
+            <form action="{{ route('admin.leave.markAbuse', $leave->id) }}" method="POST"
+                onsubmit="return confirm('Mark this leave as abuse? This will apply penalties.');">
+                @csrf
+                <input type="hidden" name="reason" value="admin_flagged_abuse">
+                <label><strong>Admin Comment:</strong></label>
+                <textarea name="comment" rows="3" placeholder="Detail the abuse here..."></textarea>
+                <button type="submit" class="btn btn-danger">Mark as Abuse</button>
             </form>
 
             <a href="{{ route('admin.leaves.index') }}" class="btn-back">Back</a>

@@ -32,8 +32,22 @@ class LeaveRequest extends Model
         'risk_score',
         'probability',
         'notes',
-        'role',       
+        'role',
         'semester',
+        'abuse',
+        'abuse_reason',
+        'flagged_by',
+        'flagged_by_id',
+        'fraud_flags',
+        'document_status',
+        'document_deadline',
+    ];
+
+    protected $casts = [
+        'fraud_flags' => 'array',
+        'document_deadline' => 'datetime',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function user()

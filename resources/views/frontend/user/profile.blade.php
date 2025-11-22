@@ -2,7 +2,7 @@
 @include('frontend.partials.sidebar')
 
 <div class="main-content">
-    
+
 <div class="profile-container">
     <h2 class="profile-heading">My Profile</h2>
 
@@ -37,6 +37,32 @@
         </div>
     </div>
 </div>
+
+<div class="penalty-status-card">
+    <h3>Penalty Status</h3>
+    <p><strong>Current Points:</strong> {{ Auth::user()->penalty_points }}</p>
+
+    @if(Auth::user()->leave_blocked_until)
+        <div class="alert alert-danger">
+            Leave privileges blocked until:
+            {{ Carbon\Carbon::parse(Auth::user()->leave_blocked_until)->format('M d, Y') }}
+        </div>
+    @elseif(Auth::user()->penalty_points >= 10)
+        <div class="alert alert-warning">
+            Warning: High penalty points. All future leaves require manual review.
+        </div>
+    @endif
+
+    <details>
+        <summary>Why did I get penalty points?</summary>
+        <ul>
+            <li>Missing document: +1 point</li>
+            <li>Unapproved absence: +3 points</li>
+            <li>Fraud detection: +4-8 points</li>
+        </ul>
+    </details>
+</div>
+
 </div>
 
 @include('frontend.partials.footer')
