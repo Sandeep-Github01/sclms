@@ -7,12 +7,24 @@ use App\Models\LeaveType;
 use App\Models\LeaveRequest;
 use App\Models\BlackoutPeriod;
 use App\Models\LeaveCredit;
+use App\Models\UserFraudHistory;   
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class LeaveValidationService
 {
+    /**
+     * Validates leave request and performs fraud detection algorithm
+     *
+     * Algorithm Complexity: O(n) where n = user's historical leave count
+     * Detects patterns: weekend bridging, emergency abuse, duration outliers,
+     * and frequency anomalies. Implements composite scoring for fraud assessment.
+     *
+     * @param Request $request
+     * @return array Validation result with steps, score, and fraud analysis
+     */
     public function validateRequest($request)
     {
         $user = Auth::user();
@@ -45,7 +57,7 @@ class LeaveValidationService
             'start_date' => 'required|date',
             'end_date'   => 'required|date|after_or_equal:start_date',
             'reason'     => 'nullable|string',
-            'document'   => 'nullable|file|max:2048',
+            'document'   => 'nullable|file|max:2048|mimes:pdf,jpg,jpeg,png',
         ]);
         $steps[] = ['text' => "Form data validated.", 'score' => $score, 'type' => 'success'];
 
@@ -60,19 +72,22 @@ class LeaveValidationService
 
         $steps[] = ['text' => "Duration: {$days} day(s)", 'score' => $score, 'type' => 'success'];
 
-        // 5. Fraud detection
+        // 5. Multi-pattern fraud detection algorithm
         $fraudScore = 0;
         $fraudReasons = [];
 
-        // Weekend pattern
+        // Pattern 1: 4-day weekend bridge detection
         $startWeekday = strtolower($start->format('l'));
-        $endWeekday   = strtolower($end->format('l'));
-        if (in_array($startWeekday, ['monday']) || in_array($endWeekday, ['friday'])) {
-            $fraudScore += 1;
-            $fraudReasons[] = "Weekend-adjacent pattern detected.";
+        $endWeekday = strtolower($end->format('l'));
+
+        if (($startWeekday === 'thursday' && $endWeekday === 'friday') ||
+            ($startWeekday === 'monday' && $endWeekday === 'tuesday')
+        ) {
+            $fraudScore += 2;
+            $fraudReasons[] = "4-day weekend bridge detected ({$startWeekday} to {$endWeekday}).";
         }
 
-        // Emergency leaves last 60 days
+        // Pattern 2: Emergency leave abuse (multiple in 60 days)
         $emergencyCount = LeaveRequest::where('user_id', $user->id)
             ->whereHas('leaveType', fn($q) => $q->whereRaw("LOWER(name)='emergency'"))
             ->whereBetween('start_date', [
@@ -86,7 +101,7 @@ class LeaveValidationService
             $fraudReasons[] = "Multiple emergency leaves ({$emergencyCount}) in last 60 days.";
         }
 
-        // Duration outlier
+        // Pattern 3: Duration statistical outlier (>2x personal average)
         $avgDuration = (float) LeaveRequest::where('user_id', $user->id)
             ->select(DB::raw('AVG(DATEDIFF(end_date, start_date)+1) as avg_days'))
             ->value('avg_days');
@@ -96,7 +111,7 @@ class LeaveValidationService
             $fraudReasons[] = "Duration unusually long ({$days} days vs average " . round($avgDuration, 2) . ").";
         }
 
-        // High frequency 30 days
+        // Pattern 4: High frequency pattern (5+ leaves in 30 days)
         $freqCount30 = LeaveRequest::where('user_id', $user->id)
             ->whereBetween('start_date', [
                 Carbon::now()->subDays(30)->toDateString(),
@@ -109,6 +124,15 @@ class LeaveValidationService
             $fraudReasons[] = "High leave frequency ({$freqCount30}) in last 30 days.";
         }
 
+        // 🔥 NEW: add old red stars from teacher's notebook (last 30 days)
+        $residual = $this->getResidualFraudScore($user->id);
+        $fraudScore += $residual;
+
+        if ($residual > 0) {
+            $fraudReasons[] = "Carry-over fraud score from past 30 days: {$residual}";
+        }
+
+        // Composite scoring: Manual review if fraud score >= 4
         $isManual = $fraudScore >= 4;
         if ($isManual) {
             $steps[] = [
@@ -118,14 +142,22 @@ class LeaveValidationService
             ];
         }
 
-        // 6. Document upload
+        // 6. Secure document upload (Private storage)
         $filePath = null;
         if ($request->hasFile('document')) {
-            $filePath = $request->file('document')->store('leave_docs', 'public');
-            $steps[] = ['text' => "Document uploaded.", 'score' => $score, 'type' => 'document'];
+            $filePath = $request->file('document')->store('private/leave_docs', 'local');
+            $steps[] = ['text' => "Document uploaded securely.", 'score' => $score, 'type' => 'document'];
         } else {
             $steps[] = ['text' => "No document uploaded.", 'score' => $score, 'type' => 'document'];
         }
+
+        // 🔥 Save today's fraud score into the notebook so tomorrow's kid can't erase it
+        UserFraudHistory::create([
+            'user_id' => $user->id,
+            'score' => $fraudScore,
+            'reasons' => $fraudReasons,
+            'expires_at' => Carbon::now()->addDays(30),
+        ]);
 
         return [
             'success' => true,
@@ -141,5 +173,16 @@ class LeaveValidationService
             'fraudReasons' => $fraudReasons,
             'isManual' => $isManual,
         ];
+    }
+
+    /**
+     * Sum of fraud scores from the last 30 days that haven't expired
+     */
+    private function getResidualFraudScore(int $userId): int
+    {
+        return (int) DB::table('user_fraud_histories')
+            ->where('user_id', $userId)
+            ->where('expires_at', '>', Carbon::now())
+            ->sum('score');
     }
 }

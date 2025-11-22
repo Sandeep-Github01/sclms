@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\LeaveRequest;
 use App\Models\LeaveCredit;
 use App\Models\Approval;
-use Auth;
+use App\Models\Admin; // Added for consistency
+use Illuminate\Support\Facades\Auth; // Modern facade import
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LeaveDecisionMail;
-
 
 class LeaveController extends Controller
 {
@@ -43,7 +43,8 @@ class LeaveController extends Controller
         return view('backend.AdminWorks.leaves.show', compact('leave'));
     }
 
-    public function index(){
+    public function index()
+    {
         $leaveRequests = LeaveRequest::where('status', 'pending')
             ->where('review_type', 'manual')
             ->with(['user', 'leaveType', 'department'])
@@ -146,5 +147,23 @@ class LeaveController extends Controller
 
         return redirect()->route('admin.leaves.index')
             ->with('success', $message);
+    }
+
+    public function markAbuse(Request $request, $id)
+    {
+        $leave = LeaveRequest::findOrFail($id);
+        $reason = $request->input('reason') ?? 'admin_flagged_abuse';
+
+        // Use explicit guard for admin ID
+        $adminId = Auth::guard('admin')->id();
+
+        $penalty = app(\App\Services\Leave\PenaltyService::class);
+        $res = $penalty->markAbuse($leave, $reason, null, 'admin', $adminId);
+
+        // Store admin comment in notes
+        $leave->notes = trim(($leave->notes ?? '') . "\nAdmin comment: " . ($request->input('comment') ?? ''));
+        $leave->save();
+
+        return redirect()->back()->with('success', 'Leave marked as abuse and penalty applied.');
     }
 }
