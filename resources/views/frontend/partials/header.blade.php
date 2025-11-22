@@ -15,9 +15,9 @@
             <button id="sidebarToggle" class="hamburger-btn">
                 <i class="fas fa-bars"></i>
             </button>
-            <span class="app-logo">{{ config('app.name', 'SCLMS') }}</span>
+            {{-- <span class="app-logo">{{ config('app.name', 'SCLMS') }}</span> --}}
         </div>
-        <div class="header-center">SMART COLLEGE LEAVE MANAGEMENT SYSTEM</div>
+        <div class="header-center">{{ config('app.name', 'SCLMS') }}</div>
         <div class="header-right">
             @auth
                 <form id="logout-form" method="POST" action="{{ route('frontend.user.logout') }}" style="display: none;">
