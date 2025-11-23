@@ -43,6 +43,7 @@ return [
         'proven_fraud' => 20,
         'confirmed_leave_abuse' => 15,
         'multiple_abuses' => 25,
+        'admin_flagged_abuse' => 15,
     ],
 
     /*

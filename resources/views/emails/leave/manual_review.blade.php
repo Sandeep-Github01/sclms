@@ -22,7 +22,7 @@
 
         <p style="font-size: 16px;">
             <strong>Leave Type:</strong> {{ $leave->leaveType->name }}<br>
-            <strong>Dates:</strong> {{ $leave->start_date }} to {{ $leave->end_date }}<br>
+            <strong>Dates:</strong> {{ $leave->start_date->format('Y-m-d') }} to {{ $leave->end_date->format('Y-m-d') }}<br>
         </p>
 
         <p style="text-align: center; margin: 30px 0;">

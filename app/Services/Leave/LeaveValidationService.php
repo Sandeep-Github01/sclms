@@ -7,11 +7,12 @@ use App\Models\LeaveType;
 use App\Models\LeaveRequest;
 use App\Models\BlackoutPeriod;
 use App\Models\LeaveCredit;
-use App\Models\UserFraudHistory;   
+use App\Models\UserFraudHistory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class LeaveValidationService
 {
@@ -145,7 +146,7 @@ class LeaveValidationService
         // 6. Secure document upload (Private storage)
         $filePath = null;
         if ($request->hasFile('document')) {
-            $filePath = $request->file('document')->store('private/leave_docs', 'local');
+            $filePath = $request->file('document')->store('leave_docs', 'local');
             $steps[] = ['text' => "Document uploaded securely.", 'score' => $score, 'type' => 'document'];
         } else {
             $steps[] = ['text' => "No document uploaded.", 'score' => $score, 'type' => 'document'];

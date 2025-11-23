@@ -47,7 +47,7 @@ Route::middleware(['auth', CheckProfileComplete::class])->prefix('user')->group(
 Route::middleware(['auth', CheckProfileComplete::class])->prefix('leave')->group(function () {
     Route::get('/apply', [LeaveController::class, 'create'])->name('leave.create');
     Route::post('/process', [LeaveController::class, 'process'])
-        ->middleware('throttle:5,1')     // 5 tries / 1 min
+        ->middleware('throttle:5,1')
         ->name('leave.process');
 
     Route::get('/process/{id}', [LeaveController::class, 'processView'])->name('leave.process.view');
@@ -58,7 +58,7 @@ Route::middleware(['auth', CheckProfileComplete::class])->prefix('leave')->group
         ->middleware('throttle:10,1')
         ->name('leave.cancel');
 
-    Route::get('/{id}/document', [FileStreamController::class, 'leaveDoc'])
+    Route::get('/{leave}/document', [FileStreamController::class, 'leaveDoc'])
         ->name('leave.document.download');
 
 });
@@ -86,7 +86,6 @@ Route::prefix('admin')->group(function () {
         Route::post('/profile', [AdminUser::class, 'profileUpdate'])->name('admin.profile.update');
 
         /* User Management */
-        Route::resource('user', UserController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
         Route::put('/user/{id}/status', [UserController::class, 'updateStatus'])->name('admin.user.updateStatus');
         Route::get('/user/review-requests', [UserController::class, 'reviewIndex'])->name('admin.user.review_index');
         Route::get('/user/profile-review/{id}', [UserController::class, 'profileReviewForm'])->name('admin.user.profileReviewForm');
@@ -107,6 +106,7 @@ Route::prefix('admin')->group(function () {
             ->name('admin.leave.markAbuse');
 
         /* Resources */
+        Route::resource('user', UserController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
         Route::resource('department', DepartmentController::class, ['as' => 'admin']);
         Route::resource('blackout', BlackoutPeriodController::class, ['as' => 'admin']);
     });

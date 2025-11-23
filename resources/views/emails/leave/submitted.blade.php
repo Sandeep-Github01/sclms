@@ -22,7 +22,7 @@
 
         <p style="font-size: 16px;">
             <strong>Leave Type:</strong> {{ $leave->leaveType->name ?? 'N/A' }}<br>
-            <strong>Dates:</strong> {{ $leave->start_date }} to {{ $leave->end_date }}<br>
+            <strong>Dates:</strong> {{ $leave->start_date->format('Y-m-d') }} to {{ $leave->end_date->format('Y-m-d') }}<br>
             <strong>Status:</strong> {{ ucfirst($leave->status) }}<br>
             <strong>Review Type:</strong> {{ ucfirst($leave->review_type) }}
         </p>

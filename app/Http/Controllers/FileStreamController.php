@@ -5,41 +5,52 @@ namespace App\Http\Controllers;
 use App\Models\LeaveRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Log;
 
 class FileStreamController extends Controller
 {
-    /**
-     * Stream leave document from private disk.
-     * URL: /leave/document/{leave}
-     */
-    public function leaveDoc(LeaveRequest $leave): StreamedResponse
+    public function leaveDoc(LeaveRequest $leave)
     {
-        $user = Auth::user();               // nullable
-        abort_if(empty($leave->file_path), 404);
+        try {
+            $user = Auth::user();
+            abort_if(empty($leave->file_path), 404, 'No document found');
 
-        // Authorise: owner OR admin
-        if (
-            !Auth::guard('admin')->check() && // admin gate
-            (!$user || $user->id !== $leave->user_id) // null-safe owner check
-        ) {
-            abort(403, 'Unauthorized access to document');
+            // Authorize: owner OR admin
+            if (
+                !Auth::guard('admin')->check() &&
+                (!$user || $user->id !== $leave->user_id)
+            ) {
+                abort(403, 'Unauthorized access to document');
+            }
+
+            // Add 'private/' prefix if it doesn't exist
+            $path = $leave->file_path;
+            if (!str_starts_with($path, 'private/')) {
+                $path = 'private/' . $path;
+            }
+
+            Log::info('Looking for file at: ' . $path);
+
+            $fullPath = storage_path('app/' . $path);
+
+            if (!file_exists($fullPath)) {
+                Log::error('File not found: ' . $fullPath);
+                abort(404, 'Document file not found on server');
+            }
+
+            if (!is_readable($fullPath)) {
+                Log::error('File not readable: ' . $fullPath);
+                abort(500, 'Document file cannot be read');
+            }
+
+            Log::info('Serving file: ' . $fullPath);
+
+            // Serve the file
+            return response()->file($fullPath);
+
+        } catch (\Exception $e) {
+            Log::error('Error serving document: ' . $e->getMessage());
+            abort(500, 'Error loading document: ' . $e->getMessage());
         }
-
-        $path = $leave->file_path;               // e.g. "private/leave_docs/abc123.pdf"
-        $disk = Storage::disk('local');          // same disk you used in store
-        abort_if(!$disk->exists($path), 404);
-
-        // Sanitized download name
-        $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $leave->user->name)
-            . '-leave.' . pathinfo($path, PATHINFO_EXTENSION);
-
-        // Stream with 1-hour private cache
-        return response()->stream(function () use ($disk, $path) {
-            fpassthru($disk->readStream($path));
-        }, 200, [
-            'Content-Disposition' => 'inline; filename="' . $safeName . '"',
-            'Cache-Control'       => 'private, max-age=3600',
-        ]);
     }
 }

@@ -32,6 +32,8 @@ class User extends Authenticatable
         'is_profile_complete',
         'profile_status',
         'last_login_at',
+        'penalty_points',
+        'leave_blocked_until',
     ];
 
     protected static function booted()

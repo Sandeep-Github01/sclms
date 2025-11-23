@@ -11,6 +11,7 @@
             <table class="user-table">
                 <thead>
                     <tr>
+                        <th>Applied Date</th>
                         <th>Type</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -21,9 +22,10 @@
                 <tbody>
                     @foreach ($leaves as $lv)
                         <tr>
+                            <td>{{ $lv->created_at }}</td>
                             <td>{{ $lv->leaveType->name }}</td>
-                            <td>{{ $lv->start_date }}</td>
-                            <td>{{ $lv->end_date }}</td>
+                            <td>{{ $lv->start_date->format('Y-m-d') }}</td>
+                            <td>{{ $lv->end_date->format('Y-m-d') }}</td>
                             <td>{{ ucfirst($lv->status) }}</td>
                             <td>
                                 <div class="table-actions">
@@ -32,7 +34,8 @@
                                         <form action="{{ route('leave.cancel', $lv->id) }}" method="POST"
                                               onsubmit="return confirm('Cancel this leave request?');">
                                             @csrf
-                                            <button type="submit" class="btn-cancel">Cancel</button>
+                                            {{-- <button type="submit" class="btn-cancel">Cancel</button> --}}
+                                            <button type="submit" class="btn-table-delete">Cancel</button>
                                         </form>
                                     @endif
                                 </div>

@@ -48,7 +48,7 @@ class LeaveController extends Controller
         $leaveRequests = LeaveRequest::where('status', 'pending')
             ->where('review_type', 'manual')
             ->with(['user', 'leaveType', 'department'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         $grouped = $leaveRequests->groupBy(function ($leave) {
@@ -149,21 +149,59 @@ class LeaveController extends Controller
             ->with('success', $message);
     }
 
+    // public function markAbuse(Request $request, $id)
+    // {
+    //     $leave = LeaveRequest::findOrFail($id);
+    //     $reason = $request->input('reason') ?? 'admin_flagged_abuse';
+
+    //     // Use explicit guard for admin ID
+    //     $adminId = Auth::guard('admin')->id();
+
+    //     $penalty = app(\App\Services\Leave\PenaltyService::class);
+    //     $res = $penalty->markAbuse($leave, $reason, null, 'admin', $adminId);
+
+    //     // Store admin comment in notes
+    //     $leave->notes = trim(($leave->notes ?? '') . "\nAdmin comment: " . ($request->input('comment') ?? ''));
+    //     $leave->save();
+
+    //     return redirect()->back()->with('success', 'Leave marked as abuse and penalty applied.');
+    // }
     public function markAbuse(Request $request, $id)
     {
-        $leave = LeaveRequest::findOrFail($id);
-        $reason = $request->input('reason') ?? 'admin_flagged_abuse';
+        // Debug what we're receiving
+        \Log::info('markAbuse called', [
+            'id' => $id,
+            'reason_from_input' => $request->input('reason'),
+            'all_request_data' => $request->all()
+        ]);
 
-        // Use explicit guard for admin ID
+        $leave = LeaveRequest::findOrFail($id);
+
+        \Log::info('Leave found', [
+            'leave_id' => $leave->id,
+            'leave_exists' => $leave->exists,
+            'leave_user_id' => $leave->user_id
+        ]);
+
+        $reason = $request->input('reason') ?? 'admin_flagged_abuse';
         $adminId = Auth::guard('admin')->id();
+
+        \Log::info('About to call PenaltyService', [
+            'leave_id' => $leave->id,
+            'reason' => $reason,
+            'admin_id' => $adminId
+        ]);
 
         $penalty = app(\App\Services\Leave\PenaltyService::class);
         $res = $penalty->markAbuse($leave, $reason, null, 'admin', $adminId);
+
+        \Log::info('PenaltyService result', ['result' => $res]);
 
         // Store admin comment in notes
         $leave->notes = trim(($leave->notes ?? '') . "\nAdmin comment: " . ($request->input('comment') ?? ''));
         $leave->save();
 
-        return redirect()->back()->with('success', 'Leave marked as abuse and penalty applied.');
+        return redirect()->route('admin.leaves.index')
+            ->with('success', 'Leave marked as abuse and penalty applied.');
     }
 }

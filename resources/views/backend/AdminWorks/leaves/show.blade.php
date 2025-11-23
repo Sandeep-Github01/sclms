@@ -21,8 +21,8 @@
             <div class="detail-section">
                 <h3>Leave Information</h3>
                 <p><strong>Type:</strong> {{ $leave->leaveType->name }}</p>
-                <p><strong>Start Date:</strong> {{ $leave->start_date }}</p>
-                <p><strong>End Date:</strong> {{ $leave->end_date }}</p>
+                <p><strong>Start Date:</strong> {{ $leave->start_date->format('Y-m-d') }}</p>
+                <p><strong>End Date:</strong> {{ $leave->end_date->format('Y-m-d') }}</p>
                 <p><strong>Duration:</strong>
                     {{ \Carbon\Carbon::parse($leave->start_date)->diffInDays(\Carbon\Carbon::parse($leave->end_date)) + 1 }}
                     day(s)</p>
@@ -54,8 +54,7 @@
             @if ($leave->file_path)
                 <div class="detail-section">
                     <h3>Attached Document</h3>
-                    <p><a href="{{ route('leave.document', $leave) }}" target="_blank">View Document</a>
-                    </p>
+                    <p><a href="{{ route('leave.document.download', $leave) }}" target="_blank">View Document</a></p>
                 </div>
             @endif
 

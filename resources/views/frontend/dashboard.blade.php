@@ -16,7 +16,7 @@
                 Last Leave Status:
                 @if($lastLeave)
                     {{ ucfirst($lastLeave->status) }}
-                    ({{ $lastLeave->start_date }} to {{ $lastLeave->end_date }})
+                    ({{ $lastLeave->start_date->format('Y-m-d') }} to {{ $lastLeave->end_date->format('Y-m-d') }})
                 @else
                     No records yet
                 @endif

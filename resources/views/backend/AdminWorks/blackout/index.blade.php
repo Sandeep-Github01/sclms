@@ -27,8 +27,8 @@
                 @forelse($blackouts as $blackout)
                     <tr>
                         <td>{{ $blackout->id }}</td>
-                        <td>{{ $blackout->start_date }}</td>
-                        <td>{{ $blackout->end_date }}</td>
+                        <td>{{ $blackout->start_date->format('Y-m-d') }}</td>
+                        <td>{{ $blackout->end_date->format('Y-m-d') }}</td>
                         <td>{{ $blackout->reason }}</td>
                         <td>
                             @if(!empty($blackout->department_id))

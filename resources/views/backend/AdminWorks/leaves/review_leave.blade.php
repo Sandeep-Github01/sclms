@@ -23,8 +23,8 @@
                 <div class="detail-section">
                     <h3>Leave Information</h3>
                     <p><strong>Type:</strong> {{ $leave->leaveType->name }}</p>
-                    <p><strong>Start Date:</strong> {{ $leave->start_date }}</p>
-                    <p><strong>End Date:</strong> {{ $leave->end_date }}</p>
+                    <p><strong>Start Date:</strong> {{ $leave->start_date->format('Y-m-d') }}</p>
+                    <p><strong>End Date:</strong> {{ $leave->end_date->format('Y-m-d') }}</p>
                     <p><strong>Duration:</strong> {{ $days }} day(s)</p>
                     <p><strong>Applied Date:</strong> {{ $leave->created_at->format('M d, Y g:i A') }}</p>
                     <p><strong>Review Type:</strong> Manual Review Required</p>
@@ -32,10 +32,7 @@
 
                 @if ($leave->reason)
                     <div class="detail-section">
-                        <h3>Reason for Leave</h3>
-                        <div class="reason-box">
-                            {{ $leave->reason }}
-                        </div>
+                        <p><strong>Reason for Leave:</strong> {{ $leave->reason }}</p>
                     </div>
                 @endif
 
@@ -44,7 +41,11 @@
                     <hr><br>
                     <div class="detail-section">
                         <h3>Attached Document</h3>
-                        <p><a href="{{ route('leave.document', $leave) }}" target="_blank">View Document</a>
+                        <br>
+                        <p>
+                            <a href="{{ route('leave.document.download', $leave->id) }}" target="_blank"
+                                class="btn-table-view" style="margin-left: 8px; width: 100px;">
+                                View Document</a>
                         </p>
                     </div>
                 @endif
@@ -80,7 +81,9 @@
                             @foreach ($recentLeaves as $recent)
                                 <div class="recent-item">
                                     <p><strong>{{ $recent->leaveType->name }}</strong></p>
-                                    <p class="recent-dates">{{ $recent->start_date }} to {{ $recent->end_date }}</p>
+                                    <p class="recent-dates">{{ $recent->start_date->format('Y-m-d') }} to
+                                        {{ $recent->end_date->format('Y-m-d') }}
+                                    </p>
                                 </div>
                             @endforeach
                         </div>
@@ -102,12 +105,16 @@
 
                 <!-- Decision buttons -->
                 <button type="submit" name="decision" value="approved" class="btn-table-view">Approve</button>
-
+                <br>
+                <br>
+                <Strong>If Decline</strong>
                 <label for="comment"><strong>Decline Reason:</strong></label>
-                <textarea id="comment" name="comment" rows="4" placeholder="Add a reason if you're rejecting..."></textarea>
-
+                <textarea id="comment" name="comment" rows="4"
+                    placeholder="Add a reason if you're rejecting..."></textarea>
+                <br>
                 <button type="submit" name="decision" value="rejected" class="btn-table-delete">Decline</button>
             </form>
+            <br>
 
             <hr>
 
@@ -118,9 +125,11 @@
                 <input type="hidden" name="reason" value="admin_flagged_abuse">
                 <label><strong>Admin Comment:</strong></label>
                 <textarea name="comment" rows="3" placeholder="Detail the abuse here..."></textarea>
-                <button type="submit" class="btn btn-danger">Mark as Abuse</button>
+                <br>
+                <button type="submit" class="btn-table-delete">Mark as Abuse</button>
             </form>
 
+            <br><hr>
             <a href="{{ route('admin.leaves.index') }}" class="btn-back">Back</a>
         </div>
 
