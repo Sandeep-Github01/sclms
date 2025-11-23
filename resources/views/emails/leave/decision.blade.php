@@ -17,7 +17,7 @@
         </p>
         <p style="font-size: 16px;">
             <strong>Leave Type:</strong> {{ $leave->leaveType->name }}<br>
-            <strong>Date Range:</strong> {{ $leave->start_date }} to {{ $leave->end_date }}<br>
+            <strong>Date Range:</strong> {{ $leave->start_date->format('Y-m-d') }} to {{ $leave->end_date->format('Y-m-d') }}<br>
         </p>
         @if($leave->status == 'rejected' && $leave->status_note)
         <p style="font-size: 16px; color:#dc3545;">

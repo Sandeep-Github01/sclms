@@ -20,12 +20,12 @@
 
         <div class="form-group">
             <label for="start_date">Start Date</label>
-            <input type="date" name="start_date" value="{{ old('start_date', $blackout->start_date) }}" required>
+            <input type="date" name="start_date" value="{{ old('start_date', $blackout->start_date->format('Y-m-d')) }}" required>
         </div>
 
         <div class="form-group">
             <label for="end_date">End Date</label>
-            <input type="date" name="end_date" value="{{ old('end_date', $blackout->end_date) }}" required>
+            <input type="date" name="end_date" value="{{ old('end_date', $blackout->end_date->format('Y-m-d')) }}" required>
         </div>
 
         <div class="form-group">

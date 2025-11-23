@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Admin;
+use App\Models\LeaveRequest;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-// Import related models
-use App\Models\LeaveRequest;
-use App\Models\User;
 
 class Approval extends Model
 {
@@ -27,6 +25,6 @@ class Approval extends Model
 
     public function approver()
     {
-        return $this->belongsTo(User::class, 'approved_by');
+        return $this->belongsTo(Admin::class, 'approved_by');
     }
 }

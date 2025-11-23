@@ -12,28 +12,27 @@
             <table class="user-table">
                 <thead>
                     <tr>
+                        <th>Applied Date</th>
                         <th>Name</th>
                         <th>Department</th>
                         <th>Leave Type</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Applied Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($students as $leave)
                         <tr>
+                            <td>{{ $leave->created_at->format('Y-m-d H:i:s') }}</td>
                             <td>{{ $leave->user->name }}</td>
                             <td>{{ $leave->department->name ?? 'N/A' }}</td>
                             <td>{{ $leave->leaveType->name ?? 'N/A' }}</td>
-                            <td>{{ $leave->start_date }}</td>
-                            <td>{{ $leave->end_date }}</td>
-                            <td>{{ $leave->created_at->format('M d, Y') }}</td>
+                            <td>{{ $leave->start_date->format('Y-m-d') }}</td>
+                            <td>{{ $leave->end_date->format('Y-m-d') }}</td>
                             <td>
                                 <div class="table-actions">
-                                    <a href="{{ route('admin.review_leave', ['id' => $leave->id]) }}"
-                                        class="btn-table-view">Review</a>
+                                    <a href="{{ route('admin.review_leave', ['id' => $leave->id]) }}" class="btn-table-view">Review</a>
                                 </div>
                             </td>
                         </tr>
@@ -55,24 +54,24 @@
             <table class="user-table">
                 <thead>
                     <tr>
+                        <th>Applied Date</th>
                         <th>Name</th>
                         <th>Department</th>
                         <th>Leave Type</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Applied Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($teachers as $leave)
                         <tr>
+                            <td>{{ $leave->created_at->format('Y-m-d H:i:s') }}</td>
                             <td>{{ $leave->user->name }}</td>
                             <td>{{ $leave->department->name ?? 'N/A' }}</td>
                             <td>{{ $leave->leaveType->name ?? 'N/A' }}</td>
-                            <td>{{ $leave->start_date }}</td>
-                            <td>{{ $leave->end_date }}</td>
-                            <td>{{ $leave->created_at->format('M d, Y') }}</td>
+                            <td>{{ $leave->start_date->format('Y-m-d') }}</td>
+                            <td>{{ $leave->end_date->format('Y-m-d') }}</td>
                             <td>
                                 <div class="table-actions">
                                     <a href="{{ route('admin.review_leave', ['id' => $leave->id]) }}"

@@ -21,6 +21,7 @@ class BlackoutPeriod extends Model
         'department_id' => 'array',
         'semester' => 'array',
     ];
+    
     public function department()
     {
         return $this->belongsTo(Department::class);

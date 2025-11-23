@@ -122,7 +122,31 @@ class LeaveController extends Controller
     {
         $leave = LeaveRequest::with('leaveType')->findOrFail($id);
         $steps = session('leave_steps', []);
-        return view('frontend.leave.process', compact('leave', 'steps'));
+
+        // de-duplicate
+        $seen = [];
+        $clean = [];
+        foreach ($steps as $s) {
+            $key = $s['text'];
+            if (!isset($seen[$key])) {
+                $seen[$key] = true;
+                $clean[] = $s;
+            }
+        }
+
+        // probability
+        $score = $leave->final_score ?? 0;
+        $max = 10;                       // same ceiling you used in service
+        $prob = min(100, round(($score / $max) * 100));
+        $label = $prob >= 70 ? 'High' : ($prob >= 40 ? 'Moderate' : 'Low');
+
+        return view('frontend.leave.process', [
+            'leave' => $leave,
+            'steps' => $clean,
+            'probability' => $prob,
+            'probLabel' => $label,
+            'score' => $score,
+        ]);
     }
 
     // 4. Show final result page
@@ -155,7 +179,7 @@ class LeaveController extends Controller
     {
         $user = Auth::user();
         $leaves = LeaveRequest::where('user_id', $user->id)
-            ->orderBy('start_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
         return view('frontend.leave.list', compact('leaves'));
     }

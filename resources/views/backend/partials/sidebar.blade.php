@@ -44,7 +44,7 @@
             </a>
             <ul class="sidebar-submenu leaves-submenu">
                 <li>
-                    <a href="{{ route('admin.recent_leaves') }}">Recent Leaves</a>
+                    <a href="{{ route('admin.leaves.recent') }}">Recent Leaves</a>
                 </li>
                 <li>
                     <a href="{{ route('admin.leaves.index') }}">Review Leaves</a>

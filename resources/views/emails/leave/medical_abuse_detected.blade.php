@@ -10,7 +10,7 @@
     <ul>
         <li><strong>User:</strong> {{ $user->name }} ({{ $user->email }})</li>
         <li><strong>Leave ID:</strong> #{{ $leave->id }}</li>
-        <li><strong>Date:</strong> {{ $leave->start_date }} → {{ $leave->end_date }}</li>
+        <li><strong>Date:</strong> {{ $leave->start_date->format('Y-m-d') }} → {{ $leave->end_date->format('Y-m-d') }}</li>
         <li><strong>Reason Code:</strong> medical_provisional_abuse</li>
     </ul>
 

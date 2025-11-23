@@ -79,13 +79,13 @@ class LeaveConflictService
         while ($current->lte($end)) {
             $d = $current->toDateString();
 
-            // 🔍 Only count REAL kids (not soft-deleted ghosts)
+            // 🔍 Only count REAL active users
             $dailyCountQuery = LeaveRequest::where('status', 'approved')
                 ->where('department_id', $department->id)
                 ->whereDate('start_date', '<=', $d)
                 ->whereDate('end_date', '>=', $d)
                 ->where('role', $role)
-                ->whereHas('user', fn($q) => $q->whereNull('deleted_at')); // 👻 ghost filter
+                ->whereHas('user', fn($q) => $q->where('status', 'active')); // ✅ active users only
 
             if ($role === 'student' && $semester) {
                 $dailyCountQuery->where('semester', $semester);
@@ -93,9 +93,12 @@ class LeaveConflictService
 
             $dailyCount = $dailyCountQuery->count();
             $dailyDetails[$d] = $dailyCount;
-            if ($dailyCount > $maxAbsentees) $maxAbsentees = $dailyCount;
+            if ($dailyCount > $maxAbsentees)
+                $maxAbsentees = $dailyCount;
+
             $current->addDay();
         }
+
 
         $teacher_threshold = config('leave.thresholds.teacher', 1);
         $student_threshold = config('leave.thresholds.student', 3);
@@ -145,7 +148,7 @@ class LeaveConflictService
                         $q2->where('start_date', '<=', $startCopy)->where('end_date', '>=', $endCopy);
                     });
             })
-            ->whereHas('user', fn($q) => $q->whereNull('deleted_at')); // 👻 ghost filter
+            ->whereHas('user', fn($q) => $q->where('status', 'active')); // 👻 ghost filter
 
         if ($role === 'student') {
             $conflictsQuery->where('semester', $semester);

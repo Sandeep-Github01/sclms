@@ -39,17 +39,17 @@
 
                 <div class="form-group">
                     <label for="start_date">Start Date:</label>
-                    <input type="date" name="start_date" id="start_date" required>
+                    <input type="text" name="start_date" id="start_date" class="flatpickr-input" required readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="end_date">End Date:</label>
-                    <input type="date" name="end_date" id="end_date" required>
+                    <input type="text" name="end_date" id="end_date" class="flatpickr-input" required readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="reason">Reason:</label>
-                    <textarea name="reason" id="reason"></textarea>
+                    <textarea name="reason" id="reason" rows="6"></textarea>
                 </div>
 
                 <div class="form-group">
@@ -69,6 +69,24 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialize start date picker
+        const startPicker = flatpickr("#start_date", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            theme: "material_blue", // or "light", "dark", "airbnb"
+            onChange: function (selectedDates, dateStr) {
+                // Update end date minimum
+                endPicker.set('minDate', dateStr);
+            }
+        });
+
+        // Initialize end date picker
+        const endPicker = flatpickr("#end_date", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            theme: "material_blue"
+        });
+
         const blackoutRanges = @json($blackouts);
         const blackoutDates = [];
 
@@ -90,7 +108,7 @@
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev,next',
                 center: 'title',
                 right: ''
             },
