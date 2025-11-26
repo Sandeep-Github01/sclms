@@ -73,9 +73,8 @@
         const startPicker = flatpickr("#start_date", {
             minDate: "today",
             dateFormat: "Y-m-d",
-            theme: "material_blue", // or "light", "dark", "airbnb"
+            theme: "material_blue",
             onChange: function (selectedDates, dateStr) {
-                // Update end date minimum
                 endPicker.set('minDate', dateStr);
             }
         });

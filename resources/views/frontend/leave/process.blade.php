@@ -1,103 +1,3 @@
-{{-- @include('frontend.partials.header')
-@include('frontend.partials.sidebar')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<div class="main-content">
-    <h2>Leave Request Evaluation Steps</h2>
-
-    <div class="review-log">
-        <h3>Evaluation Log:</h3>
-        <ol id="logList"></ol>
-        <p id="logEmpty" style="display: none;">No log available.</p>
-
-        <hr>
-
-        <div id="resultSummary" style="opacity: 0; transition: opacity 0.5s;">
-            <h3>Result Summary</h3>
-            <p><strong>Type:</strong> {{ $leave->leaveType->name }}</p>
-            <p><strong>Dates:</strong> {{ $leave->start_date }} to {{ $leave->end_date }}</p>
-            <p><strong>Status:</strong> {{ ucfirst($leave->status) }}</p>
-            <p><strong>Review Type:</strong> {{ ucfirst($leave->review_type) }}</p>
-            @if ($leave->final_score !== null)
-                <p><strong>Score:</strong> {{ $leave->final_score }}</p>
-            @endif
-            @if ($leave->status_note)
-                <p><strong>Note:</strong> {{ $leave->status_note }}</p>
-            @endif
-            @if ($leave->file_path)
-                <p><a href="{{ route('leave.document', $leave) }}" target="_blank">View Document</a>
-                </p>
-            @endif
-
-            <a href="{{ route('leave.result', $leave->id) }}" class="btn-submit">
-                View Final Result
-            </a>
-        </div>
-    </div>
-</div>
-
-@include('frontend.partials.footer')
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const steps = @json($steps);
-        const logList = document.getElementById('logList');
-        const logEmpty = document.getElementById('logEmpty');
-        const resultSummary = document.getElementById('resultSummary');
-
-        if (!steps || steps.length === 0) {
-            logEmpty.style.display = 'block';
-            return;
-        }
-
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i < steps.length) {
-                const step = steps[i];
-
-                const li = document.createElement('li');
-                li.classList.add('log-item', `log-${step.type}`);
-
-                const icon = document.createElement('span');
-                icon.classList.add('log-icon');
-
-                if (step.type === 'success') {
-                    icon.innerHTML =
-                    '<i class="fa fa-check-circle fa-spin" style="color:#4caf50;"></i>';
-                } else if (step.type === 'warning') {
-                    icon.innerHTML =
-                        '<i class="fa fa-exclamation-triangle fa-bounce" style="color:#ff9800;"></i>';
-                } else if (step.type === 'error') {
-                    icon.innerHTML =
-                        '<i class="fa fa-times-circle fa-shake" style="color:#f44336;"></i>';
-                } else if (step.type === 'document') {
-                    icon.innerHTML = '<i class="fa fa-file-alt fa-beat" style="color:#3f51b5;"></i>';
-                } else {
-                    icon.innerHTML = '•';
-                }
-
-                const textSpan = document.createElement('span');
-                textSpan.classList.add('log-text');
-                textSpan.textContent = `${step.text} (Score: ${step.score})`;
-
-                li.appendChild(icon);
-                li.appendChild(textSpan);
-
-                li.style.opacity = 0;
-                li.style.transition = 'opacity 0.5s';
-                logList.appendChild(li);
-                requestAnimationFrame(() => li.style.opacity = 1);
-
-                i++;
-            } else {
-                clearInterval(interval);
-                resultSummary.style.opacity = 1;
-            }
-        }, 800);
-    });
-</script> --}}
-
 @include('frontend.partials.header')
 @include('frontend.partials.sidebar')
 
@@ -106,27 +6,27 @@
 <div class="main-content">
     <h2>Leave Request Evaluation Steps</h2>
 
-    {{-- NEW: probability + summary (same styling) ----------------------------}}
+    {{-- Probability + issue hint --}}
     <div class="review-log" style="margin-bottom: 25px;">
-        <!-- Probability -->
         <div class="card mb-3">
             <div class="card-body" style="padding: 15px 20px;">
-                <h5 style="margin: 0;font-size: 1.1em">Approval Probability: {{ $probability }}%
+                <h5 style="margin: 0;font-size: 1.1em">
+                    Approval Probability: {{ $probability }}%
                     <span class="badge" style="background: {{ $probLabel == 'High' ? '#4caf50' : ($probLabel == 'Moderate' ? '#ff9800' : '#f44336') }};
-                                     color:#fff; padding:4px 8px; border-radius:3px; font-size:0.9em;">
+                                 color:#fff; padding:4px 8px; border-radius:3px; font-size:0.9em;">
                         {{ $probLabel }}
                     </span>
                 </h5>
-                <p class="text-muted" style="margin:5px 0 0 0;font-size:0.95em">
-                    @if($probLabel == 'High') Your request looks safe - high chance of auto-approval.
-                    @elseif($probLabel == 'Moderate') Small issues detected
-                    @else Several risk flags found - usually auto-rejected.
-                    @endif
-                </p>
+                @if($probLabel !== 'High')
+                    <p class="text-muted" style="margin:5px 0 0 0;font-size:0.95em">
+                        {{ $probLabel == 'Moderate' ? 'Small issues detected – see log below.' : 'Several risk flags found – see log below.' }}
+                    </p>
+                @endif
             </div>
         </div>
     </div>
 
+    {{-- Evaluation log --}}
     <div class="review-log">
         <h3>Evaluation Log:</h3>
         <ol id="logList"></ol>
@@ -176,49 +76,51 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const steps = @json($steps);
+        // Get steps from backend - they already contain ALL steps in correct order
+        const allSteps = @json($steps);
+
+        // Probability is ALREADY a percentage from controller (0-100)
+        const probability = {{ $probability }};
+
         const logList = document.getElementById('logList');
         const logEmpty = document.getElementById('logEmpty');
-        const resultSummary = document.getElementById('resultSummary');
+        const resultSum = document.getElementById('resultSummary');
 
-        if (!steps || steps.length === 0) {
+        if (!allSteps.length) {
             logEmpty.style.display = 'block';
             return;
         }
 
-        let i = 0;
+        let i = 0, runningTotal = 0;
+
         const interval = setInterval(() => {
-            if (i < steps.length) {
-                const step = steps[i];
+            if (i < allSteps.length) {
+                const step = allSteps[i];
 
                 const li = document.createElement('li');
                 li.classList.add('log-item', `log-${step.type}`);
 
                 const icon = document.createElement('span');
                 icon.classList.add('log-icon');
+                if (step.type === 'success') icon.innerHTML = '<i class="fa fa-check-circle fa-spin" style="color:#4caf50;"></i>';
+                else if (step.type === 'warning') icon.innerHTML = '<i class="fa fa-exclamation-triangle fa-bounce" style="color:#ff9800;"></i>';
+                else if (step.type === 'error') icon.innerHTML = '<i class="fa fa-times-circle fa-shake" style="color:#f44336;"></i>';
+                else if (step.type === 'document') icon.innerHTML = '<i class="fa fa-file-alt fa-beat" style="color:#3f51b5;"></i>';
+                else icon.innerHTML = '•';
 
-                if (step.type === 'success') {
-                    icon.innerHTML =
-                        '<i class="fa fa-check-circle fa-spin" style="color:#4caf50;"></i>';
-                } else if (step.type === 'warning') {
-                    icon.innerHTML =
-                        '<i class="fa fa-exclamation-triangle fa-bounce" style="color:#ff9800;"></i>';
-                } else if (step.type === 'error') {
-                    icon.innerHTML =
-                        '<i class="fa fa-times-circle fa-shake" style="color:#f44336;"></i>';
-                } else if (step.type === 'document') {
-                    icon.innerHTML = '<i class="fa fa-file-alt fa-beat" style="color:#3f51b5;"></i>';
+                const txt = document.createElement('span');
+                txt.classList.add('log-text');
+
+                // Show running total ONLY for scored steps
+                if (step.score !== null && step.score !== 0) {
+                    runningTotal += step.score;
+                    txt.textContent = `${step.text} (Score: ${step.score >= 0 ? '+' : ''}${step.score}) → Total: ${runningTotal}`;
                 } else {
-                    icon.innerHTML = '•';
+                    txt.textContent = step.text;
                 }
 
-                const textSpan = document.createElement('span');
-                textSpan.classList.add('log-text');
-                textSpan.textContent = `${step.text} (Score: ${step.score})`;
-
                 li.appendChild(icon);
-                li.appendChild(textSpan);
-
+                li.appendChild(txt);
                 li.style.opacity = 0;
                 li.style.transition = 'opacity 0.5s';
                 logList.appendChild(li);
@@ -227,7 +129,7 @@
                 i++;
             } else {
                 clearInterval(interval);
-                resultSummary.style.opacity = 1;
+                resultSum.style.opacity = 1;
             }
         }, 800);
     });

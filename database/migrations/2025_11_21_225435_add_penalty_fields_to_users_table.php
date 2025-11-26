@@ -16,7 +16,13 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['penalty_points', 'leave_blocked_until']);
+            if (Schema::hasColumn('users', 'penalty_points')) {
+                $table->dropColumn('penalty_points');
+            }
+            if (Schema::hasColumn('users', 'leave_blocked_until')) {
+                $table->dropColumn('leave_blocked_until');
+            }
         });
+
     }
 };

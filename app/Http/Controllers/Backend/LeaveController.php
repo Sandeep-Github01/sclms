@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\LeaveRequest;
 use App\Models\LeaveCredit;
 use App\Models\Approval;
-use App\Models\Admin; // Added for consistency
-use Illuminate\Support\Facades\Auth; // Modern facade import
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LeaveDecisionMail;
@@ -149,23 +148,6 @@ class LeaveController extends Controller
             ->with('success', $message);
     }
 
-    // public function markAbuse(Request $request, $id)
-    // {
-    //     $leave = LeaveRequest::findOrFail($id);
-    //     $reason = $request->input('reason') ?? 'admin_flagged_abuse';
-
-    //     // Use explicit guard for admin ID
-    //     $adminId = Auth::guard('admin')->id();
-
-    //     $penalty = app(\App\Services\Leave\PenaltyService::class);
-    //     $res = $penalty->markAbuse($leave, $reason, null, 'admin', $adminId);
-
-    //     // Store admin comment in notes
-    //     $leave->notes = trim(($leave->notes ?? '') . "\nAdmin comment: " . ($request->input('comment') ?? ''));
-    //     $leave->save();
-
-    //     return redirect()->back()->with('success', 'Leave marked as abuse and penalty applied.');
-    // }
     public function markAbuse(Request $request, $id)
     {
         // Debug what we're receiving
@@ -203,5 +185,46 @@ class LeaveController extends Controller
 
         return redirect()->route('admin.leaves.index')
             ->with('success', 'Leave marked as abuse and penalty applied.');
+    }
+
+    /* ---------- provisional review ---------- */
+    public function provisionalIndex()
+    {
+        $leaves = LeaveRequest::with(['user', 'leaveType'])
+            ->where('status', 'provisional')
+            ->where('document_status', 'submitted')
+            ->latest()
+            ->get();
+
+        return view('backend.AdminWorks.leaves.provisional-index', compact('leaves'));
+    }
+
+    public function provisionalReview($id)
+    {
+        $leave = LeaveRequest::with(['user', 'leaveType', 'department'])
+            ->where('id', $id)
+            ->where('status', 'provisional')
+            ->where('document_status', 'submitted')
+            ->firstOrFail();
+
+        $days = (int) Carbon::parse($leave->start_date)
+            ->diffInDays($leave->end_date) + 1;
+        $leaveCredit = LeaveCredit::where('user_id', $leave->user_id)
+            ->where('type_id', $leave->type_id)
+            ->first();
+        $recentLeaves = LeaveRequest::where('user_id', $leave->user_id)
+            ->where('id', '!=', $leave->id)
+            ->where('status', 'approved')
+            ->whereBetween('start_date', [now()->subDays(30), now()])
+            ->with('leaveType')
+            ->latest()
+            ->get();
+
+        return view('backend.AdminWorks.leaves.provisional-review', compact(
+            'leave',
+            'days',
+            'leaveCredit',
+            'recentLeaves'
+        ));
     }
 }
