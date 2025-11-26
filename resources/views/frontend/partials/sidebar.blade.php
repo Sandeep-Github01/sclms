@@ -13,6 +13,7 @@
         <li><a href="{{ route('frontend.user.dashboard') }}">🏠 Dashboard</a></li>
         <li><a href="{{ route('leave.create') }}">📝 Leave Apply</a></li>
         <li><a href="{{ route('leave.list') }}">📂 My Leaves</a></li>
+        <li><a href="{{ route('leave.provisional.index') }}">🗃️ Provisional Doc</a></li>
     </ul>
 
 </aside>
