@@ -44,10 +44,13 @@
             </a>
             <ul class="sidebar-submenu leaves-submenu">
                 <li>
-                    <a href="{{ route('admin.leaves.recent') }}">🕒 Recent Leaves</a>
+                    <a href="{{ route('admin.leaves.index') }}">📑 Review Leaves</a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.leaves.index') }}">📑 Review Leaves</a>
+                    <a href="{{ route('admin.leaves.provisional.index') }}">🗃️ Review Document</a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.leaves.recent') }}">🕒 Recent Leaves</a>
                 </li>
             </ul>
         </li>
