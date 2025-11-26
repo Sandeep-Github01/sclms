@@ -75,6 +75,10 @@ class Kernel extends ConsoleKernel
     /**
      * Register the commands for the application.
      */
+    protected $commands = [
+        \App\Console\Commands\SimulateLeaveRequests::class,
+        \App\Console\Commands\ImportLeavesFromCSV::class,
+    ];
     protected function commands(): void
     {
         $this->load(__DIR__ . '/Commands');

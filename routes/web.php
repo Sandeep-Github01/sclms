@@ -61,6 +61,13 @@ Route::middleware(['auth', CheckProfileComplete::class])->prefix('leave')->group
     Route::get('/{leave}/document', [FileStreamController::class, 'leaveDoc'])
         ->name('leave.document.download');
 
+    /* ----- provisional document upload ----- */
+    Route::get('/leave/provisional', [LeaveController::class, 'provisionalIndex'])
+        ->name('leave.provisional.index');
+    Route::get('/leave/provisional/{id}/upload', [LeaveController::class, 'provisionalUploadForm'])
+        ->name('leave.provisional.upload.form');
+    Route::post('/leave/provisional/{id}/upload', [LeaveController::class, 'provisionalUploadStore'])
+        ->name('leave.provisional.upload.store');
 });
 
 /* =========================================================
@@ -104,6 +111,12 @@ Route::prefix('admin')->group(function () {
         Route::post('/leave/{id}/mark-abuse', [BackendLeaveController::class, 'markAbuse'])
             ->middleware('throttle:30,1')
             ->name('admin.leave.markAbuse');
+
+        /* ----- review uploaded provisional docs ----- */
+        Route::get('/leaves/provisional', [BackendLeaveController::class, 'provisionalIndex'])
+            ->name('admin.leaves.provisional.index');
+        Route::get('/leaves/provisional/{id}/review', [BackendLeaveController::class, 'provisionalReview'])
+            ->name('admin.leaves.provisional.review');
 
         /* Resources */
         Route::resource('user', UserController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);

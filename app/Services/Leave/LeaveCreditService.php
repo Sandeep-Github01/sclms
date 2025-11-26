@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services\Leave;
 
 use App\Models\LeaveCredit;
@@ -9,105 +8,85 @@ use Illuminate\Support\Facades\Auth;
 
 class LeaveCreditService
 {
-    /**
-     * $request - incoming Request
-     * $validation - output from LeaveValidationService (array)
-     * $conflict - output from LeaveConflictService (array)
-     *
-     * Returns:
-     * [
-     *   'success' => true|false,
-     *   'message' => null|'error message',
-     *   'steps' => [...],
-     *   'score' => int,
-     *   'credit' => LeaveCredit|null,
-     *   'recentCount' => int,
-     *   'doc_present' => bool
-     * ]
-     */
     public function checkCredits($request, $validation, $conflict)
     {
         $user = Auth::user();
-        $steps = $validation['steps'] ?? [];
-        $score = $validation['score'] ?? 0;
+        $steps = $conflict['steps'] ?? [];
+        $score = $conflict['score'] ?? 0;
 
         $leaveType = $validation['leaveType'];
         $days = $validation['days'];
         $filePath = $validation['filePath'] ?? null;
 
-        // -------------------------
-        // Check leave credits
-        // -------------------------
+        $features = [
+            'credit_ok' => 0,
+            'credit_pct' => 0,
+            'recent_count' => 0,
+            'doc_present' => 0,
+        ];
+
+        // credit check
         $credit = LeaveCredit::where('user_id', $user->id)
             ->where('type_id', $leaveType->id)
             ->first();
+        $creditScore = 0;
+        if ($credit) {
+            $pct = $credit->remaining_days / max(1, $leaveType->max_days);
+            $features['credit_pct'] = $pct;
+            $features['credit_ok'] = $credit->remaining_days >= $days ? 1 : 0;
 
-        if ($credit && $credit->remaining_days >= $days) {
-            $score += 2;
-            $steps[] = ['text' => "Sufficient leave credits ({$credit->remaining_days}).", 'score' => $score, 'type' => 'success'];
-        } else {
-            $score -= 2;
-            $steps[] = ['text' => "Insufficient leave credits or record missing.", 'score' => $score, 'type' => 'error'];
-        }
-
-        // -------------------------
-        // Recent approved leaves in past 10 days
-        // -------------------------
-        $recentCount = LeaveRequest::where('user_id', $user->id)
-            ->where('status', 'approved')
-            ->whereBetween('start_date', [
-                Carbon::now()->subDays(10)->toDateString(),
-                Carbon::now()->toDateString()
-            ])
-            ->count();
-
-        $score += ($recentCount === 0) ? 2 : -1;
-        $steps[] = ['text' => ($recentCount === 0 ? "No recent leaves." : "{$recentCount} recent leave(s) in past 10 days."), 'score' => $score, 'type' => ($recentCount === 0 ? 'success' : 'warning')];
-
-        // -------------------------
-        // Medical doc check / doc scoring
-        // -------------------------
-        $doc_present = false;
-        if (strtolower($leaveType->name) === 'medical') {
-            $score += 1;
-            if ($filePath) {
-                $score += 3;
-                $doc_present = true;
-                $steps[] = ['text' => "Medical document attached.", 'score' => $score, 'type' => 'success'];
-            } elseif ($leaveType->requires_documentation) {
-                // reject immediately (as per original logic)
-                $data = [
-                    'status' => 'rejected',
-                    'status_note' => "Medical document required."
-                ];
-                $steps[] = ['text' => "Rejected: Missing medical document.", 'score' => $score, 'type' => 'error'];
-                return [
-                    'success' => false,
-                    'message' => 'Medical document required.',
-                    'steps' => $steps,
-                ];
+            if ($credit->remaining_days >= $days) {
+                $creditScore = 2 + (int) ($pct * 3);
+                $steps[] = ['text' => "Sufficient credits ({$credit->remaining_days}/{$leaveType->max_days})", 'score' => $creditScore, 'type' => 'success'];
+            } else {
+                $creditScore = -3;
+                $steps[] = ['text' => "Insufficient credits", 'score' => $creditScore, 'type' => 'error'];
             }
+        } else {
+            $creditScore = -2;
+            $steps[] = ['text' => "No credit record", 'score' => $creditScore, 'type' => 'error'];
+        }
+        $score += $creditScore;
+
+        // NEW: recent leaves count
+        $recent = LeaveRequest::where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->whereBetween('start_date', [now()->subDays(30), now()])
+            ->count();
+        $features['recent_count'] = $recent;
+        $recentScore = $recent === 0 ? 3 : -$recent;
+        $steps[] = ['text' => $recent === 0 ? 'No recent leaves' : "$recent recent leave(s)", 'score' => $recentScore, 'type' => $recent > 2 ? 'warning' : 'info'];
+        $score += $recentScore;
+
+        // NEW: medical-document step
+        $docScore = 0;
+        if (strtolower($leaveType->name) === 'medical') {
+            if ($filePath) {
+                $docScore = 4;
+                $features['doc_present'] = 1;
+                $steps[] = ['text' => 'Medical document attached', 'score' => $docScore, 'type' => 'success'];
+            } else {
+                $steps[] = ['text' => 'No document uploaded', 'score' => 0, 'type' => 'info'];
+            }
+            $score += $docScore;
         }
 
-        // Return final credit evaluation
         return [
             'success' => true,
             'message' => null,
             'steps' => $steps,
             'score' => $score,
-            'credit' => $credit ?? null,
-            'recentCount' => $recentCount,
-            'doc_present' => $doc_present,
+            'credit' => $credit,
+            'recentCount' => $recent,
+            'doc_present' => (bool) $filePath,
+            'features' => $features,
         ];
     }
 
-    /**
-     * Deduct credits after approval (called by execution service).
-     * Keeps exact logic: max(0, remaining_days - $days)
-     */
     public function deductCredits($credit, $days)
     {
-        if (! $credit) return;
+        if (!$credit)
+            return;
         $credit->remaining_days = max(0, $credit->remaining_days - $days);
         $credit->save();
     }

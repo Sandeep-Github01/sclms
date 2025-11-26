@@ -67,9 +67,10 @@
         <details style="cursor:pointer;">
             <summary style="color:#337ab7;font-weight:bold;">Show reasons</summary>
             <ul style="margin:8px 0 0 20px;padding:0;">
-                <li>Missing document: +1 point</li>
-                <li>Unapproved absence: +3 points</li>
-                <li>Fraud detection: +4-8 points</li>
+                <li>Missing document</li>
+                <li>Unapproved absence</li>
+                <li>Fraud detection</li>
+                <li>Marked as abuse</li>
             </ul>
         </details>
     </div>

@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Department;
-use App\Models\LeaveType;
-use App\Models\LeaveRequest;
-use App\Models\LeaveCredit;
-use App\Models\BlackoutPeriod;
-use App\Models\Admin;
 use Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Admin;
+use App\Models\LeaveType;
+use App\Models\Department;
+use App\Models\LeaveCredit;
+use App\Models\LeaveRequest;
+use Illuminate\Http\Request;
+use App\Models\BlackoutPeriod;
 use App\Mail\LeaveSubmittedMail;
-use App\Mail\LeaveManualReviewMail;
 use Illuminate\Support\Facades\DB;
-use App\Services\Leave\LeaveValidationService;
-use App\Services\Leave\LeaveConflictService;
+use App\Mail\LeaveManualReviewMail;
+use App\Http\Controllers\Controller;
+use App\Mail\MedicalDocUploadedMail;
+use Illuminate\Support\Facades\Mail;
 use App\Services\Leave\LeaveCreditService;
+use App\Services\Leave\LeaveConflictService;
 use App\Services\Leave\LeaveExecutionService;
+use App\Services\Leave\LeaveValidationService;
 
 class LeaveController extends Controller
 {
@@ -120,33 +121,37 @@ class LeaveController extends Controller
     // 3. Show the process log
     public function processView($id)
     {
-        $leave = LeaveRequest::with('leaveType')->findOrFail($id);
-        $steps = session('leave_steps', []);
+        $leave = LeaveRequest::with(['user', 'leaveType', 'department'])->findOrFail($id);
 
-        // de-duplicate
-        $seen = [];
-        $clean = [];
-        foreach ($steps as $s) {
-            $key = $s['text'];
-            if (!isset($seen[$key])) {
-                $seen[$key] = true;
-                $clean[] = $s;
-            }
+        // Get probability from the database
+        $probability = round(($leave->probability ?? 0) * 100, 1);
+
+        // Get steps from database (leave_evaluations table), NOT from session
+        $evaluation = DB::table('leave_evaluations')
+            ->where('leave_request_id', $leave->id)
+            ->first();
+
+        if ($evaluation && $evaluation->steps) {
+            $steps = json_decode($evaluation->steps, true);
+        } else {
+            // Fallback: try session
+            $steps = session('leave_steps', []);
+            // Clear session after reading to prevent contamination
+            session()->forget('leave_steps');
         }
 
-        // probability
+        // Get the final score
         $score = $leave->final_score ?? 0;
-        $max = 10;                       // same ceiling you used in service
-        $prob = min(100, round(($score / $max) * 100));
-        $label = $prob >= 70 ? 'High' : ($prob >= 40 ? 'Moderate' : 'Low');
 
-        return view('frontend.leave.process', [
-            'leave' => $leave,
-            'steps' => $clean,
-            'probability' => $prob,
-            'probLabel' => $label,
-            'score' => $score,
-        ]);
+        // Determine probability label
+        $probLabel = 'Low';
+        if ($probability >= 70) {
+            $probLabel = 'High';
+        } elseif ($probability >= 40) {
+            $probLabel = 'Moderate';
+        }
+
+        return view('frontend.leave.process', compact('leave', 'steps', 'probability', 'probLabel', 'score'));
     }
 
     // 4. Show final result page
@@ -182,6 +187,55 @@ class LeaveController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         return view('frontend.leave.list', compact('leaves'));
+    }
+
+    /* ---------- provisional document upload ---------- */
+    public function provisionalIndex()
+    {
+        $leaves = LeaveRequest::where('user_id', Auth::id())
+            ->where('status', 'provisional')
+            ->where('document_status', 'pending')
+            ->with('leaveType')
+            ->get();
+
+        return view('frontend.leave.provisional-index', compact('leaves'));
+    }
+
+    public function provisionalUploadForm($id)
+    {
+        $leave = LeaveRequest::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->where('status', 'provisional')
+            ->firstOrFail();
+
+        return view('frontend.leave.provisional-upload', compact('leave'));
+    }
+
+    public function provisionalUploadStore(Request $request, $id)
+    {
+        $leave = LeaveRequest::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->where('status', 'provisional')
+            ->firstOrFail();
+
+        $request->validate([
+            'document' => 'required|file|max:2048|mimes:pdf,jpg,jpeg,png'
+        ]);
+
+        $path = $request->file('document')->store('leave_docs', 'local');
+
+        $leave->update([
+            'file_path' => $path,
+            'document_status' => 'submitted'
+        ]);
+
+        // notify admins
+        foreach (Admin::all() as $admin) {
+            Mail::to($admin->email)->send(new MedicalDocUploadedMail($leave));
+        }
+
+        return redirect()->route('leave.provisional.index')
+            ->with('success', 'Document uploaded. Admin will review soon.');
     }
 
 }
